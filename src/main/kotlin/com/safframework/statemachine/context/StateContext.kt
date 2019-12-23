@@ -17,9 +17,9 @@ interface StateContext<S, E> {
 
     fun getTarget(): State<S, E>
 
-    fun getException(): Exception?
+    fun getException(): Exception
 
-    fun setException(exception: Exception?)
+    fun setException(exception: Exception)
 
     fun getTransition(): Transition<S, E>
 }

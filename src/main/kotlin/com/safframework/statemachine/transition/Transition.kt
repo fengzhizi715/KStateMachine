@@ -13,7 +13,7 @@ interface Transition<S, E> {
      * @param context
      * @return
      */
-    fun transit(context: StateContext<S, E>?): Boolean
+    fun transit(context: StateContext<S, E>): Boolean
 
     fun executeTransitionActions(context: StateContext<S, E>)
 
