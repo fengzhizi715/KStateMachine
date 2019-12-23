@@ -13,13 +13,9 @@ class MessageHeaders {
         headers = HashMap()
     }
 
-    fun getHeaders(): Map<String, Any> {
-        return headers
-    }
+    fun getHeaders(): Map<String, Any> = headers
 
-    fun getHeader(key: String?): Any? {
-        return headers[key]
-    }
+    fun getHeader(key: String?): Any? = headers[key]
 
     fun setHeaders(headers: MutableMap<String, Any>) {
         this.headers = headers

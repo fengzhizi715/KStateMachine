@@ -13,12 +13,7 @@ class DefaultMessage<T>(payload: T, headers: MessageHeaders) : Message<T> {
         this.headers = headers
     }
 
-    override fun getPayload(): T {
-        return payload
-    }
+    override fun getPayload(): T = payload
 
-    override fun getHeaders(): MessageHeaders {
-        return headers
-    }
-
+    override fun getHeaders(): MessageHeaders = headers
 }
