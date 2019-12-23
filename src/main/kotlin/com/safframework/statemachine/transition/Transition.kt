@@ -8,6 +8,7 @@ import com.safframework.statemachine.state.State
  * Created by tony on 2019/12/21.
  */
 interface Transition<S, E> {
+
     /**
      * 是否转换
      * @param context
