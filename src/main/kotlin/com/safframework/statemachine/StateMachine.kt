@@ -44,12 +44,12 @@ interface StateMachine<S, E> {
      * 获取状态机当前状态
      * @return S
      */
-    fun getState(): State<S, E>?
+    fun getState(): State<S, E>
 
     /**
      * 获取当前事件
      */
-    fun getEvent(): Message<E>?
+    fun getEvent(): Message<E>
 
     /**
      * 重置状态机当前状态
@@ -60,7 +60,7 @@ interface StateMachine<S, E> {
     /**
      * 获取状态机所有状态集合
      */
-    fun getStates(): Collection<State<S, E>?>?
+    fun getStates(): Collection<State<S, E>>
 
     /**
      * 获取状态机所有转换器
@@ -73,7 +73,7 @@ interface StateMachine<S, E> {
     fun transition(): Transition<S, E>
 
     /**
-     * 状态机是否完成，如果有异常不接受事件或扭转到end状态 都是完成
+     * 状态机是否完成，如果有异常不接受事件或扭转到 end 状态 都是完成
      */
     fun isComplete(): Boolean
 
