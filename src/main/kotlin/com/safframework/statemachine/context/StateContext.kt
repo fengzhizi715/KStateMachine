@@ -5,6 +5,7 @@ import com.safframework.statemachine.state.State
 import com.safframework.statemachine.transition.Transition
 
 /**
+ * 状态上下文
  * Created by tony on 2019/12/21.
  */
 interface StateContext<S, E> {

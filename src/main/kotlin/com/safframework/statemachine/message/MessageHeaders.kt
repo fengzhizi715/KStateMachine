@@ -2,11 +2,12 @@ package com.safframework.statemachine.message
 
 import java.util.*
 
-
 /**
+ * 消息头
  * Created by tony on 2019/12/21.
  */
 class MessageHeaders {
+
     private var headers: MutableMap<String, Any>
 
     init {
