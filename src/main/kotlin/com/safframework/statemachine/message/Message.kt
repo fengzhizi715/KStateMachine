@@ -7,5 +7,5 @@ interface Message<T> {
 
     fun getPayload(): T
 
-    fun getHeaders(): MessageHeaders
+    fun getHeaders(): MessageHeaders?
 }
