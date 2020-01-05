@@ -1,10 +1,12 @@
 package com.safframework.statemachine
 
+import com.safframework.statemachine.message.DefaultMessage
 import com.safframework.statemachine.message.Message
 import com.safframework.statemachine.state.State
 import com.safframework.statemachine.transition.Transition
 import java.util.Collection
 import java.util.Map
+
 
 /**
  * Created by tony on 2020/1/5.
@@ -21,6 +23,10 @@ abstract class AbstractStateMachine<S,E>(
     @Volatile
     private lateinit var currentEvent: Message<E>
 
+    //当前转换器
+    @Volatile
+    private lateinit var currentTransition: Transition<S, E>
+
     override fun getInitialState(): State<S, E> = initialState
 
     override fun getStateMachineError(): Exception = currentError
@@ -33,4 +39,7 @@ abstract class AbstractStateMachine<S,E>(
 
     override fun getTransitions(): Map<S, Collection<Transition<S, E>>> = transitions
 
+    override fun transition(): Transition<S, E> = currentTransition
+
+    override fun isComplete(): Boolean = currentState.isEnd() || currentState != null
 }

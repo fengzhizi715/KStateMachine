@@ -32,7 +32,7 @@ interface StateMachine<S, E> {
      * 触发事件
      * @param event Message<E>
      * @return 状态机是否接受事件
-    </E> */
+     */
     fun sendEvent(event: Message<E>): Boolean
 
     /**
