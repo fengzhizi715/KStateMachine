@@ -6,6 +6,7 @@ import com.safframework.statemachine.state.State
 import com.safframework.statemachine.transition.Transition
 import java.util.Collection
 import java.util.Map
+
 /**
  * Created by tony on 2020/1/2.
  */
@@ -61,7 +62,7 @@ interface StateMachine<S, E> {
     /**
      * 获取状态机所有状态集合
      */
-    fun getStates(): Collection<State<S, E>>
+    fun getStates(): MutableCollection<State<S, E>>
 
     /**
      * 获取状态机所有转换器
