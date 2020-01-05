@@ -4,7 +4,8 @@ import com.safframework.statemachine.message.Message
 import com.safframework.statemachine.message.MessageHeaders
 import com.safframework.statemachine.state.State
 import com.safframework.statemachine.transition.Transition
-
+import java.util.Collection
+import java.util.Map
 /**
  * Created by tony on 2020/1/2.
  */
