@@ -5,7 +5,7 @@ import com.safframework.statemachine.context.StateContext
 import com.safframework.statemachine.state.State
 
 /**
- * 两个状态之间的定向转换关系，状态机对发生的特定类型事件响应后当前状态由A转换到B。
+ * 从一个状态切换到另一个状态
  * Created by tony on 2019/12/21.
  */
 interface Transition<S, E> {

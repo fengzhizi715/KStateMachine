@@ -37,12 +37,12 @@ interface State<S, E> {
     fun isSuspend(): Boolean
 
     /**
-     * 进入Actions
+     * 进入 State 的所有 Actions
      */
     fun getEntryActions(): Collection<Action<S, E>>
 
     /**
-     * 所有退出的actions
+     * 退出 State 的所有 Actions
      * @return actions
      */
     fun getExitActions(): Collection<Action<S, E>>

@@ -3,7 +3,8 @@ package com.safframework.statemachine.action
 import com.safframework.statemachine.context.StateContext
 
 /**
- * 执行某个转换时，执行的具体操作。
+ * 当一个 Event 被状态机系统分发的时候，状态机用 Action 来进行响应
+ *
  * Created by tony on 2019/12/21.
  */
 interface Action<S, E> {
