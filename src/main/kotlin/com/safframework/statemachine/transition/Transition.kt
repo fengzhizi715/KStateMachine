@@ -2,6 +2,7 @@ package com.safframework.statemachine.transition
 
 import com.safframework.statemachine.action.Action
 import com.safframework.statemachine.context.StateContext
+import com.safframework.statemachine.guard.Guard
 import com.safframework.statemachine.state.State
 
 /**
@@ -24,6 +25,8 @@ interface Transition<S, E> {
     fun getSource(): State<S, E>
 
     fun getTarget(): State<S, E>
+
+    fun guard(): Guard<S, E>
 
     fun getEvent(): E
 
