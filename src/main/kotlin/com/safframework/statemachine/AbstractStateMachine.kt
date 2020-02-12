@@ -6,6 +6,7 @@ import com.safframework.statemachine.context.StateContext
 import com.safframework.statemachine.exception.StateMachineException
 import com.safframework.statemachine.message.DefaultMessage
 import com.safframework.statemachine.message.Message
+import com.safframework.statemachine.message.MessageHeaders
 import com.safframework.statemachine.state.State
 import com.safframework.statemachine.transition.Transition
 
@@ -13,7 +14,7 @@ import com.safframework.statemachine.transition.Transition
 /**
  * Created by tony on 2020/1/5.
  */
-abstract class AbstractStateMachine<S,E>(
+open class AbstractStateMachine<S,E>(
     private val states: Map<S, State<S, E>>,
     private val transitions: Map<S, Collection<Transition<S, E>>>,
     private val initialState: State<S, E>,
@@ -43,9 +44,14 @@ abstract class AbstractStateMachine<S,E>(
 
     override fun isComplete(): Boolean = currentState.isEnd() || currentState != null
 
-    override fun sendEvent(event: Message<E>): Boolean {
-        return sendEvent(event, false)
-    }
+    override fun start(headers: MessageHeaders?): Boolean = getCurrentEvent()?.let {
+        val accepted = sendEvent(DefaultMessage(it, headers), true)
+        return accepted && (currentState.isEnd() || currentState.isSuspend())
+    }?:false
+
+    override fun sendEvent(event: Message<E>): Boolean = sendEvent(event, false)
+
+    override fun sendEvent(event: E) = sendEvent(DefaultMessage(event, null))
 
     /**
      * 发送事件
@@ -167,5 +173,30 @@ abstract class AbstractStateMachine<S,E>(
                 action?.execute(context)
             }
         }
+    }
+
+    private fun getCurrentEvent(): E? {
+        val trans = transitions[currentState.getId()]
+
+        trans?.takeIf { it.isNotEmpty() }?.let {
+            for (transition in trans) {
+                if (transition.getSource().getId() == getState().getId()) {
+                    return transition.getEvent()
+                }
+            }
+        }
+
+        return null
+    }
+
+    override fun resetStateMachine(newState: S) {
+
+        states[newState]?.let {
+            currentState = it
+        }?:throw StateMachineException("State can not be empty")
+    }
+
+    override fun setStateMachineError(exception: Exception) {
+        this.currentError = exception
     }
 }

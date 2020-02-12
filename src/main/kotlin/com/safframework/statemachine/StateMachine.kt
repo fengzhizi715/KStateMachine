@@ -17,14 +17,9 @@ interface StateMachine<S, E> {
 
     /**
      * 开始执行状态机，并自动事件驱动所有状态扭转，直到有事件不被接受或事件中发生异常
-     */
-    fun start(): Boolean
-
-    /**
-     * 开始执行状态机，并自动事件驱动所有状态扭转，直到有事件不被接受或事件中发生异常
      * @param headers 传入参数，可在触发事件中使用
      */
-    fun start(headers: MessageHeaders): Boolean
+    fun start(headers: MessageHeaders?=null): Boolean
 
     /**
      * 触发事件
