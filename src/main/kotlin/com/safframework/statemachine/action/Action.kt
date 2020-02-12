@@ -3,6 +3,7 @@ package com.safframework.statemachine.action
 import com.safframework.statemachine.context.StateContext
 
 /**
+ * 执行某个转换时，执行的具体操作。
  * Created by tony on 2019/12/21.
  */
 interface Action<S, E> {

@@ -1,6 +1,5 @@
 package com.safframework.statemachine
 
-import com.safframework.statemachine.message.DefaultMessage
 import com.safframework.statemachine.message.Message
 import com.safframework.statemachine.state.State
 import com.safframework.statemachine.transition.Transition

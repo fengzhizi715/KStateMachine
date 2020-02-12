@@ -4,6 +4,7 @@ import com.safframework.statemachine.action.Action
 import com.safframework.statemachine.message.Message
 
 /**
+ * 构成状态机的基本单位，状态机在任何特定时间都可处于某一状态。
  * Created by tony on 2019/12/21.
  */
 interface State<S, E> {
