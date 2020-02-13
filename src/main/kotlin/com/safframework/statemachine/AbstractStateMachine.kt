@@ -65,10 +65,13 @@ open class AbstractStateMachine<S,E>(
             if (autoDrive) { //如果不是最终状态、不是挂起状态、并且状态机接受了上一事件
                 while (!currentState.isEnd() && accepted && !currentState.isSuspend()) {
                     var nextEvent: E? = null
-                    for (transition in transitions[currentState.getId()]!!) {
-                        if (transition.getSource().getId()!!.equals(currentState.getId())) {
-                            nextEvent = transition.getEvent()
-                            break
+
+                    transitions[currentState.getId()]?.let {
+                        for (transition in it) {
+                            if (transition.getSource().getId() == currentState.getId()) {
+                                nextEvent = transition.getEvent()
+                                break
+                            }
                         }
                     }
 
@@ -193,7 +196,7 @@ open class AbstractStateMachine<S,E>(
 
         states[newState]?.let {
             currentState = it
-        }?:throw StateMachineException("State can not be empty")
+        }?:throw StateMachineException("State can not be null")
     }
 
     override fun setStateMachineError(exception: Exception) {
