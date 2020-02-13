@@ -15,4 +15,22 @@ interface Action<S, E> {
      * @param context 上下文
      */
     fun execute(context: StateContext<S, E>)
+
+    /**
+     * 添加信息到上下文中
+     * @param context 上下文
+     * @param key     key
+     * @param value   value
+     */
+    fun addHeader(context: StateContext<S, E>, key: String, value: String) {
+
+        context.getMessage().getHeaders()?.addHeader(key, value)
+    }
+
+    /**
+     * 上下文中获取信息
+     * @param context 上下文
+     * @param key     key
+     */
+    fun <T> getHeader(context: StateContext<S, E>, key: String?): T? = context.getMessage().getHeaders()?.getHeader(key) as? T
 }
