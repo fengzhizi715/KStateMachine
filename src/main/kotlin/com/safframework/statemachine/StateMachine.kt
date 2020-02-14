@@ -1,84 +1,72 @@
 package com.safframework.statemachine
 
-import com.safframework.statemachine.message.Message
-import com.safframework.statemachine.message.MessageHeaders
-import com.safframework.statemachine.state.State
-import com.safframework.statemachine.transition.Transition
-
 /**
- * Created by tony on 2020/1/2.
+ *
+ * @FileName:
+ *          com.safframework.statemachine.StateMachine
+ * @author: Tony Shen
+ * @date: 2020-02-14 21:50
+ * @version: V1.0 <描述当前版本功能>
  */
-interface StateMachine<S, E> {
+class StateMachine private constructor(private val initialState: BaseState) {
+
+    private lateinit var currentState: State
+    private val states = mutableListOf<State>()
+
+    fun state(stateName: BaseState, init: State.() -> Unit) {
+        val state = State(stateName)
+        state.init()
+
+        states.add(state)
+    }
 
     /**
-     * 初始化状态
+     * Translates state name to an object
      */
-    fun getInitialState(): State<S, E>
+    private fun getState(stateType: BaseState): State {
+        return states.firstOrNull { stateType.javaClass == it.name.javaClass }
+            ?: throw NoSuchElementException(stateType.javaClass.canonicalName)
+    }
 
     /**
-     * 开始执行状态机，并自动事件驱动所有状态扭转，直到有事件不被接受或事件中发生异常
-     * @param headers 传入参数，可在触发事件中使用
+     * Initializes the [StateMachine] and puts it on the first state
      */
-    fun start(headers: MessageHeaders?=null): Boolean
+    fun initialize() {
+        currentState = getState(initialState)
+        currentState.enter()
+    }
 
     /**
-     * 触发事件
-     * @param event Message<E>
-     * @return 状态机是否接受事件
+     * Gives the FSM an event to act upon, state is then changed and actions are performed
      */
-    fun sendEvent(event: Message<E>): Boolean
+    fun sendEvent(e: BaseEvent) {
+        try {
+            val edge = currentState.getTransitionForEvent(e)
 
-    /**
-     * 触发事件
-     * @param event E
-     * @return 状态机是否接受事件
-     */
-    fun sendEvent(event: E): Boolean
+            // Indirectly get the state stored in edge
+            // The syntax is weird to guarantee that the states are changed
+            // once the actions are performed
+            // This line just queries the next state name (Class) from the
+            // state list and retrieves the corresponding state object.
+            val state = edge.applyTransition { getState(it) }
+            state.enter()
 
-    /**
-     * 获取状态机当前状态
-     * @return S
-     */
-    fun getState(): State<S, E>
+            currentState = state
+        } catch (exc: NoSuchElementException) {
+            throw IllegalStateException("This state doesn't support " +
+                    "transition on ${e.javaClass.simpleName}")
+        }
+    }
 
-    /**
-     * 获取当前事件
-     */
-    fun getEvent(): Message<E>
+    fun getCurrentState(): BaseState {
+        return this.currentState.name
+    }
 
-    /**
-     * 重置状态机当前状态
-     * @param newState S
-     */
-    fun resetStateMachine(newState: S)
-
-    /**
-     * 获取状态机所有状态集合
-     */
-    fun getStates(): Collection<State<S, E>>
-
-    /**
-     * 获取状态机所有转换器
-     */
-    fun getTransitions(): Map<S, Collection<Transition<S, E>>>
-
-    /**
-     * 当前转换器
-     */
-    fun transition(): Transition<S, E>
-
-    /**
-     * 状态机是否完成，如果有异常不接受事件或扭转到 end 状态 都是完成
-     */
-    fun isComplete(): Boolean
-
-    /**
-     * 设置状态机异常
-     */
-    fun setStateMachineError(exception: Exception)
-
-    /**
-     * 状态机是否有异常
-     */
-    fun getStateMachineError(): Exception
+    companion object {
+        fun buildStateMachine(initialStateName: BaseState, init: StateMachine.() -> Unit): StateMachine {
+            val stateMachine = StateMachine(initialStateName)
+            stateMachine.init()
+            return stateMachine
+        }
+    }
 }
