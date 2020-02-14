@@ -12,6 +12,12 @@ class Transition(private val event: BaseEvent, private val targetState: BaseStat
 
     private val actions = mutableListOf<(Transition) -> Unit>()
 
+    var guard:(()->Boolean)?= null
+
+    fun guard(guard: ()->Boolean) {
+        this.guard = guard
+    }
+
     /**
      * Add an action to be performed upon transition
      */

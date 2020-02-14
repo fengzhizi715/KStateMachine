@@ -41,17 +41,23 @@ class StateMachine private constructor(private val initialState: BaseState) {
      */
     fun sendEvent(e: BaseEvent) {
         try {
-            val edge = currentState.getTransitionForEvent(e)
+            val transition = currentState.getTransitionForEvent(e)
 
-            // Indirectly get the state stored in edge
-            // The syntax is weird to guarantee that the states are changed
-            // once the actions are performed
-            // This line just queries the next state name (Class) from the
-            // state list and retrieves the corresponding state object.
-            val state = edge.applyTransition { getState(it) }
-            state.enter()
+            val guard = transition.guard?.invoke()?:true
 
-            currentState = state
+            if (guard) {
+                // Indirectly get the state stored in edge
+                // The syntax is weird to guarantee that the states are changed
+                // once the actions are performed
+                // This line just queries the next state name (Class) from the
+                // state list and retrieves the corresponding state object.
+                val state = transition.applyTransition { getState(it) }
+                state.enter()
+
+                currentState = state
+            } else {
+                println("${transition} 调转到下一个状态失败")
+            }
         } catch (exc: NoSuchElementException) {
             throw IllegalStateException("This state doesn't support " +
                     "transition on ${e.javaClass.simpleName}")
