@@ -19,15 +19,15 @@ class State(val name: BaseState) {
      * @param targetState: Next state
      * @param init
      */
-    fun transition(event: BaseEvent, targetState: BaseState, init: Transition.() -> Unit) {
-        val transition = Transition(event, targetState)
+    fun transition(event: BaseEvent, targetState: BaseState, guard: (()->Boolean)?=null, init: Transition.() -> Unit) {
+        val transition = Transition(event, targetState, guard)
         transition.init()
 
         if (transitions.containsKey(event)) {
             throw StateMachineException("Adding multiple transitions for the same event is invalid")
         }
 
-        transitions.put(event, transition)
+        transitions[event] = transition
     }
 
     /**
