@@ -3,7 +3,9 @@ package com.safframework.statemachine.action
 import com.safframework.statemachine.context.StateContext
 
 /**
+ * 事件/条件满足后执行的动作行为。
  * 当一个 Event 被状态机系统分发的时候，状态机用 Action 来进行响应
+ * 状态转换可以使用 F(S, E) -> (A, S’) 表示
  *
  * Created by tony on 2019/12/21.
  */
