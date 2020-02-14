@@ -31,9 +31,6 @@ open abstract class AbstractTransition<S, E>(
     }
 
     override fun executeTransitionActions(context: StateContext<S, E>) {
-        if (actions == null) {
-            return
-        }
         for (action in actions) {
             try {
                 action.execute(context)

@@ -34,5 +34,5 @@ interface Action<S, E> {
      * @param context 上下文
      * @param key     key
      */
-    fun <T> getHeader(context: StateContext<S, E>, key: String?): T? = context.getMessage().getHeaders()?.getHeader(key) as? T
+    fun <T> getHeader(context: StateContext<S, E>, key: String): T? = context.getMessage().getHeaders()?.getHeader(key) as? T
 }
