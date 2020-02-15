@@ -20,7 +20,7 @@ class State(val name: BaseState) {
      * @param guard: 断言接口，为了转换操作执行后检测结果是否满足特定条件从一个状态切换到某一个状态
      * @param init
      */
-    fun transition(event: BaseEvent, targetState: BaseState, guard: (()->Boolean)?=null, init: Transition.() -> Unit) {
+    fun transition(event: BaseEvent, targetState: BaseState, guard: (()->Boolean)?=null, init: Transition.() -> Unit):State {
         val transition = Transition(event, targetState, guard)
         transition.init()
 
@@ -29,6 +29,7 @@ class State(val name: BaseState) {
         }
 
         transitions[event] = transition
+        return this
     }
 
     /**
