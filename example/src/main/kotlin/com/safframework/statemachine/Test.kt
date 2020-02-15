@@ -8,12 +8,12 @@ package com.safframework.statemachine
  * @date: 2020-02-15 17:54
  * @version: V1.0 <描述当前版本功能>
  */
-class Cook : BaseEvent()
-class WashDishes: BaseEvent()
+class Cook : BaseEvent()      // 烧菜
+class WashDishes: BaseEvent() // 洗碗
 
-class Initial : BaseState()
-class Eat : BaseState()
-class WatchTV : BaseState()
+class Initial : BaseState()   // 初始化状态
+class Eat : BaseState()       // 吃饭状态
+class WatchTV : BaseState()   // 看电视状态
 
 fun main() {
 

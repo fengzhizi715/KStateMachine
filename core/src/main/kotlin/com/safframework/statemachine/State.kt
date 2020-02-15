@@ -10,11 +10,13 @@ package com.safframework.statemachine
  */
 class State(val name: BaseState) {
 
-    private val transitions = hashMapOf<BaseEvent, Transition>()   // Convert to HashMap with event as key
+    private val transitions = hashMapOf<BaseEvent, Transition>()
     private val stateActions = mutableListOf<(State) -> Unit>()
 
     /**
-     * Creates a transition from a [State] to another when a [BaseEvent] occurs
+     * 当一个 Event 被状态机系统分发的时候，状态机用 Action 来进行响应
+     * 状态转换可以使用 F(S, E) -> (A, S’) 表示
+     *
      * @param event: 触发事件
      * @param targetState: 下一个状态
      * @param guard: 断言接口，为了转换操作执行后检测结果是否满足特定条件从一个状态切换到某一个状态
