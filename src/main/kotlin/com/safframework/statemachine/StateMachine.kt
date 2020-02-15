@@ -41,7 +41,7 @@ class StateMachine private constructor(private val initialState: BaseState) {
         try {
             val transition = currentState.getTransitionForEvent(e)
 
-            val guard = transition.guard?.invoke()?:true
+            val guard = transition.getGuard()?.invoke()?:true
 
             if (guard) {
                 // Indirectly get the state stored in edge
@@ -54,7 +54,7 @@ class StateMachine private constructor(private val initialState: BaseState) {
 
                 currentState = state
             } else {
-                println("$transition 跳转到下一个状态失败")
+                println("$transition 失败")
             }
         } catch (exc: NoSuchElementException) {
             throw IllegalStateException("This state doesn't support " +

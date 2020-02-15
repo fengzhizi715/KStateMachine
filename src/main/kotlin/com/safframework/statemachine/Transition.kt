@@ -8,13 +8,15 @@ package com.safframework.statemachine
  * @date: 2020-02-14 21:40
  * @version: V1.0 <描述当前版本功能>
  */
-class Transition(private val event: BaseEvent, private val targetState: BaseState,var guard:(()->Boolean)?= null) {
+class Transition(private val event: BaseEvent, private val targetState: BaseState, private var guard:(()->Boolean)?= null) {
 
     private val actions = mutableListOf<(Transition) -> Unit>()
 
     fun guard(guard: ()->Boolean) {
         this.guard = guard
     }
+
+    fun getGuard():(()->Boolean)? = guard
 
     /**
      * Add an action to be performed upon transition
@@ -34,7 +36,5 @@ class Transition(private val event: BaseEvent, private val targetState: BaseStat
         return getNextState(targetState)
     }
 
-    override fun toString(): String {
-        return "Transition to ${targetState.javaClass.simpleName} on ${event.javaClass.simpleName}"
-    }
+    override fun toString(): String = "Transition to ${targetState.javaClass.simpleName} on ${event.javaClass.simpleName}"
 }
