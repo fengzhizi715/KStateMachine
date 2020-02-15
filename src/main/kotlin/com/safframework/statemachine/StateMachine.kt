@@ -13,20 +13,18 @@ class StateMachine private constructor(private val initialState: BaseState) {
     private lateinit var currentState: State
     private val states = mutableListOf<State>()
 
-    fun state(stateName: BaseState, init: State.() -> Unit) {
+    fun state(stateName: BaseState, init: State.() -> Unit):StateMachine {
         val state = State(stateName)
         state.init()
 
         states.add(state)
+        return this
     }
 
     /**
      * Translates state name to an object
      */
-    private fun getState(stateType: BaseState): State {
-        return states.firstOrNull { stateType.javaClass == it.name.javaClass }
-            ?: throw NoSuchElementException(stateType.javaClass.canonicalName)
-    }
+    private fun getState(stateType: BaseState): State = states.firstOrNull { stateType.javaClass == it.name.javaClass } ?: throw NoSuchElementException(stateType.javaClass.canonicalName)
 
     /**
      * Initializes the [StateMachine] and puts it on the first state
@@ -56,7 +54,7 @@ class StateMachine private constructor(private val initialState: BaseState) {
 
                 currentState = state
             } else {
-                println("$transition 调转到下一个状态失败")
+                println("$transition 跳转到下一个状态失败")
             }
         } catch (exc: NoSuchElementException) {
             throw IllegalStateException("This state doesn't support " +

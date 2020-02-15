@@ -15,8 +15,9 @@ class State(val name: BaseState) {
 
     /**
      * Creates a transition from a [State] to another when a [BaseEvent] occurs
-     * @param event: Transition event
-     * @param targetState: Next state
+     * @param event: 触发事件
+     * @param targetState: 下一个状态
+     * @param guard: 断言接口，为了转换操作执行后检测结果是否满足特定条件从一个状态切换到某一个状态
      * @param init
      */
     fun transition(event: BaseEvent, targetState: BaseState, guard: (()->Boolean)?=null, init: Transition.() -> Unit) {
