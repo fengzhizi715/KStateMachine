@@ -37,6 +37,7 @@ class StateMachine private constructor(private val initialState: BaseState) {
     /**
      * Gives the FSM an event to act upon, state is then changed and actions are performed
      */
+    @Synchronized
     fun sendEvent(e: BaseEvent) {
         try {
             val transition = currentState.getTransitionForEvent(e)
@@ -44,11 +45,6 @@ class StateMachine private constructor(private val initialState: BaseState) {
             val guard = transition.getGuard()?.invoke()?:true
 
             if (guard) {
-                // Indirectly get the state stored in edge
-                // The syntax is weird to guarantee that the states are changed
-                // once the actions are performed
-                // This line just queries the next state name (Class) from the
-                // state list and retrieves the corresponding state object.
                 val state = transition.applyTransition { getState(it) }
                 state.enter()
 
@@ -57,16 +53,15 @@ class StateMachine private constructor(private val initialState: BaseState) {
                 println("$transition 失败")
             }
         } catch (exc: NoSuchElementException) {
-            throw IllegalStateException("This state doesn't support " +
-                    "transition on ${e.javaClass.simpleName}")
+            throw IllegalStateException("This state doesn't support transition on ${e.javaClass.simpleName}")
         }
     }
 
-    fun getCurrentState(): BaseState {
-        return this.currentState.name
-    }
+    @Synchronized
+    fun getCurrentState(): BaseState = this.currentState.name
 
     companion object {
+
         fun buildStateMachine(initialStateName: BaseState, init: StateMachine.() -> Unit): StateMachine {
             val stateMachine = StateMachine(initialStateName)
             stateMachine.init()

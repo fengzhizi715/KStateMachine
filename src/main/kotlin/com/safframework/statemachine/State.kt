@@ -32,27 +32,25 @@ class State(val name: BaseState) {
     }
 
     /**
-     * Action performed by state
+     * state 执行的 action
      */
     fun action(action: (State) -> Unit) {
         stateActions.add(action)
     }
 
     /**
-     * Enter the state and run all actions
+     * 进入 state 并执行所有的 action
      */
     fun enter() {
-        // Every action takes the current state
-        stateActions.forEach { it(this) }
+        stateActions.forEach {
+            it(this)
+        }
     }
 
     /**
-     * Get the appropriate [Transition] for the [BaseEvent]
+     * 获取 Transition
      */
-    fun getTransitionForEvent(event: BaseEvent): Transition {
-
-        return transitions[event]?:throw IllegalStateException("Event $event isn't registered with state ${this.name}")
-    }
+    fun getTransitionForEvent(event: BaseEvent): Transition = transitions[event]?:throw IllegalStateException("Event $event isn't registered with state ${this.name}")
 
     override fun toString(): String = name.javaClass.simpleName
 }
