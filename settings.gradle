@@ -1,4 +1,6 @@
 rootProject.name = 'KStateMachine'
 include 'core'
+include 'extension'
+
 include 'example'
 
