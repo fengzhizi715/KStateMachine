@@ -53,8 +53,5 @@ class State(val name: BaseState) {
         return transitions[event]?:throw IllegalStateException("Event $event isn't registered with state ${this.name}")
     }
 
-    override fun toString(): String {
-        return name.javaClass.simpleName
-    }
-
+    override fun toString(): String = name.javaClass.simpleName
 }

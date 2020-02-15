@@ -19,11 +19,7 @@ abstract class Base {
         return this.javaClass == e.javaClass
     }
 
-    override fun hashCode(): Int {
-        return javaClass.hashCode()
-    }
+    override fun hashCode(): Int = javaClass.hashCode()
 
-    override fun toString(): String {
-        return this.javaClass.simpleName
-    }
+    override fun toString(): String = this.javaClass.simpleName
 }

@@ -56,7 +56,7 @@ class StateMachine private constructor(private val initialState: BaseState) {
 
                 currentState = state
             } else {
-                println("${transition} 调转到下一个状态失败")
+                println("$transition 调转到下一个状态失败")
             }
         } catch (exc: NoSuchElementException) {
             throw IllegalStateException("This state doesn't support " +
