@@ -1,6 +1,6 @@
 # KStateMachine
 
-基于 Kotlin 特性实现的有限状态机（FSM) 框架。
+基于 Kotlin 特性实现的有限状态机 (FSM) 框，基于事件驱动。
 
 ```kotlin
     val sm = StateMachine.buildStateMachine(Initial()) {
