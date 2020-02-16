@@ -21,16 +21,16 @@ fun main() {
 
         state(Initial()) {
             action {
-                println("Entered [$it]")
+                println("Entered [$it] State")
             }
 
             transition(Cook(), Eat()) {
                 action {
-                    println("Wash Vegetables")
+                    println("Action: Wash Vegetables")
                 }
 
                 action {
-                    println("Cook")
+                    println("Action: Cook")
                 }
             }
         }
@@ -38,17 +38,17 @@ fun main() {
         state(Eat()) {
 
             action {
-                println("Entered [$it]")
+                println("Entered [$it] State")
             }
 
             transition(WashDishes(), WatchTV()) {
 
                 action {
-                    println("Wash Dishes")
+                    println("Action: Wash Dishes")
                 }
 
                 action {
-                    println("Turn on the TV")
+                    println("Action: Turn on the TV")
                 }
             }
         }
@@ -56,7 +56,7 @@ fun main() {
         state(WatchTV()) {
 
             action {
-                println("Entered [$it]")
+                println("Entered [$it] State")
             }
         }
     }
