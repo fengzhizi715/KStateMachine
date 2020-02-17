@@ -23,7 +23,7 @@ class State(val name: BaseState) {
      * @param init
      */
     fun transition(event: BaseEvent, targetState: BaseState, guard: (()->Boolean)?=null, init: Transition.() -> Unit):State {
-        val transition = Transition(event, targetState, guard)
+        val transition = Transition(event, this.name, targetState, guard)
         transition.init()
 
         if (transitions.containsKey(event)) { // 同一个 Event 不能对应多个 Transition，即 State 只能通过一个 Event 然后 Transition 到另一个 State

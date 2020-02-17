@@ -1,5 +1,6 @@
 package com.safframework.statemachine
 
+
 /**
  * 状态机全局的拦截器，对 State 改变前、后进行监听拦截。
  * @FileName:
@@ -26,4 +27,9 @@ interface GlobalInterceptor {
      * @param to:   下一个状态
      */
     fun stateChanged(from: State,to: State)
+
+    /**
+     *
+     */
+    fun transition(transition: Transition)
 }
