@@ -10,9 +10,20 @@ package com.safframework.statemachine
  */
 interface GlobalInterceptor {
 
+    /**
+     * 进入某个 State
+     */
     fun stateEntered(state: State)
 
+    /**
+     * 离开某个 State
+     */
     fun stateExited(state: State)
 
+    /**
+     * State 发生改变
+     * @param from: 当前状态
+     * @param to:   下一个状态
+     */
     fun stateChanged(from: State,to: State)
 }

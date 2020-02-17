@@ -18,6 +18,15 @@ class StateMachine private constructor(private val initialState: BaseState) {
     private var globalInterceptor:GlobalInterceptor?=null
 
     /**
+     * 设置状态机全局的拦截器，使用时需要在 initialize() 之前
+     * @param event: 状态机全局的拦截器
+     */
+    fun interceptor(globalInterceptor:GlobalInterceptor):StateMachine {
+        this.globalInterceptor = globalInterceptor
+        return this
+    }
+
+    /**
      * 初始化状态机，并进入初始化状态
      */
     fun initialize() {
@@ -43,12 +52,6 @@ class StateMachine private constructor(private val initialState: BaseState) {
      * Translates state name to an object
      */
     private fun getState(stateType: BaseState): State = states.firstOrNull { stateType.javaClass == it.name.javaClass } ?: throw NoSuchElementException(stateType.javaClass.canonicalName)
-
-    fun interceptor(globalInterceptor:GlobalInterceptor):StateMachine {
-
-        this.globalInterceptor = globalInterceptor
-        return this
-    }
 
     /**
      * Gives the FSM an event to act upon, state is then changed and actions are performed
