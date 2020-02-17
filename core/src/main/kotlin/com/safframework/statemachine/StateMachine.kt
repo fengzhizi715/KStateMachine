@@ -1,5 +1,10 @@
 package com.safframework.statemachine
 
+import java.util.concurrent.atomic.AtomicBoolean
+
+
+
+
 /**
  *
  * @FileName:
@@ -12,6 +17,8 @@ class StateMachine private constructor(private val initialState: BaseState) {
 
     private lateinit var currentState: State
     private val states = mutableListOf<State>()
+    private val initialized = AtomicBoolean(false)
+
 
     fun state(stateName: BaseState, init: State.() -> Unit):StateMachine {
         val state = State(stateName)
@@ -30,8 +37,10 @@ class StateMachine private constructor(private val initialState: BaseState) {
      * Initializes the [StateMachine] and puts it on the first state
      */
     fun initialize() {
-        currentState = getState(initialState)
-        currentState.enter()
+        if(initialized.compareAndSet(false, true)){
+            currentState = getState(initialState)
+            currentState.enter()
+        }
     }
 
     /**
