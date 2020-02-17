@@ -10,8 +10,8 @@ package com.safframework.statemachine
  */
 class State(val name: BaseState) {
 
-    private val transitions = hashMapOf<BaseEvent, Transition>()
-    private val stateActions = mutableListOf<(State) -> Unit>()
+    private val transitions = hashMapOf<BaseEvent, Transition>() // 存储当前 State 相关的所有 Transition
+    private val stateActions = mutableListOf<(State) -> Unit>()  // 当前 State 相关的所有 Action
 
     /**
      * 当一个 Event 被状态机系统分发的时候，状态机用 Action 来进行响应
@@ -26,7 +26,7 @@ class State(val name: BaseState) {
         val transition = Transition(event, targetState, guard)
         transition.init()
 
-        if (transitions.containsKey(event)) {
+        if (transitions.containsKey(event)) { // 对同一个 Event 不能对应多个 Transition，State 只能通过一个 Event 通过一个 Transition 跳转到另一个 State
             throw StateMachineException("Adding multiple transitions for the same event is invalid")
         }
 
@@ -35,14 +35,14 @@ class State(val name: BaseState) {
     }
 
     /**
-     * state 执行的 action
+     * State 执行的 Action
      */
     fun action(action: (State) -> Unit) {
         stateActions.add(action)
     }
 
     /**
-     * 进入 state 并执行所有的 action
+     * 进入 State 并执行所有的 Action
      */
     fun enter() {
         stateActions.forEach {

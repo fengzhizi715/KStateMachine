@@ -66,3 +66,5 @@ Action: Wash Dishes
 Action: Turn on the TV
 Entered [WatchTV] State
 ```
+
+![](images/fsm.png)

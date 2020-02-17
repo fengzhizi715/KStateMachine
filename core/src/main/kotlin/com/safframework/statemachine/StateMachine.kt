@@ -2,9 +2,6 @@ package com.safframework.statemachine
 
 import java.util.concurrent.atomic.AtomicBoolean
 
-
-
-
 /**
  *
  * @FileName:
@@ -15,9 +12,9 @@ import java.util.concurrent.atomic.AtomicBoolean
  */
 class StateMachine private constructor(private val initialState: BaseState) {
 
-    private lateinit var currentState: State
-    private val states = mutableListOf<State>()
-    private val initialized = AtomicBoolean(false)
+    private lateinit var currentState: State    // 当前状态
+    private val states = mutableListOf<State>() // 状态列表
+    private val initialized = AtomicBoolean(false) // 是否初始化
 
 
     fun state(stateName: BaseState, init: State.() -> Unit):StateMachine {
