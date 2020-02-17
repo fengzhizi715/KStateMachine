@@ -68,13 +68,13 @@ class StateMachine private constructor(private val initialState: BaseState) {
 
                 globalInterceptor?.apply {
                     transition(transition)
-                    stateEntered(currentState)
+                    stateEntered(state)
                     stateChanged(currentState,state)
                 }
 
                 state.enter()
 
-                globalInterceptor?.stateExited(currentState)
+                globalInterceptor?.stateExited(state)
 
                 currentState = state
             } else {
