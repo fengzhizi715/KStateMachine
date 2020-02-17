@@ -63,6 +63,7 @@ class StateMachine private constructor(private val initialState: BaseState) {
             if (guard) {
                 val state = transition.applyTransition { getState(it) }
                 globalInterceptor?.stateEntered(currentState)
+                globalInterceptor?.stateChanged(currentState,state)
                 state.enter()
                 globalInterceptor?.stateExited(currentState)
 

@@ -85,3 +85,8 @@ Action: Turn on the TV
 Entered [WatchTV] State
 ```
 
+
+## TODO：
+
+* 状态机的配置，支持 yml、properties
+* 支持 RxJava、Kotlin Coroutines

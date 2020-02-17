@@ -13,4 +13,6 @@ interface GlobalInterceptor {
     fun stateEntered(state: State)
 
     fun stateExited(state: State)
+
+    fun stateChanged(from: State,to: State)
 }
