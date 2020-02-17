@@ -55,6 +55,8 @@ fun main() {
 }
 ```
 
+![](images/fsm.png)
+
 执行结果：
 
 ```
@@ -67,4 +69,3 @@ Action: Turn on the TV
 Entered [WatchTV] State
 ```
 
-![](images/fsm.png)

@@ -26,7 +26,7 @@ class State(val name: BaseState) {
         val transition = Transition(event, targetState, guard)
         transition.init()
 
-        if (transitions.containsKey(event)) { // 对同一个 Event 不能对应多个 Transition，State 只能通过一个 Event 通过一个 Transition 跳转到另一个 State
+        if (transitions.containsKey(event)) { // 同一个 Event 不能对应多个 Transition，即 State 只能通过一个 Event 然后 Transition 到另一个 State
             throw StateMachineException("Adding multiple transitions for the same event is invalid")
         }
 
