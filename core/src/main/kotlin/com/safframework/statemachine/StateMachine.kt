@@ -15,12 +15,26 @@ class StateMachine private constructor(private val initialState: BaseState) {
     private lateinit var currentState: State    // 当前状态
     private val states = mutableListOf<State>() // 状态列表
     private val initialized = AtomicBoolean(false) // 是否初始化
+    private var globalInterceptor:GlobalInterceptor?=null
 
+    /**
+     * 初始化状态机，并进入初始化状态
+     */
+    fun initialize() {
+        if(initialized.compareAndSet(false, true)){
+            currentState = getState(initialState)
+            globalInterceptor?.stateEntered(currentState)
+            currentState.enter()
+            globalInterceptor?.stateExited(currentState)
+        }
+    }
 
+    /**
+     * 向状态机添加 State
+     */
     fun state(stateName: BaseState, init: State.() -> Unit):StateMachine {
         val state = State(stateName)
         state.init()
-
         states.add(state)
         return this
     }
@@ -30,14 +44,10 @@ class StateMachine private constructor(private val initialState: BaseState) {
      */
     private fun getState(stateType: BaseState): State = states.firstOrNull { stateType.javaClass == it.name.javaClass } ?: throw NoSuchElementException(stateType.javaClass.canonicalName)
 
-    /**
-     * Initializes the [StateMachine] and puts it on the first state
-     */
-    fun initialize() {
-        if(initialized.compareAndSet(false, true)){
-            currentState = getState(initialState)
-            currentState.enter()
-        }
+    fun interceptor(globalInterceptor:GlobalInterceptor):StateMachine {
+
+        this.globalInterceptor = globalInterceptor
+        return this
     }
 
     /**
@@ -52,7 +62,9 @@ class StateMachine private constructor(private val initialState: BaseState) {
 
             if (guard) {
                 val state = transition.applyTransition { getState(it) }
+                globalInterceptor?.stateEntered(currentState)
                 state.enter()
+                globalInterceptor?.stateExited(currentState)
 
                 currentState = state
             } else {
