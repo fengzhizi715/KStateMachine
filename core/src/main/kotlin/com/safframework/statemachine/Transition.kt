@@ -37,5 +37,9 @@ class Transition(private val event: BaseEvent, private val sourceState: BaseStat
         return getNextState(targetState)
     }
 
+    fun getSourceState():BaseState = sourceState
+
+    fun getTargetState():BaseState = targetState
+
     override fun toString(): String = "${sourceState.javaClass.simpleName} transition to ${targetState.javaClass.simpleName} on ${event.javaClass.simpleName}"
 }

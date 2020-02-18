@@ -34,7 +34,6 @@ class StateMachine private constructor(private val initialState: BaseState) {
             currentState = getState(initialState)
             globalInterceptor?.stateEntered(currentState)
             currentState.enter()
-            globalInterceptor?.stateExited(currentState)
         }
     }
 
@@ -61,6 +60,8 @@ class StateMachine private constructor(private val initialState: BaseState) {
         try {
             val transition = currentState.getTransitionForEvent(e)
 
+            globalInterceptor?.transitionStarted(transition)
+
             val guard = transition.getGuard()?.invoke()?:true
 
             if (guard) {
@@ -68,13 +69,16 @@ class StateMachine private constructor(private val initialState: BaseState) {
 
                 globalInterceptor?.apply {
                     transition(transition)
-                    stateEntered(state)
-                    stateChanged(currentState,state)
+                    stateExited(currentState)
                 }
 
                 state.enter()
 
-                globalInterceptor?.stateExited(state)
+                globalInterceptor?.apply {
+                    stateEntered(state)
+                    stateChanged(currentState,state)
+                    transitionEnded(transition)
+                }
 
                 currentState = state
             } else {

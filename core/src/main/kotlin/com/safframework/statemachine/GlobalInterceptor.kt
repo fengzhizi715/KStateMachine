@@ -2,7 +2,7 @@ package com.safframework.statemachine
 
 
 /**
- * 状态机全局的拦截器，对 State 改变前、后进行监听拦截。
+ * 状态机全局的拦截器
  * @FileName:
  *          com.safframework.statemachine.GlobalInterceptor
  * @author: Tony Shen
@@ -32,4 +32,8 @@ interface GlobalInterceptor {
      *
      */
     fun transition(transition: Transition)
+
+    fun transitionStarted(transition: Transition)
+
+    fun transitionEnded(transition: Transition)
 }
