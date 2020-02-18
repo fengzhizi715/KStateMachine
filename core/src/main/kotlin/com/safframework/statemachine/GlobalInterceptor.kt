@@ -29,11 +29,17 @@ interface GlobalInterceptor {
     fun stateChanged(from: State,to: State)
 
     /**
-     *
+     * 触发 Transition
      */
     fun transition(transition: Transition)
 
+    /**
+     * 准备开始 Transition
+     */
     fun transitionStarted(transition: Transition)
 
+    /**
+     * Transition 结束
+     */
     fun transitionEnded(transition: Transition)
 }
