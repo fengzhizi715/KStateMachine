@@ -83,9 +83,12 @@ class StateMachine private constructor(private val initialState: BaseState) {
                 currentState = state
             } else {
                 println("$transition 失败")
+
+                globalInterceptor?.stateMachineError(this,StateMachineException("没有找到Transition, 状态${currentState.name}，事件${e.javaClass.simpleName}"))
             }
-        } catch (exc: NoSuchElementException) {
-            throw IllegalStateException("This state doesn't support transition on ${e.javaClass.simpleName}")
+        } catch (exc:Exception) {
+
+            globalInterceptor?.stateMachineError(this,StateMachineException("This state doesn't support transition on ${e.javaClass.simpleName}"))
         }
     }
 

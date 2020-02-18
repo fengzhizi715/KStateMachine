@@ -42,4 +42,6 @@ interface GlobalInterceptor {
      * Transition 结束
      */
     fun transitionEnded(transition: Transition)
+
+    fun stateMachineError(stateMachine: StateMachine, exception: Exception)
 }
