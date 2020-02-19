@@ -8,15 +8,15 @@ package com.safframework.statemachine
  * @date: 2020-02-14 21:40
  * @version: V1.0 <描述当前版本功能>
  */
-class Transition(private val event: BaseEvent, private val sourceState: BaseState,private val targetState: BaseState, private var guard:(()->Boolean)?= null) {
+class Transition(private val event: BaseEvent, private val sourceState: BaseState,private val targetState: BaseState, private var guard:Guard?= null) {
 
     private val actions = mutableListOf<TransitionAction>()
 
-    fun guard(guard: ()->Boolean) {
+    fun guard(guard: Guard) {
         this.guard = guard
     }
 
-    fun getGuard():(()->Boolean)? = guard
+    fun getGuard():Guard? = guard
 
     /**
      * Add an action to be performed upon transition

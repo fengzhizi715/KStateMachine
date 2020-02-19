@@ -11,3 +11,5 @@ package com.safframework.statemachine
 typealias StateAction = (State) -> Unit
 
 typealias TransitionAction = (Transition) -> Unit
+
+typealias Guard = ()->Boolean
