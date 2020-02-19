@@ -66,11 +66,20 @@ class StateMachine private constructor(private val initialState: BaseState) {
 
             globalInterceptor?.transitionStarted(transition)
 
+            val stateContext: StateContext = DefaultStateContext(e, transition, transition.getSourceState(), transition.getTargetState())
+
+            //状态转换之前执行的 action(Transition 内部的 action), action执行失败表示不接受事件，返回false
+            val accept = transition.transit(stateContext)
+
+            if (!accept) {
+                //状态机发生异常
+                globalInterceptor?.stateMachineError(this, StateMachineException("状态转换失败,source ${currentState.name} -> target ${transition.getTargetState()} Event ${e}"))
+                return
+            }
+
             val guard = transition.getGuard()?.invoke()?:true
 
             if (guard) {
-                val stateContext: StateContext = DefaultStateContext(e, transition, transition.getSourceState(), transition.getTargetState())
-
                 val state = transition.applyTransition { getState(stateContext.getTarget()) }
 
                 globalInterceptor?.apply {
@@ -91,7 +100,7 @@ class StateMachine private constructor(private val initialState: BaseState) {
             } else {
                 println("$transition 失败")
 
-                globalInterceptor?.stateMachineError(this, StateMachineException("没有找到Transition, 状态${currentState.name}，事件${e.javaClass.simpleName}"))
+                globalInterceptor?.stateMachineError(this, StateMachineException("状态转换时 guard [${guard}], 状态 [${currentState.name}]，事件 [${e.javaClass.simpleName}]"))
             }
         } catch (exception:Exception) {
 
