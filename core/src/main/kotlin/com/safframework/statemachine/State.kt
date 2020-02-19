@@ -1,5 +1,7 @@
 package com.safframework.statemachine
 
+import com.safframework.statemachine.exception.StateMachineException
+
 /**
  * 构成状态机的基本单位，状态机在任何特定时间都可处于某一状态。
  * @FileName:

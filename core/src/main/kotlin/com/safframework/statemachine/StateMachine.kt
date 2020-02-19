@@ -2,6 +2,8 @@ package com.safframework.statemachine
 
 import com.safframework.statemachine.context.DefaultStateContext
 import com.safframework.statemachine.context.StateContext
+import com.safframework.statemachine.exception.StateMachineException
+import com.safframework.statemachine.interceptor.GlobalInterceptor
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
@@ -17,13 +19,13 @@ class StateMachine private constructor(private val initialState: BaseState) {
     private lateinit var currentState: State    // 当前状态
     private val states = mutableListOf<State>() // 状态列表
     private val initialized = AtomicBoolean(false) // 是否初始化
-    private var globalInterceptor:GlobalInterceptor?=null
+    private var globalInterceptor: GlobalInterceptor?=null
 
     /**
      * 设置状态机全局的拦截器，使用时必须要在 initialize() 之前
      * @param event: 状态机全局的拦截器
      */
-    fun interceptor(globalInterceptor:GlobalInterceptor):StateMachine {
+    fun interceptor(globalInterceptor: GlobalInterceptor):StateMachine {
         this.globalInterceptor = globalInterceptor
         return this
     }
@@ -89,11 +91,15 @@ class StateMachine private constructor(private val initialState: BaseState) {
             } else {
                 println("$transition 失败")
 
-                globalInterceptor?.stateMachineError(this,StateMachineException("没有找到Transition, 状态${currentState.name}，事件${e.javaClass.simpleName}"))
+                globalInterceptor?.stateMachineError(this,
+                    StateMachineException("没有找到Transition, 状态${currentState.name}，事件${e.javaClass.simpleName}")
+                )
             }
         } catch (exception:Exception) {
 
-            globalInterceptor?.stateMachineError(this,StateMachineException("This state [${this.currentState.name}] doesn't support transition on ${e.javaClass.simpleName}"))
+            globalInterceptor?.stateMachineError(this,
+                StateMachineException("This state [${this.currentState.name}] doesn't support transition on ${e.javaClass.simpleName}")
+            )
         }
     }
 
