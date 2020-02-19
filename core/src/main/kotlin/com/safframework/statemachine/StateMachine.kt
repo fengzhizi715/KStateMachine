@@ -18,7 +18,7 @@ class StateMachine private constructor(private val initialState: BaseState) {
     private var globalInterceptor:GlobalInterceptor?=null
 
     /**
-     * 设置状态机全局的拦截器，使用时需要在 initialize() 之前
+     * 设置状态机全局的拦截器，使用时必须要在 initialize() 之前
      * @param event: 状态机全局的拦截器
      */
     fun interceptor(globalInterceptor:GlobalInterceptor):StateMachine {
@@ -86,7 +86,7 @@ class StateMachine private constructor(private val initialState: BaseState) {
 
                 globalInterceptor?.stateMachineError(this,StateMachineException("没有找到Transition, 状态${currentState.name}，事件${e.javaClass.simpleName}"))
             }
-        } catch (exc:Exception) {
+        } catch (exception:Exception) {
 
             globalInterceptor?.stateMachineError(this,StateMachineException("This state [${this.currentState.name}] doesn't support transition on ${e.javaClass.simpleName}"))
         }

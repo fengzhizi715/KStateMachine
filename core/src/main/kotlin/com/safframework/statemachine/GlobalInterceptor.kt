@@ -43,5 +43,8 @@ interface GlobalInterceptor {
      */
     fun transitionEnded(transition: Transition)
 
+    /**
+     * 状态机异常的回调
+     */
     fun stateMachineError(stateMachine: StateMachine, exception: Exception)
 }
