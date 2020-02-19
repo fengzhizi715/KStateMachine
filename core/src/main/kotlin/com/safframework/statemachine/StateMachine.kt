@@ -88,7 +88,7 @@ class StateMachine private constructor(private val initialState: BaseState) {
             }
         } catch (exc:Exception) {
 
-            globalInterceptor?.stateMachineError(this,StateMachineException("This state doesn't support transition on ${e.javaClass.simpleName}"))
+            globalInterceptor?.stateMachineError(this,StateMachineException("This state [${this.currentState.name}] doesn't support transition on ${e.javaClass.simpleName}"))
         }
     }
 
