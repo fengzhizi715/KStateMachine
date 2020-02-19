@@ -5,7 +5,7 @@ import com.safframework.statemachine.BaseState
 import com.safframework.statemachine.Transition
 
 /**
- *
+ * 默认的状态上下文
  * @FileName:
  *          com.safframework.statemachine.context.DefaultContext
  * @author: Tony Shen

@@ -1,5 +1,10 @@
 package com.safframework.statemachine
 
+import com.safframework.statemachine.context.StateContext
+
+
+
+
 
 /**
  * 状态机全局的拦截器
@@ -47,4 +52,7 @@ interface GlobalInterceptor {
      * 状态机异常的回调
      */
     fun stateMachineError(stateMachine: StateMachine, exception: Exception)
+
+
+    fun stateContext(stateContext: StateContext)
 }

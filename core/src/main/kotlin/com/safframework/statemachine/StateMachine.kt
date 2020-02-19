@@ -72,6 +72,7 @@ class StateMachine private constructor(private val initialState: BaseState) {
                 val state = transition.applyTransition { getState(stateContext.getTarget()) }
 
                 globalInterceptor?.apply {
+                    stateContext(stateContext)
                     transition(transition)
                     stateExited(currentState)
                 }
