@@ -1,5 +1,7 @@
 package com.safframework.statemachine
 
+import com.safframework.statemachine.context.DefaultStateContext
+import com.safframework.statemachine.context.StateContext
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
@@ -65,7 +67,9 @@ class StateMachine private constructor(private val initialState: BaseState) {
             val guard = transition.getGuard()?.invoke()?:true
 
             if (guard) {
-                val state = transition.applyTransition { getState(it) }
+                val stateContext: StateContext = DefaultStateContext(e, transition, transition.getSourceState(), transition.getTargetState())
+
+                val state = transition.applyTransition { getState(stateContext.getTarget()) }
 
                 globalInterceptor?.apply {
                     transition(transition)

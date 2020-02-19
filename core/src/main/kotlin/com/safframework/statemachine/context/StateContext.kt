@@ -1,11 +1,11 @@
 package com.safframework.statemachine.context
 
 import com.safframework.statemachine.BaseEvent
-import com.safframework.statemachine.State
+import com.safframework.statemachine.BaseState
 import com.safframework.statemachine.Transition
 
 /**
- *
+ * 状态上下文
  * @FileName:
  *          com.safframework.statemachine.context.StateContext
  * @author: Tony Shen
@@ -16,9 +16,9 @@ interface StateContext {
 
     fun getEvent(): BaseEvent
 
-    fun getSource(): State
+    fun getSource(): BaseState
 
-    fun getTarget(): State
+    fun getTarget(): BaseState
 
     fun getException(): Exception?
 

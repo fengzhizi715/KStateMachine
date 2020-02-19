@@ -1,7 +1,7 @@
 package com.safframework.statemachine.context
 
 import com.safframework.statemachine.BaseEvent
-import com.safframework.statemachine.State
+import com.safframework.statemachine.BaseState
 import com.safframework.statemachine.Transition
 
 /**
@@ -14,15 +14,15 @@ import com.safframework.statemachine.Transition
  */
 class DefaultStateContext(private val event: BaseEvent,
                           private val transition: Transition,
-                          private val source:State,
-                          private val target: State,
+                          private val source: BaseState,
+                          private val target: BaseState,
                           private var e: Exception?=null ) :StateContext {
 
     override fun getEvent(): BaseEvent = event
 
-    override fun getSource(): State = source
+    override fun getSource(): BaseState = source
 
-    override fun getTarget(): State = target
+    override fun getTarget(): BaseState = target
 
     override fun getException(): Exception? = e
 
