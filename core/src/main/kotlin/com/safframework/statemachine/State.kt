@@ -13,7 +13,7 @@ import com.safframework.statemachine.exception.StateMachineException
 class State(val name: BaseState) {
 
     private val transitions = hashMapOf<BaseEvent, Transition>() // 存储当前 State 相关的所有 Transition
-    private val stateActions = mutableListOf<(State) -> Unit>()  // 当前 State 相关的所有 Action
+    private val stateActions = mutableListOf<StateAction>()  // 当前 State 相关的所有 Action
 
     /**
      * 当一个 Event 被状态机系统分发的时候，状态机用 Action 来进行响应
@@ -39,7 +39,7 @@ class State(val name: BaseState) {
     /**
      * State 执行的 Action
      */
-    fun action(action: (State) -> Unit) {
+    fun action(action: StateAction) {
         stateActions.add(action)
     }
 

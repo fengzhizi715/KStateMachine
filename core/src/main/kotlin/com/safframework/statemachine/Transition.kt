@@ -10,7 +10,7 @@ package com.safframework.statemachine
  */
 class Transition(private val event: BaseEvent, private val sourceState: BaseState,private val targetState: BaseState, private var guard:(()->Boolean)?= null) {
 
-    private val actions = mutableListOf<(Transition) -> Unit>()
+    private val actions = mutableListOf<TransitionAction>()
 
     fun guard(guard: ()->Boolean) {
         this.guard = guard
@@ -21,7 +21,7 @@ class Transition(private val event: BaseEvent, private val sourceState: BaseStat
     /**
      * Add an action to be performed upon transition
      */
-    fun action(action: (Transition) -> Unit) {
+    fun action(action: TransitionAction) {
         actions.add(action)
     }
 
