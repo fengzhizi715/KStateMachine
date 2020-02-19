@@ -48,7 +48,7 @@ class State(val name: BaseState) {
      */
     fun enter() {
         stateActions.forEach {
-            it(this)
+            it.invoke(this)
         }
     }
 

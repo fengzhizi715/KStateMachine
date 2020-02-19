@@ -31,7 +31,7 @@ class Transition(private val event: BaseEvent, private val sourceState: BaseStat
     fun applyTransition(getNextState: (BaseState) -> State): State {
 
         actions.forEach {
-            it(this)
+            it.invoke(this)
         }
 
         return getNextState(targetState)
