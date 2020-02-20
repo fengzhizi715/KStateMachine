@@ -2,7 +2,7 @@
 
 使用 Kotlin 特性实现的有限状态机 (FSM) 框架，基于事件驱动。
 
-### 有限状态机定义
+## 有限状态机定义
 
 有限状态机，（英语：Finite-state machine, FSM），又称有限状态自动机，简称状态机，是表示有限个状态以及在这些状态之间的转移和动作等行为的数学模型。有限状态机体现了两点：首先是离散的，然后是有限的。以下是对状态机抽象定义
 
@@ -85,8 +85,10 @@ Action: Turn on the TV
 Entered [WatchTV] State
 ```
 
+## Feature
+
 
 ## TODO：
 
 * 状态机的配置，支持 yml、properties
-* 支持 RxJava、Kotlin Coroutines
+* 支持 Kotlin Coroutines
