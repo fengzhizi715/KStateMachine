@@ -1,6 +1,7 @@
 package com.safframework.statemachine
 
 import com.safframework.statemachine.model.BaseState
+import com.safframework.statemachine.model.TransitionEvent
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
 
@@ -31,37 +32,6 @@ val StateMachine.exitTransitionObservable: Observable<TransitionEvent.ExitTransi
     get() = stateObservable
         .filter { event -> event is TransitionEvent.ExitTransition }
         .map { event -> event as TransitionEvent.ExitTransition }
-
-sealed class TransitionEvent {
-
-    /**
-     * Event signal when a transition is in progress.
-     *
-     * @param currentState the current state of the machine
-     * @param transition the transition that initiated the state change
-     * @param targetState the resulting state of this transition
-     */
-    data class EnterTransition(
-        val stateMachine: StateMachine,
-        val currentState: BaseState,
-        val transition: Transition,
-        val targetState: BaseState
-    ) : TransitionEvent()
-
-    /**
-     * Event signal when a transition has completed.
-     *
-     * @param previousState the previous state of the machine before the transition was applied
-     * @param transition the transition that initiated the state change
-     * @param currentState the resulting state of this transition
-     */
-    data class ExitTransition(
-        val stateMachine: StateMachine,
-        val previousState: BaseState,
-        val transition: Transition,
-        val currentState: BaseState
-    ) : TransitionEvent()
-}
 
 private class RxStateCallback(
     private val emitter: ObservableEmitter<TransitionEvent>
