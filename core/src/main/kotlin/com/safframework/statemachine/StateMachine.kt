@@ -22,6 +22,7 @@ class StateMachine private constructor(private val initialState: BaseState) {
     private val states = mutableListOf<State>() // 状态列表
     private val initialized = AtomicBoolean(false) // 是否初始化
     private var globalInterceptor: GlobalInterceptor?=null
+    private val transitionCallbacks: MutableList<TransitionCallback> = mutableListOf()
 
     /**
      * 设置状态机全局的拦截器，使用时必须要在 initialize() 之前
@@ -84,13 +85,23 @@ class StateMachine private constructor(private val initialState: BaseState) {
             if (guard) {
                 val state = transition.applyTransition { getState(stateContext.getTarget()) }
 
+                val callbacks = transitionCallbacks.toList()
+
                 globalInterceptor?.apply {
                     stateContext(stateContext)
                     transition(transition)
                     stateExited(currentState)
                 }
 
+                callbacks.forEach { callback ->
+                    callback.enteringState(this, stateContext.getSource(), transition, stateContext.getTarget())
+                }
+
                 state.enter()
+
+                callbacks.forEach { callback ->
+                    callback.enteredState(this, stateContext.getSource(), transition, stateContext.getTarget())
+                }
 
                 globalInterceptor?.apply {
                     stateEntered(state)
@@ -112,6 +123,10 @@ class StateMachine private constructor(private val initialState: BaseState) {
 
     @Synchronized
     fun getCurrentState(): BaseState = this.currentState.name
+
+    fun registerCallback(transitionCallback: TransitionCallback) = transitionCallbacks.add(transitionCallback)
+
+    fun unregisterCallback(transitionCallback: TransitionCallback) = transitionCallbacks.remove(transitionCallback)
 
     companion object {
 
