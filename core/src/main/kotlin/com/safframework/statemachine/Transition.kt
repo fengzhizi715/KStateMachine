@@ -49,6 +49,9 @@ class Transition(private val event: BaseEvent, private val sourceState: BaseStat
      */
     fun applyTransition(getNextState: (BaseState) -> State): State = getNextState(targetState)
 
+    /**
+     * 设置检测条件，判断是否满足状态转换的条件，满足则执行状态转换
+     */
     fun guard(guard: Guard) {
         this.guard = guard
     }

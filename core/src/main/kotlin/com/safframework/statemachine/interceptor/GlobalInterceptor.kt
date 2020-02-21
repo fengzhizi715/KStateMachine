@@ -52,6 +52,8 @@ interface GlobalInterceptor {
      */
     fun stateMachineError(stateMachine: StateMachine, exception: Exception)
 
-
+    /**
+     * 监听状态机上下文
+     */
     fun stateContext(stateContext: StateContext)
 }

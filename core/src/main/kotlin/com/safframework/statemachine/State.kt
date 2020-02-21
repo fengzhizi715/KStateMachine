@@ -55,7 +55,7 @@ class State(val name: BaseState) {
     }
 
     /**
-     * 获取 Transition
+     * 通过 Event 获取 Transition
      */
     fun getTransitionForEvent(event: BaseEvent): Transition = transitions[event]?:throw IllegalStateException("Event $event isn't registered with state ${this.name}")
 

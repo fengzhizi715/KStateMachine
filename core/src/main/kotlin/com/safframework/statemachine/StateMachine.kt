@@ -55,12 +55,12 @@ class StateMachine private constructor(private val initialState: BaseState) {
     }
 
     /**
-     * Translates state name to an object
+     * 通过状态名称获取状态
      */
     private fun getState(stateType: BaseState): State = states.firstOrNull { stateType.javaClass == it.name.javaClass } ?: throw NoSuchElementException(stateType.javaClass.canonicalName)
 
     /**
-     * Gives the FSM an event to act upon, state is then changed and actions are performed
+     * 向状态机发送 Event，执行状态转换
      */
     @Synchronized
     fun sendEvent(e: BaseEvent) {
@@ -124,8 +124,14 @@ class StateMachine private constructor(private val initialState: BaseState) {
     @Synchronized
     fun getCurrentState(): BaseState = this.currentState.name
 
+    /**
+     * 注册 TransitionCallback
+     */
     fun registerCallback(transitionCallback: TransitionCallback) = transitionCallbacks.add(transitionCallback)
 
+    /**
+     * 取消 TransitionCallback
+     */
     fun unregisterCallback(transitionCallback: TransitionCallback) = transitionCallbacks.remove(transitionCallback)
 
     companion object {

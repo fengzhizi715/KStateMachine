@@ -13,13 +13,6 @@ import com.safframework.statemachine.Transition
  */
 sealed class TransitionEvent {
 
-    /**
-     * Event signal when a transition is in progress.
-     *
-     * @param currentState the current state of the machine
-     * @param transition the transition that initiated the state change
-     * @param targetState the resulting state of this transition
-     */
     data class EnterTransition(
         val stateMachine: StateMachine,
         val currentState: BaseState,
@@ -27,13 +20,6 @@ sealed class TransitionEvent {
         val targetState: BaseState
     ) : TransitionEvent()
 
-    /**
-     * Event signal when a transition has completed.
-     *
-     * @param previousState the previous state of the machine before the transition was applied
-     * @param transition the transition that initiated the state change
-     * @param currentState the resulting state of this transition
-     */
     data class ExitTransition(
         val stateMachine: StateMachine,
         val previousState: BaseState,

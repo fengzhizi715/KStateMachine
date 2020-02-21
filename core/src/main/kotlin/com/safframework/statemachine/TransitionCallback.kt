@@ -12,14 +12,6 @@ import com.safframework.statemachine.model.BaseState
  */
 interface TransitionCallback {
 
-    /**
-     * After a state transition has been verified to be legal but has not yet been applied to the machine.
-     *
-     * @param stateMachine the machine notifying the state change
-     * @param currentState the current state of the machine
-     * @param transition the transition that initiated the state change
-     * @param targetState the resulting state of this transition
-     */
     fun enteringState(
         stateMachine: StateMachine,
         currentState: BaseState,
@@ -27,19 +19,10 @@ interface TransitionCallback {
         targetState: BaseState
     )
 
-    /**
-     * After a state transition has been verified to be legal and also applied to a machine.
-     *
-     * @param stateMachine the machine notifying the state change
-     * @param previousState the previous state of the machine before the transition was applied
-     * @param transition the transition that initiated the state change
-     * @param currentState the resulting state of this transition
-     */
     fun enteredState(
         stateMachine: StateMachine,
         previousState: BaseState,
         transition: Transition,
         currentState: BaseState
     )
-
 }
