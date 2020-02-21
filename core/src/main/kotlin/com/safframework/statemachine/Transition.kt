@@ -25,6 +25,9 @@ class Transition(private val event: BaseEvent, private val sourceState: BaseStat
         return context.getException() == null
     }
 
+    /**
+     * 执行 Transition 的 Action
+     */
     private fun executeTransitionActions(context: StateContext) {
 
         actions.forEach {
@@ -38,14 +41,15 @@ class Transition(private val event: BaseEvent, private val sourceState: BaseStat
     }
 
     /**
-     * Add an action to be performed upon transition
+     * 添加一个 action，在状态转换时执行(时间点是在状态转换之前)
      */
     fun action(action: TransitionAction) {
         actions.add(action)
     }
 
+
     /**
-     * Apply the transition actions
+     * 转换状态
      */
     fun applyTransition(getNextState: (BaseState) -> State): State = getNextState(targetState)
 
