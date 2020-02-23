@@ -87,6 +87,10 @@ Entered [WatchTV] State
 
 ## Feature
 
+* 支持 DSL 的 FSM
+* 全局的拦截器
+* 支持 RxJava 2
+
 
 ## TODO：
 
