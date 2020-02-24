@@ -1,5 +1,8 @@
 package com.safframework.statemachine
 
+import com.safframework.statemachine.model.BaseEvent
+import com.safframework.statemachine.model.BaseState
+
 /**
  *
  * @FileName:
