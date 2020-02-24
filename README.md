@@ -96,3 +96,5 @@ Entered [WatchTV] State
 
 * 状态机的配置，支持 yml、properties
 * 支持 Kotlin Coroutines
+* 支持 HSM
+
