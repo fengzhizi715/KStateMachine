@@ -87,14 +87,14 @@ Entered [WatchTV] State
 
 ## Feature
 
-* 支持 DSL 的 FSM
-* 全局的拦截器
+* 支持 DSL 构建的 FSM
+* 支持全局的拦截器
 * 支持 RxJava 2
 
 
 ## TODO：
 
-* 状态机的配置，支持 yml、properties
+* 通过配置构建状态机，支持 yml、properties
 * 支持 Kotlin Coroutines
 * 支持 HSM
 
