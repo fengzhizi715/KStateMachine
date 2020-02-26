@@ -1,7 +1,6 @@
 package com.safframework.statemachine.state
 
 import com.safframework.statemachine.Guard
-import com.safframework.statemachine.StateAction
 import com.safframework.statemachine.Transition
 import com.safframework.statemachine.exception.StateMachineException
 import com.safframework.statemachine.model.BaseEvent
@@ -18,7 +17,7 @@ import com.safframework.statemachine.model.BaseState
 class State(val name: BaseState): IState {
 
     private val transitions = hashMapOf<BaseEvent, Transition>() // 存储当前 State 相关的所有 Transition
-    private val stateActions = mutableListOf<StateAction>()      // 当前 State 相关的所有 Action
+    private var entry:Entry?=null
 
     /**
      * 当一个 Event 被状态机系统分发的时候，状态机用 Action 来进行响应
@@ -43,18 +42,19 @@ class State(val name: BaseState): IState {
     }
 
     /**
-     * State 执行的 Action
-     */
-    fun action(action: StateAction) {
-        stateActions.add(action)
-    }
-
-    /**
      * 进入 State 并执行所有的 Action
      */
     override fun enter() {
-        stateActions.forEach {
-            it.invoke(this)
+        entry?.let {
+            it.getActions().forEach{
+                action->action.invoke(this)
+            }
+        }
+    }
+
+    fun entry(block:Entry.() -> Unit): Unit {
+        entry = Entry().apply{
+            block()
         }
     }
 
