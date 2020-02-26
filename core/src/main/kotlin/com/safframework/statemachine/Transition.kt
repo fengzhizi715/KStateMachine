@@ -3,6 +3,7 @@ package com.safframework.statemachine
 import com.safframework.statemachine.context.StateContext
 import com.safframework.statemachine.model.BaseEvent
 import com.safframework.statemachine.model.BaseState
+import com.safframework.statemachine.state.State
 
 /**
  * 从一个状态切换到另一个状态
@@ -46,7 +47,6 @@ class Transition(private val event: BaseEvent, private val sourceState: BaseStat
     fun action(action: TransitionAction) {
         actions.add(action)
     }
-
 
     /**
      * 转换状态

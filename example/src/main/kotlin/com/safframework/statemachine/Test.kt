@@ -28,6 +28,7 @@ fun main() {
             }
 
             transition(Cook(), Eat()) {
+
                 action {
                     println("Action: Wash Vegetables")
                 }
@@ -65,6 +66,7 @@ fun main() {
     }
 
     sm.initialize()
+
     sm.sendEvent(Cook())
     sm.sendEvent(WashDishes())
 }

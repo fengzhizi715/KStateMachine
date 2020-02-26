@@ -1,5 +1,7 @@
 package com.safframework.statemachine
 
+import com.safframework.statemachine.state.State
+
 /**
  *
  * @FileName:
