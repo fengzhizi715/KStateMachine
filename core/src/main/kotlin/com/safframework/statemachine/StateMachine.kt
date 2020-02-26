@@ -6,6 +6,7 @@ import com.safframework.statemachine.exception.StateMachineException
 import com.safframework.statemachine.interceptor.GlobalInterceptor
 import com.safframework.statemachine.model.BaseEvent
 import com.safframework.statemachine.model.BaseState
+import com.safframework.statemachine.state.State
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
