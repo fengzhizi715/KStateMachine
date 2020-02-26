@@ -17,7 +17,8 @@ import com.safframework.statemachine.model.BaseState
 class State(val name: BaseState): IState {
 
     private val transitions = hashMapOf<BaseEvent, Transition>() // 存储当前 State 相关的所有 Transition
-    private var entry:Entry?=null
+    private var entry:StateEntry?=null
+    private var exit:StateExit?=null
 
     /**
      * 当一个 Event 被状态机系统分发的时候，状态机用 Action 来进行响应
@@ -41,20 +42,33 @@ class State(val name: BaseState): IState {
         return this
     }
 
+    fun entry(block:StateEntry.() -> Unit): Unit {
+        entry = StateEntry().apply{
+            block()
+        }
+    }
+
+    fun exit(block:StateExit.() -> Unit): Unit {
+        exit = StateExit().apply{
+            block()
+        }
+    }
+
     /**
      * 进入 State 并执行所有的 Action
      */
     override fun enter() {
         entry?.let {
-            it.getActions().forEach{
-                action->action.invoke(this)
-            }
+            it.getActions().forEach{ action -> action.invoke(this) }
         }
     }
 
-    fun entry(block:Entry.() -> Unit): Unit {
-        entry = Entry().apply{
-            block()
+    /**
+     * 退出 State 并执行所有的 Action
+     */
+    fun exit() {
+        exit?.let {
+            it.getActions().forEach{ action -> action.invoke(this) }
         }
     }
 

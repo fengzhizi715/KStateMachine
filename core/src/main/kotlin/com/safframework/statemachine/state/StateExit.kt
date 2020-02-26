@@ -5,12 +5,12 @@ import com.safframework.statemachine.StateAction
 /**
  *
  * @FileName:
- *          com.safframework.statemachine.state.Entry
+ *          com.safframework.statemachine.state.StateExit
  * @author: Tony Shen
- * @date: 2020-02-26 23:36
+ * @date: 2020-02-26 23:57
  * @version: V1.0 <描述当前版本功能>
  */
-class Entry {
+class StateExit {
 
     private val actions = mutableListOf<StateAction>()
 

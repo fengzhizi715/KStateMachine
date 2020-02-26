@@ -40,6 +40,12 @@ fun main() {
                     println("Action: Cook")
                 }
             }
+
+            exit {
+                action {
+                    println("Exited [$it] State")
+                }
+            }
         }
 
         state(Eat()) {

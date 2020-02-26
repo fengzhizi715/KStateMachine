@@ -86,6 +86,8 @@ class StateMachine private constructor(private val initialState: BaseState) {
             val guard = transition.getGuard()?.invoke()?:true
 
             if (guard) {
+                getState(transition.getSourceState()).exit()
+
                 val state = transition.applyTransition { getState(stateContext.getTarget()) }
 
                 val callbacks = transitionCallbacks.toList()
