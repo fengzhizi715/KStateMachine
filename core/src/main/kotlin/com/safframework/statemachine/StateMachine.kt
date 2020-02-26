@@ -86,35 +86,7 @@ class StateMachine private constructor(private val initialState: BaseState) {
             val guard = transition.getGuard()?.invoke()?:true
 
             if (guard) {
-                getState(transition.getSourceState()).exit()
-
-                val state = transition.applyTransition { getState(stateContext.getTarget()) }
-
-                val callbacks = transitionCallbacks.toList()
-
-                globalInterceptor?.apply {
-                    stateContext(stateContext)
-                    transition(transition)
-                    stateExited(currentState)
-                }
-
-                callbacks.forEach { callback ->
-                    callback.enteringState(this, stateContext.getSource(), transition, stateContext.getTarget())
-                }
-
-                state.enter()
-
-                callbacks.forEach { callback ->
-                    callback.enteredState(this, stateContext.getSource(), transition, stateContext.getTarget())
-                }
-
-                globalInterceptor?.apply {
-                    stateEntered(state)
-                    stateChanged(currentState,state)
-                    transitionEnded(transition)
-                }
-
-                currentState = state
+                transitionSuccess(transition,stateContext)
             } else {
                 println("$transition 失败")
 
@@ -124,6 +96,38 @@ class StateMachine private constructor(private val initialState: BaseState) {
 
             globalInterceptor?.stateMachineError(this, StateMachineException("This state [${this.currentState.name}] doesn't support transition on ${e.javaClass.simpleName}"))
         }
+    }
+
+    private fun transitionSuccess(transition:Transition, stateContext: StateContext) {
+        getState(transition.getSourceState()).exit()
+
+        val state = transition.applyTransition { getState(stateContext.getTarget()) }
+
+        val callbacks = transitionCallbacks.toList()
+
+        globalInterceptor?.apply {
+            stateContext(stateContext)
+            transition(transition)
+            stateExited(currentState)
+        }
+
+        callbacks.forEach { callback ->
+            callback.enteringState(this, stateContext.getSource(), transition, stateContext.getTarget())
+        }
+
+        state.enter()
+
+        callbacks.forEach { callback ->
+            callback.enteredState(this, stateContext.getSource(), transition, stateContext.getTarget())
+        }
+
+        globalInterceptor?.apply {
+            stateEntered(state)
+            stateChanged(currentState,state)
+            transitionEnded(transition)
+        }
+
+        currentState = state
     }
 
     @Synchronized
