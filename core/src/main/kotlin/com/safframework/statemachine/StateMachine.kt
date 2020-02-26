@@ -49,8 +49,10 @@ class StateMachine private constructor(private val initialState: BaseState) {
      * 向状态机添加 State
      */
     fun state(stateName: BaseState, init: State.() -> Unit):StateMachine {
-        val state = State(stateName)
-        state.init()
+        val state = State(stateName).apply{
+            init()
+        }
+
         states.add(state)
         return this
     }
@@ -114,7 +116,7 @@ class StateMachine private constructor(private val initialState: BaseState) {
             } else {
                 println("$transition 失败")
 
-                globalInterceptor?.stateMachineError(this, StateMachineException("状态转换时 guard [${guard}], 状态 [${currentState.name}]，事件 [${e.javaClass.simpleName}]"))
+                globalInterceptor?.stateMachineError(this, StateMachineException("状态转换失败: guard [${guard}], 状态 [${currentState.name}]，事件 [${e.javaClass.simpleName}]"))
             }
         } catch (exception:Exception) {
 

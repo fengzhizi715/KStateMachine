@@ -30,9 +30,9 @@ class State(val name: BaseState): IState {
      * @param init
      */
     override fun transition(event: BaseEvent, targetState: BaseState, guard: Guard?, init: Transition.() -> Unit):IState {
-        val transition =
-            Transition(event, this.name, targetState, guard)
-        transition.init()
+        val transition = Transition(event, this.name, targetState, guard).apply {
+            init()
+        }
 
         if (transitions.containsKey(event)) { // 同一个 Event 不能对应多个 Transition，即 State 只能通过一个 Event 然后 Transition 到另一个 State
             throw StateMachineException("Adding multiple transitions for the same event is invalid")
