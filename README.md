@@ -89,6 +89,7 @@ Entered [WatchTV] State
 
 * 支持 DSL 构建的 FSM
 * 支持全局的拦截器
+* 支持进入状态、离开状态的Actions
 * 支持 RxJava 2
 
 

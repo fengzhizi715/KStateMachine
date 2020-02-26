@@ -66,7 +66,7 @@ class State(val name: BaseState): IState {
     /**
      * 退出 State 并执行所有的 Action
      */
-    fun exit() {
+    override fun exit() {
         exit?.let {
             it.getActions().forEach{ action -> action.invoke(this) }
         }

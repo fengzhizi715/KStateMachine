@@ -17,5 +17,7 @@ interface IState {
 
     fun enter()
 
+    fun exit()
+
     fun transition(event: BaseEvent, targetState: BaseState, guard: Guard?=null, init: Transition.() -> Unit): IState
 }
