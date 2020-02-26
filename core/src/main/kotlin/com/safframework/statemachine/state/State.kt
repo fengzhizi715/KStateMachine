@@ -18,7 +18,7 @@ import com.safframework.statemachine.model.BaseState
 class State(val name: BaseState): IState {
 
     private val transitions = hashMapOf<BaseEvent, Transition>() // 存储当前 State 相关的所有 Transition
-    private val stateActions = mutableListOf<StateAction>()  // 当前 State 相关的所有 Action
+    private val stateActions = mutableListOf<StateAction>()      // 当前 State 相关的所有 Action
 
     /**
      * 当一个 Event 被状态机系统分发的时候，状态机用 Action 来进行响应

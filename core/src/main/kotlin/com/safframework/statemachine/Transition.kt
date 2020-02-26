@@ -48,7 +48,6 @@ class Transition(private val event: BaseEvent, private val sourceState: BaseStat
         actions.add(action)
     }
 
-
     /**
      * 转换状态
      */
