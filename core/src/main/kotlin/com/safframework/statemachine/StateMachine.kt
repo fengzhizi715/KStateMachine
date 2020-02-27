@@ -131,7 +131,9 @@ class StateMachine private constructor(private val initialState: BaseState) {
     }
 
     @Synchronized
-    fun getCurrentState(): BaseState = this.currentState.name
+    fun getCurrentState(): BaseState? = if (isCurrentStateInitialzed()) this.currentState.name else null
+
+    private fun isCurrentStateInitialzed() = ::currentState.isInitialized
 
     /**
      * 注册 TransitionCallback
