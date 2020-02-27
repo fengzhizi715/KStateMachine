@@ -24,6 +24,7 @@ class StateMachine private constructor(private val initialState: BaseState) {
     private val initialized = AtomicBoolean(false) // 是否初始化
     private var globalInterceptor: GlobalInterceptor?=null
     private val transitionCallbacks: MutableList<TransitionCallback> = mutableListOf()
+    private val path = mutableListOf<StateMachine>()
 
     /**
      * 设置状态机全局的拦截器，使用时必须要在 initialize() 之前
@@ -131,9 +132,9 @@ class StateMachine private constructor(private val initialState: BaseState) {
     }
 
     @Synchronized
-    fun getCurrentState(): BaseState? = if (isCurrentStateInitialzed()) this.currentState.name else null
+    fun getCurrentState(): BaseState? = if (isCurrentStateInitialized()) this.currentState.name else null
 
-    private fun isCurrentStateInitialzed() = ::currentState.isInitialized
+    private fun isCurrentStateInitialized() = ::currentState.isInitialized
 
     /**
      * 注册 TransitionCallback
