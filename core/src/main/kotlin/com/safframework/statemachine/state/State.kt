@@ -15,7 +15,7 @@ import com.safframework.statemachine.model.BaseState
  * @date: 2020-02-14 21:42
  * @version: V1.0 <描述当前版本功能>
  */
-open class State(val name: BaseState): IState {
+class State(val name: BaseState): IState {
 
     private val transitions = hashMapOf<BaseEvent, Transition>() // 存储当前 State 相关的所有 Transition
     private var entry:StateEntry?=null
