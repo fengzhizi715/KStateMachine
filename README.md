@@ -24,11 +24,15 @@ fun main() {
     val sm = StateMachine.buildStateMachine(Initial()) {
 
         state(Initial()) {
-            action {
-                println("Entered [$it] State")
+
+            entry {
+                action {
+                    println("Entered [$it] State")
+                }
             }
 
             transition(Cook(), Eat()) {
+
                 action {
                     println("Action: Wash Vegetables")
                 }
@@ -37,12 +41,20 @@ fun main() {
                     println("Action: Cook")
                 }
             }
+
+            exit {
+                action {
+                    println("Exited [$it] State")
+                }
+            }
         }
 
         state(Eat()) {
 
-            action {
-                println("Entered [$it] State")
+            entry{
+                action {
+                    println("Entered [$it] State")
+                }
             }
 
             transition(WashDishes(), WatchTV()) {
@@ -59,8 +71,10 @@ fun main() {
 
         state(WatchTV()) {
 
-            action {
-                println("Entered [$it] State")
+            entry{
+                action {
+                    println("Entered [$it] State")
+                }
             }
         }
     }
