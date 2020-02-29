@@ -23,6 +23,7 @@ open class State(val name: BaseState): IState {
     var owner: StateMachine? = null
 
     /**
+     * 向 State 添加 Transition
      * 当一个 Event 被状态机系统分发的时候，状态机用 Action 来进行响应
      * 状态转换可以使用 F(S, E) -> (A, S’) 表示
      *
@@ -75,7 +76,7 @@ open class State(val name: BaseState): IState {
     }
 
     /**
-     * 通过 Event 获取 Transition
+     * 通过 Event 查找 State 储存的 Transition
      */
     fun getTransitionForEvent(event: BaseEvent): Transition = transitions[event]?:throw IllegalStateException("Event $event isn't registered with state ${this.name}")
 
