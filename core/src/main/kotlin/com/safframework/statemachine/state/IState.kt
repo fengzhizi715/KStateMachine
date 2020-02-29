@@ -1,7 +1,7 @@
 package com.safframework.statemachine.state
 
 import com.safframework.statemachine.Guard
-import com.safframework.statemachine.Transition
+import com.safframework.statemachine.transition.Transition
 import com.safframework.statemachine.model.BaseEvent
 import com.safframework.statemachine.model.BaseState
 

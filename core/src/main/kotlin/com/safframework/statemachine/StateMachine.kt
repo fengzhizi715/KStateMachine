@@ -7,6 +7,7 @@ import com.safframework.statemachine.interceptor.GlobalInterceptor
 import com.safframework.statemachine.model.BaseEvent
 import com.safframework.statemachine.model.BaseState
 import com.safframework.statemachine.state.State
+import com.safframework.statemachine.transition.Transition
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
@@ -112,7 +113,7 @@ class StateMachine private constructor(var name: String?=null,private val initia
      * @param transition
      * @param stateContext
      */
-    private fun transitionSuccess(transition:Transition, stateContext: StateContext) {
+    private fun transitionSuccess(transition: Transition, stateContext: StateContext) {
         getState(transition.getSourceState()).exit()
 
         val state = transition.applyTransition { getState(stateContext.getTarget()) }

@@ -2,6 +2,7 @@ package com.safframework.statemachine
 
 import com.safframework.statemachine.model.BaseState
 import com.safframework.statemachine.model.TransitionEvent
+import com.safframework.statemachine.transition.Transition
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
 

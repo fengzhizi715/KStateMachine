@@ -2,7 +2,7 @@ package com.safframework.statemachine.context
 
 import com.safframework.statemachine.model.BaseEvent
 import com.safframework.statemachine.model.BaseState
-import com.safframework.statemachine.Transition
+import com.safframework.statemachine.transition.Transition
 
 /**
  * 默认的状态上下文

@@ -1,7 +1,7 @@
 package com.safframework.statemachine.model
 
 import com.safframework.statemachine.StateMachine
-import com.safframework.statemachine.Transition
+import com.safframework.statemachine.transition.Transition
 
 /**
  *

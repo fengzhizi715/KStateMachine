@@ -1,5 +1,7 @@
-package com.safframework.statemachine
+package com.safframework.statemachine.transition
 
+import com.safframework.statemachine.Guard
+import com.safframework.statemachine.TransitionAction
 import com.safframework.statemachine.context.StateContext
 import com.safframework.statemachine.model.BaseEvent
 import com.safframework.statemachine.model.BaseState
@@ -8,12 +10,12 @@ import com.safframework.statemachine.state.State
 /**
  * 从一个状态切换到另一个状态
  * @FileName:
- *          com.safframework.statemachine.Transition
+ *          com.safframework.statemachine.transition.Transition
  * @author: Tony Shen
  * @date: 2020-02-14 21:40
  * @version: V1.0 <描述当前版本功能>
  */
-class Transition(private val event: BaseEvent, private val sourceState: BaseState, private val targetState: BaseState, private var guard:Guard?= null) {
+class Transition(private val event: BaseEvent, private val sourceState: BaseState, private val targetState: BaseState, private var guard: Guard?= null) {
 
     private val actions = mutableListOf<TransitionAction>()
 
@@ -60,7 +62,7 @@ class Transition(private val event: BaseEvent, private val sourceState: BaseStat
         this.guard = guard
     }
 
-    fun getGuard():Guard? = guard
+    fun getGuard(): Guard? = guard
 
     fun getSourceState(): BaseState = sourceState
 
