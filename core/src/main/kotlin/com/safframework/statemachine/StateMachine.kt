@@ -143,7 +143,18 @@ class StateMachine private constructor(var name: String?=null,private val initia
 
     private fun isCurrentStateInitialized() = ::currentState.isInitialized
 
+    fun processEvent(event: BaseEvent): Boolean {
+        return currentState?.processEvent(event) ?: false
+    }
+
     internal fun executeTransition(transition: Transition, event: BaseEvent) {
+    }
+
+    internal fun addParent(parent: StateMachine) {
+        path.add(0, parent)
+        states.forEach {
+            it.addParent(parent)
+        }
     }
 
     /**

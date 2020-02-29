@@ -88,5 +88,7 @@ open class State(val name: BaseState): IState {
         }?:return false
     }
 
+    internal open fun addParent(parent: StateMachine) = Unit
+
     override fun toString(): String = "state: ${name.javaClass.simpleName},owner: ${owner?.name}"
 }
