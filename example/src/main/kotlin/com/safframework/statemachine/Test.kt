@@ -26,7 +26,7 @@ fun main() {
 
             entry {
                 action {
-                    println("Entered [$it] State")
+                    println("Entered [${it.name}] State")
                 }
             }
 
@@ -43,7 +43,7 @@ fun main() {
 
             exit {
                 action {
-                    println("Exited [$it] State")
+                    println("Exited [${it.name}] State")
                 }
             }
         }
@@ -52,7 +52,7 @@ fun main() {
 
             entry{
                 action {
-                    println("Entered [$it] State")
+                    println("Entered [${it.name}] State")
                 }
             }
 
@@ -72,7 +72,7 @@ fun main() {
 
             entry{
                 action {
-                    println("Entered [$it] State")
+                    println("Entered [${it.name}] State")
                 }
             }
         }

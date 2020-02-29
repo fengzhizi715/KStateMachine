@@ -88,5 +88,5 @@ open class State(val name: BaseState): IState {
         }?:return false
     }
 
-    override fun toString(): String = name.javaClass.simpleName
+    override fun toString(): String = "state: ${name.javaClass.simpleName},owner: ${owner?.name}"
 }

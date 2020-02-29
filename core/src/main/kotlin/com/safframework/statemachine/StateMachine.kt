@@ -139,7 +139,7 @@ class StateMachine private constructor(var name: String?=null,private val initia
     }
 
     @Synchronized
-    fun getCurrentState(): BaseState? = if (isCurrentStateInitialized()) this.currentState.name else null
+    fun getCurrentState(): State? = if (isCurrentStateInitialized()) this.currentState else null
 
     private fun isCurrentStateInitialized() = ::currentState.isInitialized
 
