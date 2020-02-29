@@ -43,6 +43,8 @@ class StateMachine private constructor(var name: String?=null,private val initia
         if(initialized.compareAndSet(false, true)){
             currentState = getState(initialState)
             currentState.owner = this@StateMachine
+            path.add(0, this)
+            currentState.addParent(this)
             descendantStates.plus(currentState)
             globalInterceptor?.stateEntered(currentState)
             currentState.enter()
@@ -56,6 +58,7 @@ class StateMachine private constructor(var name: String?=null,private val initia
         val state = State(stateName).apply{
             init()
             owner = this@StateMachine
+            addParent(this@StateMachine)
             descendantStates.plus(this.getDescendantStates())
         }
 
