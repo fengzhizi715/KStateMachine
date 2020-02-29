@@ -41,6 +41,7 @@ class StateMachine private constructor(var name: String?=null,private val initia
     fun initialize() {
         if(initialized.compareAndSet(false, true)){
             currentState = getState(initialState)
+            currentState.owner = this@StateMachine
             globalInterceptor?.stateEntered(currentState)
             currentState.enter()
         }
@@ -52,6 +53,7 @@ class StateMachine private constructor(var name: String?=null,private val initia
     fun state(stateName: BaseState, init: State.() -> Unit):StateMachine {
         val state = State(stateName).apply{
             init()
+            owner = this@StateMachine
         }
 
         states.add(state)
@@ -140,6 +142,9 @@ class StateMachine private constructor(var name: String?=null,private val initia
     fun getCurrentState(): BaseState? = if (isCurrentStateInitialized()) this.currentState.name else null
 
     private fun isCurrentStateInitialized() = ::currentState.isInitialized
+
+    internal fun executeTransition(transition: Transition, event: BaseEvent) {
+    }
 
     /**
      * 注册 TransitionCallback

@@ -80,5 +80,13 @@ open class State(val name: BaseState): IState {
      */
     fun getTransitionForEvent(event: BaseEvent): Transition = transitions[event]?:throw IllegalStateException("Event $event isn't registered with state ${this.name}")
 
+    internal open fun processEvent(event: BaseEvent): Boolean {
+
+        getTransitionForEvent(event)?.takeIf { owner!=null }?.let {
+            owner!!.executeTransition(it, event)
+            return true
+        }?:return false
+    }
+
     override fun toString(): String = name.javaClass.simpleName
 }
