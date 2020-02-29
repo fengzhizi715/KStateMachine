@@ -25,6 +25,7 @@ class StateMachine private constructor(var name: String?=null,private val initia
     private var globalInterceptor: GlobalInterceptor?=null
     private val transitionCallbacks: MutableList<TransitionCallback> = mutableListOf()
     private val path = mutableListOf<StateMachine>()
+    internal val descendantStates: Set<State> = mutableSetOf()
 
     /**
      * 设置状态机全局的拦截器，使用时必须要在 initialize() 之前
@@ -42,6 +43,7 @@ class StateMachine private constructor(var name: String?=null,private val initia
         if(initialized.compareAndSet(false, true)){
             currentState = getState(initialState)
             currentState.owner = this@StateMachine
+            descendantStates.plus(currentState)
             globalInterceptor?.stateEntered(currentState)
             currentState.enter()
         }
@@ -54,6 +56,7 @@ class StateMachine private constructor(var name: String?=null,private val initia
         val state = State(stateName).apply{
             init()
             owner = this@StateMachine
+            descendantStates.plus(this.getDescendantStates())
         }
 
         states.add(state)
@@ -157,6 +160,17 @@ class StateMachine private constructor(var name: String?=null,private val initia
         }
     }
 
+    fun getAllActiveStates(): Set<State> {
+
+        if (!isCurrentStateInitialized()) {
+            return emptySet()
+        }
+
+        val activeStates: MutableSet<State> = mutableSetOf(currentState)
+        activeStates.addAll(currentState.getAllActiveStates())
+        return activeStates.toSet()
+    }
+
     /**
      * 注册 TransitionCallback
      */
@@ -173,11 +187,8 @@ class StateMachine private constructor(var name: String?=null,private val initia
          * @param name 状态机的名称
          * @param initialStateName 初始化状态机的 block
          */
-        fun buildStateMachine(name:String = "StateMachine", initialStateName: BaseState, init: StateMachine.() -> Unit): StateMachine {
-
-            return StateMachine(name,initialStateName).apply{
-                init()
-            }
+        fun buildStateMachine(name:String = "StateMachine", initialStateName: BaseState, init: StateMachine.() -> Unit): StateMachine  = StateMachine(name,initialStateName).apply{
+            init()
         }
     }
 }

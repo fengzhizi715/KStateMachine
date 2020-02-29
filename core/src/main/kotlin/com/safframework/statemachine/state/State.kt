@@ -90,5 +90,9 @@ open class State(val name: BaseState): IState {
 
     internal open fun addParent(parent: StateMachine) = Unit
 
+    internal open fun getDescendantStates(): Set<State> = setOf()
+
+    internal open fun getAllActiveStates(): Collection<State> = setOf()
+
     override fun toString(): String = "state: ${name.javaClass.simpleName},owner: ${owner?.name}"
 }

@@ -22,4 +22,8 @@ class SubState(val subStateName: BaseState,val subStateMachine: StateMachine):St
     override fun addParent(parent: StateMachine) {
         subStateMachine.addParent(parent)
     }
+
+    override fun getDescendantStates(): Set<State> = subStateMachine.descendantStates
+
+    override fun getAllActiveStates(): Collection<State> = subStateMachine.getAllActiveStates()
 }
