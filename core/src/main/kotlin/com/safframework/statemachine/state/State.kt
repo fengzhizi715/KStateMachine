@@ -51,13 +51,13 @@ open class State(val name: BaseState): IState {
         return this
     }
 
-    fun entry(block:StateEntry.() -> Unit): Unit {
+    fun entry(block:StateEntry.() -> Unit) {
         entry = StateEntry().apply{
             block()
         }
     }
 
-    fun exit(block:StateExit.() -> Unit): Unit {
+    fun exit(block:StateExit.() -> Unit) {
         exit = StateExit().apply{
             block()
         }

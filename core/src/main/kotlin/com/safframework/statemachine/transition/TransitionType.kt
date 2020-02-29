@@ -9,7 +9,7 @@ package com.safframework.statemachine.transition
  * @version: V1.0 <描述当前版本功能>
  */
 enum class TransitionType {
-    External,
-    Local,
-    Internal
+    External,  // 当source和target不同时
+    Local,     // 类似于 External，但是不会跳出 Composite state
+    Internal   // 当source和target相同时
 }

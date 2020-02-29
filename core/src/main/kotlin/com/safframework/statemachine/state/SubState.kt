@@ -12,7 +12,18 @@ import com.safframework.statemachine.model.BaseState
  * @date: 2020-02-28 00:03
  * @version: V1.0 <描述当前版本功能>
  */
-class SubState(val subStateName: BaseState,val subStateMachine: StateMachine):State(subStateName) {
+class SubState(val subStateName: BaseState,vararg states: State):State(subStateName) {
+
+    private val subStateMachine: StateMachine
+
+    init {
+        val stateList = states.toMutableList()
+        val initialState = stateList.removeAt(0)
+        subStateMachine = StateMachine.buildStateMachine(subStateName.toString(),initialState.name) {
+            states.forEach { this.addState(it) }
+        }
+        subStateMachine.container = this
+    }
 
     override fun processEvent(event: BaseEvent): Boolean = when {
         subStateMachine.processEvent(event) -> true

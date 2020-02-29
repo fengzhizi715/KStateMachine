@@ -8,6 +8,7 @@ import com.safframework.statemachine.model.BaseEvent
 import com.safframework.statemachine.model.BaseState
 import com.safframework.statemachine.state.State
 import com.safframework.statemachine.transition.Transition
+import com.safframework.statemachine.transition.TransitionType
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
@@ -27,6 +28,7 @@ class StateMachine private constructor(var name: String?=null,private val initia
     private val transitionCallbacks: MutableList<TransitionCallback> = mutableListOf()
     private val path = mutableListOf<StateMachine>()
     internal val descendantStates: Set<State> = mutableSetOf()
+    lateinit var container:State
 
     /**
      * 设置状态机全局的拦截器，使用时必须要在 initialize() 之前
@@ -63,6 +65,14 @@ class StateMachine private constructor(var name: String?=null,private val initia
             descendantStates.plus(this.getDescendantStates())
         }
 
+        states.add(state)
+        return this
+    }
+
+    fun addState(state:State):StateMachine {
+        state.owner = this@StateMachine
+        state.addParent(this@StateMachine)
+        descendantStates.plus(state.getDescendantStates())
         states.add(state)
         return this
     }
@@ -150,11 +160,83 @@ class StateMachine private constructor(var name: String?=null,private val initia
 
     private fun isCurrentStateInitialized() = ::currentState.isInitialized
 
-    fun processEvent(event: BaseEvent): Boolean {
-        return currentState?.processEvent(event) ?: false
-    }
+    fun processEvent(event: BaseEvent): Boolean = if (isCurrentStateInitialized()) currentState.processEvent(event) else false
 
     internal fun executeTransition(transition: Transition, event: BaseEvent) {
+
+        val stateContext: StateContext = DefaultStateContext(event, transition, transition.getSourceState(), transition.getTargetState())
+
+        when (transition.getTransitionType()) {
+            TransitionType.External -> doExternalTransition(stateContext)
+//            TransitionType.Local    -> doLocalTransition(currentState, transition.getTargetState(), event)
+//            TransitionType.Internal -> doInternalTransition(event)
+        }
+    }
+
+    private fun doExternalTransition(stateContext: StateContext) {
+        val targetState = getState(stateContext.getTarget())
+        val lowestCommonAncestor: StateMachine = findLowestCommonAncestor(targetState)
+        lowestCommonAncestor.switchState(stateContext)
+    }
+
+    private fun findLowestCommonAncestor(targetState: State): StateMachine {
+        checkNotNull(targetState.owner) { "$targetState is not contained in state machine model." }
+        val targetPath = targetState.owner!!.path
+
+        (1..targetPath.size).forEach { index ->
+            try {
+                val targetAncestor = targetPath[index]
+                val localAncestor = path[index]
+                if (targetAncestor != localAncestor) {
+                    return path[index - 1]
+                }
+            } catch (e: IndexOutOfBoundsException) {
+                return path[index - 1]
+            }
+        }
+        return this
+    }
+
+    private fun switchState(stateContext: StateContext) {
+        exitState(stateContext)
+        executeAction(stateContext)
+        enterState(stateContext)
+    }
+
+    internal fun exitState(stateContext: StateContext) {
+        currentState.exit() ?: throw IllegalStateException("current state is null")
+    }
+
+    private fun executeAction(stateContext: StateContext) {
+        val transition = stateContext.getTransition()
+        transition.transit(stateContext)
+    }
+
+    internal fun enterState(stateContext: StateContext) {
+        val targetState = getState(stateContext.getTarget())
+        val targetLevel = targetState.owner!!.path.size
+        val localLevel = path.size
+        val nextState: State = when {
+            targetLevel < localLevel -> getState(initialState)
+            targetLevel == localLevel -> targetState
+            // targetLevel > localLevel
+            else -> findNextStateOnPathTo(targetState)
+        }
+
+        currentState = if (states.contains(nextState)) {
+            nextState
+        } else {
+            getState(initialState)
+        }
+        currentState.enter() ?: throw RuntimeException("CurrentState can't be null here. Yet you see this exception :(")
+    }
+
+    private fun findNextStateOnPathTo(targetState: State): State = findNextStateMachineOnPathTo(targetState).container
+
+    private fun findNextStateMachineOnPathTo(targetState: State): StateMachine {
+        val localLevel = path.size
+        val targetOwner = targetState.owner!!
+        return targetOwner.path[localLevel]
     }
 
     internal fun addParent(parent: StateMachine) {
@@ -186,7 +268,6 @@ class StateMachine private constructor(var name: String?=null,private val initia
     fun unregisterCallback(transitionCallback: TransitionCallback) = transitionCallbacks.remove(transitionCallback)
 
     companion object {
-
         /**
          * @param name 状态机的名称
          * @param initialStateName 初始化状态机的 block

@@ -68,5 +68,9 @@ class Transition(private val event: BaseEvent, private val sourceState: BaseStat
 
     fun getTargetState(): BaseState = targetState
 
+    fun getTransitionType(): TransitionType = transitionType
+
+    fun getActions(): MutableList<TransitionAction> = actions
+
     override fun toString(): String = "${sourceState.javaClass.simpleName} transition to ${targetState.javaClass.simpleName} on ${event.javaClass.simpleName}"
 }
