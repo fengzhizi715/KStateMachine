@@ -6,6 +6,7 @@ import com.safframework.statemachine.transition.Transition
 import com.safframework.statemachine.exception.StateMachineException
 import com.safframework.statemachine.model.BaseEvent
 import com.safframework.statemachine.model.BaseState
+import com.safframework.statemachine.transition.TransitionType
 
 /**
  * 构成状态机的基本单位，状态机在任何特定时间都可处于某一状态。
@@ -32,15 +33,15 @@ open class State(val name: BaseState): IState {
      * @param guard: 断言接口，为了转换操作执行后检测结果是否满足特定条件从一个状态切换到某一个状态
      * @param init
      */
-    override fun transition(event: BaseEvent, targetState: BaseState, guard: Guard?, init: Transition.() -> Unit):IState {
+    override fun transition(event: BaseEvent, targetState: BaseState, transitionType: TransitionType, guard: Guard?, init: Transition.() -> Unit):IState {
+
         val transition = Transition(
             event,
             this.name,
             targetState,
+            transitionType,
             guard
-        ).apply {
-            init()
-        }
+        ).apply(init)
 
         if (transitions.containsKey(event)) { // 同一个 Event 不能对应多个 Transition，即 State 只能通过一个 Event 然后 Transition 到另一个 State
             throw StateMachineException("Adding multiple transitions for the same event is invalid")
