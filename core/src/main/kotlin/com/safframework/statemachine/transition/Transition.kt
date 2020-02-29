@@ -5,7 +5,6 @@ import com.safframework.statemachine.TransitionAction
 import com.safframework.statemachine.context.StateContext
 import com.safframework.statemachine.model.BaseEvent
 import com.safframework.statemachine.model.BaseState
-import com.safframework.statemachine.state.State
 
 /**
  * 从一个状态切换到另一个状态
@@ -44,16 +43,16 @@ class Transition(private val event: BaseEvent, private val sourceState: BaseStat
     }
 
     /**
-     * 添加一个 action，在状态转换时执行(时间点是在状态转换之前)
+     * 添加一个 action，在状态转换时执行
      */
     fun action(action: TransitionAction) {
         actions.add(action)
     }
 
-    /**
-     * 转换状态
-     */
-    fun applyTransition(getNextState: (BaseState) -> State): State = getNextState(targetState)
+//    /**
+//     * 转换状态
+//     */
+//    fun applyTransition(getNextState: (BaseState) -> State): State = getNextState(targetState)
 
     /**
      * 设置检测条件，判断是否满足状态转换的条件，满足则执行状态转换
