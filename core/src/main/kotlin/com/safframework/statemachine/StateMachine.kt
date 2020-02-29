@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean
  * @date: 2020-02-14 21:50
  * @version: V1.0 <描述当前版本功能>
  */
-class StateMachine private constructor(private val initialState: BaseState) {
+class StateMachine private constructor(var name: String?=null,private val initialState: BaseState) {
 
     private lateinit var currentState: State    // 当前状态
     private val states = mutableListOf<State>() // 状态列表
@@ -99,6 +99,11 @@ class StateMachine private constructor(private val initialState: BaseState) {
         }
     }
 
+    /**
+     * 状态转换成功
+     * @param transition
+     * @param stateContext
+     */
     private fun transitionSuccess(transition:Transition, stateContext: StateContext) {
         getState(transition.getSourceState()).exit()
 
@@ -148,10 +153,15 @@ class StateMachine private constructor(private val initialState: BaseState) {
 
     companion object {
 
-        fun buildStateMachine(initialStateName: BaseState, init: StateMachine.() -> Unit): StateMachine {
-            val stateMachine = StateMachine(initialStateName)
-            stateMachine.init()
-            return stateMachine
+        /**
+         * @param name 状态机的名称
+         * @param initialStateName 初始化状态机的 block
+         */
+        fun buildStateMachine(name:String = "StateMachine", initialStateName: BaseState, init: StateMachine.() -> Unit): StateMachine {
+
+            return StateMachine(name,initialStateName).apply{
+                init()
+            }
         }
     }
 }
