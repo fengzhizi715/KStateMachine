@@ -166,8 +166,8 @@ class StateMachine private constructor(var name: String?=null,private val initia
         val stateContext: StateContext = DefaultStateContext(event, transition, transition.getSourceState(), transition.getTargetState())
         when (transition.getTransitionType()) {
             TransitionType.External -> doExternalTransition(stateContext)
-//            TransitionType.Local    -> doLocalTransition(currentState, transition.getTargetState(), event)
-//            TransitionType.Internal -> doInternalTransition(event)
+            TransitionType.Local    -> doLocalTransition(stateContext)
+            TransitionType.Internal -> executeAction(stateContext)
         }
     }
 
@@ -175,6 +175,27 @@ class StateMachine private constructor(var name: String?=null,private val initia
         val targetState = getState(stateContext.getTarget())
         val lowestCommonAncestor: StateMachine = findLowestCommonAncestor(targetState)
         lowestCommonAncestor.switchState(stateContext)
+    }
+
+    private fun doLocalTransition(stateContext: StateContext) {
+        val previousState = getState(stateContext.getSource())
+        val targetState = getState(stateContext.getTarget())
+        when {
+            previousState.getDescendantStates().contains(targetState) -> {
+                val stateMachine = findNextStateMachineOnPathTo(targetState)
+                stateMachine.switchState(stateContext)
+            }
+            targetState.getDescendantStates().contains(previousState) -> {
+                val targetLevel = targetState.owner!!.path.size
+                val stateMachine = path[targetLevel]
+                stateMachine.switchState(stateContext)
+            }
+            previousState == targetState -> {
+                // TODO clarify desired behavior for local transition on self currently behaves like an internal transition
+                executeAction(stateContext)
+            }
+            else -> doExternalTransition(stateContext)
+        }
     }
 
     private fun findLowestCommonAncestor(targetState: State): StateMachine {
@@ -204,7 +225,16 @@ class StateMachine private constructor(var name: String?=null,private val initia
 
                 exitState(stateContext)
                 executeAction(stateContext)
+
+                val callbacks = transitionCallbacks.toList()
+                callbacks.forEach { callback ->
+                    callback.enteringState(this, stateContext.getSource(), stateContext.getTransition(), stateContext.getTarget())
+                }
                 enterState(stateContext)
+
+                callbacks.forEach { callback ->
+                    callback.enteredState(this, stateContext.getSource(), stateContext.getTransition(), stateContext.getTarget())
+                }
             } else {
                 println("${stateContext.getTransition()} 失败")
                 globalInterceptor?.stateMachineError(this, StateMachineException("状态转换失败: guard [${guard}], 状态 [${currentState.name}]，事件 [${stateContext.getEvent().javaClass.simpleName}]"))
@@ -216,6 +246,12 @@ class StateMachine private constructor(var name: String?=null,private val initia
 
     internal fun exitState(stateContext: StateContext) {
         currentState.exit()
+
+        globalInterceptor?.apply {
+            stateContext(stateContext)
+            transition(stateContext.getTransition())
+            stateExited(currentState)
+        }
     }
 
     private fun executeAction(stateContext: StateContext) {
