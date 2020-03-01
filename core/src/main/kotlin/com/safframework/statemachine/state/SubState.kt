@@ -22,6 +22,7 @@ class SubState(val subStateName: BaseState,vararg states: State):State(subStateN
         subStateMachine = StateMachine.buildStateMachine(subStateName.toString(),initialState.name) {
             states.forEach { this.addState(it) }
         }
+        subStateMachine.initialize()
         subStateMachine.container = this
     }
 

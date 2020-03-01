@@ -2,6 +2,7 @@ package com.safframework.statemachine
 
 import com.safframework.statemachine.context.DefaultStateContext
 import com.safframework.statemachine.context.StateContext
+import com.safframework.statemachine.exception.StateMachineException
 import com.safframework.statemachine.interceptor.GlobalInterceptor
 import com.safframework.statemachine.model.BaseEvent
 import com.safframework.statemachine.model.BaseState
@@ -162,9 +163,7 @@ class StateMachine private constructor(var name: String?=null,private val initia
     fun processEvent(event: BaseEvent): Boolean = if (isCurrentStateInitialized()) currentState.processEvent(event) else false
 
     internal fun executeTransition(transition: Transition, event: BaseEvent) {
-
         val stateContext: StateContext = DefaultStateContext(event, transition, transition.getSourceState(), transition.getTargetState())
-
         when (transition.getTransitionType()) {
             TransitionType.External -> doExternalTransition(stateContext)
 //            TransitionType.Local    -> doLocalTransition(currentState, transition.getTargetState(), event)
@@ -197,11 +196,22 @@ class StateMachine private constructor(var name: String?=null,private val initia
     }
 
     private fun switchState(stateContext: StateContext) {
-        globalInterceptor?.transitionStarted(stateContext.getTransition())
+        try {
+            val guard = stateContext.getTransition().getGuard()?.invoke()?:true
 
-        exitState(stateContext)
-        executeAction(stateContext)
-        enterState(stateContext)
+            if (guard) {
+                globalInterceptor?.transitionStarted(stateContext.getTransition())
+
+                exitState(stateContext)
+                executeAction(stateContext)
+                enterState(stateContext)
+            } else {
+                println("${stateContext.getTransition()} 失败")
+                globalInterceptor?.stateMachineError(this, StateMachineException("状态转换失败: guard [${guard}], 状态 [${currentState.name}]，事件 [${stateContext.getEvent().javaClass.simpleName}]"))
+            }
+        } catch (exception:Exception) {
+            globalInterceptor?.stateMachineError(this, StateMachineException("This state [${this.currentState.name}] doesn't support transition on ${stateContext.getEvent().javaClass.simpleName}"))
+        }
     }
 
     internal fun exitState(stateContext: StateContext) {
