@@ -84,11 +84,11 @@ open class State(val name: BaseState): IState {
     /**
      * 通过 Event 查找 State 储存的 Transition
      */
-    fun getTransitionForEvent(event: BaseEvent): Transition = transitions[event]?:throw IllegalStateException("Event $event isn't registered with state ${this.name}")
+    private fun getTransitionForEvent(event: BaseEvent): Transition = transitions[event]?:throw IllegalStateException("Event $event isn't registered with state ${this.name}")
 
     internal open fun processEvent(event: BaseEvent): Boolean {
 
-        getTransitionForEvent(event)?.takeIf { owner!=null }?.let {
+        getTransitionForEvent(event).takeIf { owner!=null }?.let {
             owner!!.executeTransition(it, event)
             return true
         }?:return false
