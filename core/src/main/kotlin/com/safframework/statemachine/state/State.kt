@@ -33,7 +33,7 @@ open class State(val name: BaseState): IState {
      * @param guard: 断言接口，为了转换操作执行后检测结果是否满足特定条件从一个状态切换到某一个状态
      * @param init
      */
-    override fun transition(event: BaseEvent, targetState: BaseState, transitionType: TransitionType, guard: Guard?, init: Transition.() -> Unit):IState {
+    override fun transition(event: BaseEvent, targetState: BaseState, transitionType: TransitionType, guard: Guard?, init: Transition.() -> Unit):State {
 
         val transition = Transition(
             event,

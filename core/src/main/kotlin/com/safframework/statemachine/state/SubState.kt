@@ -12,7 +12,7 @@ import com.safframework.statemachine.model.BaseState
  * @date: 2020-02-28 00:03
  * @version: V1.0 <描述当前版本功能>
  */
-class SubState(val subStateName: BaseState,vararg states: State):State(subStateName) {
+class SubState(subStateName: BaseState,vararg states: State):State(subStateName) {
 
     private val subStateMachine: StateMachine
 
@@ -27,7 +27,7 @@ class SubState(val subStateName: BaseState,vararg states: State):State(subStateN
     }
 
     override fun processEvent(event: BaseEvent): Boolean = when {
-        subStateMachine.processEvent(event) -> true
+        subStateMachine.sendEvent(event) -> true
         else -> super.processEvent(event)
     }
 

@@ -82,85 +82,12 @@ class StateMachine private constructor(var name: String?=null,private val initia
      */
     private fun getState(stateType: BaseState): State = states.firstOrNull { stateType.javaClass == it.name.javaClass } ?: throw NoSuchElementException(stateType.javaClass.canonicalName)
 
-//    /**
-//     * 向状态机发送 Event，执行状态转换
-//     */
-//    @Synchronized
-//    fun sendEvent(e: BaseEvent) {
-//        try {
-//            val transition = currentState.getTransitionForEvent(e)
-//
-//            globalInterceptor?.transitionStarted(transition)
-//
-//            val stateContext: StateContext = DefaultStateContext(e, transition, transition.getSourceState(), transition.getTargetState())
-//
-//            //状态转换之前执行的 action(Transition 内部的 action), action执行失败表示不接受事件，返回false
-//            val accept = transition.transit(stateContext)
-//
-//            if (!accept) {
-//                //状态机发生异常
-//                globalInterceptor?.stateMachineError(this, StateMachineException("状态转换失败,source ${currentState.name} -> target ${transition.getTargetState()} Event ${e}"))
-//                return
-//            }
-//
-//            val guard = transition.getGuard()?.invoke()?:true
-//
-//            if (guard) {
-//                transitionSuccess(transition,stateContext)
-//            } else {
-//                println("$transition 失败")
-//
-//                globalInterceptor?.stateMachineError(this, StateMachineException("状态转换失败: guard [${guard}], 状态 [${currentState.name}]，事件 [${e.javaClass.simpleName}]"))
-//            }
-//        } catch (exception:Exception) {
-//
-//            globalInterceptor?.stateMachineError(this, StateMachineException("This state [${this.currentState.name}] doesn't support transition on ${e.javaClass.simpleName}"))
-//        }
-//    }
-//
-//    /**
-//     * 状态转换成功
-//     * @param transition
-//     * @param stateContext
-//     */
-//    private fun transitionSuccess(transition: Transition, stateContext: StateContext) {
-//        getState(transition.getSourceState()).exit()
-//
-//        val state = transition.applyTransition { getState(stateContext.getTarget()) }
-//
-//        val callbacks = transitionCallbacks.toList()
-//
-//        globalInterceptor?.apply {
-//            stateContext(stateContext)
-//            transition(transition)
-//            stateExited(currentState)
-//        }
-//
-//        callbacks.forEach { callback ->
-//            callback.enteringState(this, stateContext.getSource(), transition, stateContext.getTarget())
-//        }
-//
-//        state.enter()
-//
-//        callbacks.forEach { callback ->
-//            callback.enteredState(this, stateContext.getSource(), transition, stateContext.getTarget())
-//        }
-//
-//        globalInterceptor?.apply {
-//            stateEntered(state)
-//            stateChanged(currentState,state)
-//            transitionEnded(transition)
-//        }
-//
-//        currentState = state
-//    }
-
     @Synchronized
     fun getCurrentState(): State? = if (isCurrentStateInitialized()) this.currentState else null
 
     private fun isCurrentStateInitialized() = ::currentState.isInitialized
 
-    fun processEvent(event: BaseEvent): Boolean = if (isCurrentStateInitialized()) currentState.processEvent(event) else false
+    fun sendEvent(event: BaseEvent): Boolean = if (isCurrentStateInitialized()) currentState.processEvent(event) else false
 
     internal fun executeTransition(transition: Transition, event: BaseEvent) {
         val stateContext: StateContext = DefaultStateContext(event, transition, transition.getSourceState(), transition.getTargetState())
