@@ -4,6 +4,7 @@ import com.safframework.statemachine.context.DefaultStateContext
 import com.safframework.statemachine.context.StateContext
 import com.safframework.statemachine.exception.StateMachineException
 import com.safframework.statemachine.interceptor.GlobalInterceptor
+import com.safframework.statemachine.interceptor.Interceptor
 import com.safframework.statemachine.model.BaseEvent
 import com.safframework.statemachine.model.BaseState
 import com.safframework.statemachine.state.State
@@ -25,7 +26,7 @@ class StateMachine private constructor(var name: String?=null,private val initia
     private val states = mutableListOf<State>() // 状态列表
     private val initialized = AtomicBoolean(false) // 是否初始化
     private var globalInterceptor: GlobalInterceptor?=null
-    private val transitionCallbacks: MutableList<TransitionCallback> = mutableListOf()
+    private val interceptors: MutableList<Interceptor> = mutableListOf()
     private val path = mutableListOf<StateMachine>()
     internal val descendantStates: Set<State> = mutableSetOf()
     lateinit var container:State
@@ -34,7 +35,7 @@ class StateMachine private constructor(var name: String?=null,private val initia
      * 设置状态机全局的拦截器，使用时必须要在 initialize() 之前
      * @param event: 状态机全局的拦截器
      */
-    fun interceptor(globalInterceptor: GlobalInterceptor):StateMachine {
+    fun globalInterceptor(globalInterceptor: GlobalInterceptor):StateMachine {
         this.globalInterceptor = globalInterceptor
         return this
     }
@@ -159,7 +160,7 @@ class StateMachine private constructor(var name: String?=null,private val initia
                 exitState(stateContext)
                 executeAction(stateContext)
 
-                val callbacks = transitionCallbacks.toList()
+                val callbacks = interceptors.toList()
                 callbacks.forEach { callback ->
                     callback.enteringState(this, stateContext.getSource(), stateContext.getTransition(), stateContext.getTarget())
                 }
@@ -245,14 +246,14 @@ class StateMachine private constructor(var name: String?=null,private val initia
     }
 
     /**
-     * 注册 TransitionCallback
+     * 注册 Interceptor
      */
-    fun registerCallback(transitionCallback: TransitionCallback) = transitionCallbacks.add(transitionCallback)
+    fun registerInterceptor(interceptor: Interceptor) = interceptors.add(interceptor)
 
     /**
-     * 取消 TransitionCallback
+     * 取消 Interceptor
      */
-    fun unregisterCallback(transitionCallback: TransitionCallback) = transitionCallbacks.remove(transitionCallback)
+    fun unregisterInterceptor(interceptor: Interceptor) = interceptors.remove(interceptor)
 
     companion object {
         /**

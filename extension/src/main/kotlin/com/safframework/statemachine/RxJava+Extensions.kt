@@ -1,5 +1,6 @@
 package com.safframework.statemachine
 
+import com.safframework.statemachine.interceptor.Interceptor
 import com.safframework.statemachine.model.BaseState
 import com.safframework.statemachine.model.TransitionEvent
 import com.safframework.statemachine.transition.Transition
@@ -36,7 +37,7 @@ val StateMachine.exitTransitionObservable: Observable<TransitionEvent.ExitTransi
 
 private class RxStateCallback(
     private val emitter: ObservableEmitter<TransitionEvent>
-) : TransitionCallback {
+) : Interceptor {
 
     override fun enteringState(
         stateMachine: StateMachine,
