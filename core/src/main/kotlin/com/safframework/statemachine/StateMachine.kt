@@ -160,15 +160,11 @@ class StateMachine private constructor(var name: String?=null,private val initia
                 exitState(stateContext)
                 executeAction(stateContext)
 
-                interceptors.forEach { interceptor ->
-                    interceptor.enteringState(this, stateContext.getSource(), stateContext.getTransition(), stateContext.getTarget())
-                }
+                interceptors.forEach { interceptor -> interceptor.enteringState(this, stateContext) }
 
                 enterState(stateContext)
 
-                interceptors.forEach { interceptor ->
-                    interceptor.enteredState(this, stateContext.getSource(), stateContext.getTransition(), stateContext.getTarget())
-                }
+                interceptors.forEach { interceptor -> interceptor.enteredState(this, stateContext) }
             } else {
                 println("${stateContext.getTransition()} 失败")
                 globalInterceptor?.stateMachineError(this, StateMachineException("状态转换失败: guard [${guard}], 状态 [${currentState.name}]，事件 [${stateContext.getEvent().javaClass.simpleName}]"))

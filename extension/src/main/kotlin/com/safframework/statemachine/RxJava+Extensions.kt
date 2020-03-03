@@ -1,9 +1,8 @@
 package com.safframework.statemachine
 
+import com.safframework.statemachine.context.StateContext
 import com.safframework.statemachine.interceptor.Interceptor
-import com.safframework.statemachine.model.BaseState
 import com.safframework.statemachine.model.TransitionEvent
-import com.safframework.statemachine.transition.Transition
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
 
@@ -18,10 +17,10 @@ import io.reactivex.ObservableEmitter
 
 val StateMachine.stateObservable: Observable<TransitionEvent>
     get() = Observable.create { emitter ->
-        val rxCallback = RxStateCallback(emitter)
-        registerInterceptor(rxCallback)
+        val rxInterceptor = RxInterceptor(emitter)
+        registerInterceptor(rxInterceptor)
         emitter.setCancellable {
-            unregisterInterceptor(rxCallback)
+            unregisterInterceptor(rxInterceptor)
         }
     }
 
@@ -35,22 +34,17 @@ val StateMachine.exitTransitionObservable: Observable<TransitionEvent.ExitTransi
         .filter { event -> event is TransitionEvent.ExitTransition }
         .map { event -> event as TransitionEvent.ExitTransition }
 
-private class RxStateCallback(
+private class RxInterceptor(
     private val emitter: ObservableEmitter<TransitionEvent>
 ) : Interceptor {
 
     override fun enteringState(
         stateMachine: StateMachine,
-        currentState: BaseState,
-        transition: Transition,
-        targetState: BaseState
-    ) = emitter.onNext(TransitionEvent.EnterTransition(stateMachine, currentState, transition, targetState))
+        stateContext: StateContext
+    ) = emitter.onNext(TransitionEvent.EnterTransition(stateMachine, stateContext))
 
     override fun enteredState(
         stateMachine: StateMachine,
-        previousState: BaseState,
-        transition: Transition,
-        currentState: BaseState
-    ) = emitter.onNext(TransitionEvent.ExitTransition(stateMachine, previousState, transition, currentState))
-
+        stateContext: StateContext
+    ) = emitter.onNext(TransitionEvent.ExitTransition(stateMachine, stateContext))
 }

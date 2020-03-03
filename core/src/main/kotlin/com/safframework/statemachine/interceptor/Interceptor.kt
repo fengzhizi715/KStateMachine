@@ -1,6 +1,7 @@
 package com.safframework.statemachine.interceptor
 
 import com.safframework.statemachine.StateMachine
+import com.safframework.statemachine.context.StateContext
 import com.safframework.statemachine.model.BaseState
 import com.safframework.statemachine.transition.Transition
 
@@ -16,15 +17,11 @@ interface Interceptor {
 
     fun enteringState(
         stateMachine: StateMachine,
-        currentState: BaseState,
-        transition: Transition,
-        targetState: BaseState
+        stateContext: StateContext
     )
 
     fun enteredState(
         stateMachine: StateMachine,
-        previousState: BaseState,
-        transition: Transition,
-        currentState: BaseState
+        stateContext: StateContext
     )
 }

@@ -1,6 +1,7 @@
 package com.safframework.statemachine.model
 
 import com.safframework.statemachine.StateMachine
+import com.safframework.statemachine.context.StateContext
 import com.safframework.statemachine.transition.Transition
 
 /**
@@ -15,15 +16,11 @@ sealed class TransitionEvent {
 
     data class EnterTransition(
         val stateMachine: StateMachine,
-        val currentState: BaseState,
-        val transition: Transition,
-        val targetState: BaseState
+        val stateContext: StateContext
     ) : TransitionEvent()
 
     data class ExitTransition(
         val stateMachine: StateMachine,
-        val previousState: BaseState,
-        val transition: Transition,
-        val currentState: BaseState
+        val stateContext: StateContext
     ) : TransitionEvent()
 }
