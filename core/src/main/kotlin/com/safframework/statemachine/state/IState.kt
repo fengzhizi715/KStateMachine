@@ -1,9 +1,10 @@
 package com.safframework.statemachine.state
 
 import com.safframework.statemachine.Guard
-import com.safframework.statemachine.Transition
+import com.safframework.statemachine.transition.Transition
 import com.safframework.statemachine.model.BaseEvent
 import com.safframework.statemachine.model.BaseState
+import com.safframework.statemachine.transition.TransitionType
 
 /**
  *
@@ -19,5 +20,5 @@ interface IState {
 
     fun exit()
 
-    fun transition(event: BaseEvent, targetState: BaseState, guard: Guard?=null, init: Transition.() -> Unit): IState
+    fun transition(event: BaseEvent, targetState: BaseState, transitionType: TransitionType = TransitionType.External, guard: Guard?=null, init: Transition.() -> Unit): IState
 }

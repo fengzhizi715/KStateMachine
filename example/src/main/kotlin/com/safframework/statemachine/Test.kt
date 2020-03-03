@@ -20,13 +20,13 @@ class WatchTV : BaseState()   // 看电视状态
 
 fun main() {
 
-    val sm = StateMachine.buildStateMachine(Initial()) {
+    val sm = StateMachine.buildStateMachine(initialStateName = Initial()) {
 
         state(Initial()) {
 
             entry {
                 action {
-                    println("Entered [$it] State")
+                    println("Entered [${it.name}] State")
                 }
             }
 
@@ -43,7 +43,7 @@ fun main() {
 
             exit {
                 action {
-                    println("Exited [$it] State")
+                    println("Exited [${it.name}] State")
                 }
             }
         }
@@ -52,7 +52,7 @@ fun main() {
 
             entry{
                 action {
-                    println("Entered [$it] State")
+                    println("Entered [${it.name}] State")
                 }
             }
 
@@ -72,7 +72,7 @@ fun main() {
 
             entry{
                 action {
-                    println("Entered [$it] State")
+                    println("Entered [${it.name}] State")
                 }
             }
         }

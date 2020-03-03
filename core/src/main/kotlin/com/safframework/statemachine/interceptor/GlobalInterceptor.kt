@@ -2,7 +2,7 @@ package com.safframework.statemachine.interceptor
 
 import com.safframework.statemachine.state.State
 import com.safframework.statemachine.StateMachine
-import com.safframework.statemachine.Transition
+import com.safframework.statemachine.transition.Transition
 import com.safframework.statemachine.context.StateContext
 
 /**

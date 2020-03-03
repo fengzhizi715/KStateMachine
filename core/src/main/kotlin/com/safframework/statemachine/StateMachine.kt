@@ -7,6 +7,8 @@ import com.safframework.statemachine.interceptor.GlobalInterceptor
 import com.safframework.statemachine.model.BaseEvent
 import com.safframework.statemachine.model.BaseState
 import com.safframework.statemachine.state.State
+import com.safframework.statemachine.transition.Transition
+import com.safframework.statemachine.transition.TransitionType
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
@@ -17,13 +19,16 @@ import java.util.concurrent.atomic.AtomicBoolean
  * @date: 2020-02-14 21:50
  * @version: V1.0 <描述当前版本功能>
  */
-class StateMachine private constructor(private val initialState: BaseState) {
+class StateMachine private constructor(var name: String?=null,private val initialState: BaseState) {
 
     private lateinit var currentState: State    // 当前状态
     private val states = mutableListOf<State>() // 状态列表
     private val initialized = AtomicBoolean(false) // 是否初始化
     private var globalInterceptor: GlobalInterceptor?=null
     private val transitionCallbacks: MutableList<TransitionCallback> = mutableListOf()
+    private val path = mutableListOf<StateMachine>()
+    internal val descendantStates: Set<State> = mutableSetOf()
+    lateinit var container:State
 
     /**
      * 设置状态机全局的拦截器，使用时必须要在 initialize() 之前
@@ -35,11 +40,15 @@ class StateMachine private constructor(private val initialState: BaseState) {
     }
 
     /**
-     * 初始化状态机，并进入初始化状态
+     * 初始化状态机，并进入初始化状态，保证只初始化一次防止多次初始化
      */
     fun initialize() {
         if(initialized.compareAndSet(false, true)){
             currentState = getState(initialState)
+            currentState.owner = this@StateMachine
+            path.add(0, this)
+            currentState.addParent(this)
+            descendantStates.plus(currentState)
             globalInterceptor?.stateEntered(currentState)
             currentState.enter()
         }
@@ -51,8 +60,19 @@ class StateMachine private constructor(private val initialState: BaseState) {
     fun state(stateName: BaseState, init: State.() -> Unit):StateMachine {
         val state = State(stateName).apply{
             init()
+            owner = this@StateMachine
+            addParent(this@StateMachine)
+            descendantStates.plus(this.getDescendantStates())
         }
 
+        states.add(state)
+        return this
+    }
+
+    fun addState(state:State):StateMachine {
+        state.owner = this@StateMachine
+        state.addParent(this@StateMachine)
+        descendantStates.plus(state.getDescendantStates())
         states.add(state)
         return this
     }
@@ -62,78 +82,167 @@ class StateMachine private constructor(private val initialState: BaseState) {
      */
     private fun getState(stateType: BaseState): State = states.firstOrNull { stateType.javaClass == it.name.javaClass } ?: throw NoSuchElementException(stateType.javaClass.canonicalName)
 
+    @Synchronized
+    fun getCurrentState(): State? = if (isCurrentStateInitialized()) this.currentState else null
+
+    private fun isCurrentStateInitialized() = ::currentState.isInitialized
+
     /**
-     * 向状态机发送 Event，执行状态转换
+     * 发送消息，驱动状态的转换
      */
     @Synchronized
-    fun sendEvent(e: BaseEvent) {
-        try {
-            val transition = currentState.getTransitionForEvent(e)
+    fun sendEvent(event: BaseEvent): Boolean = if (isCurrentStateInitialized()) currentState.processEvent(event) else false
 
-            globalInterceptor?.transitionStarted(transition)
-
-            val stateContext: StateContext = DefaultStateContext(e, transition, transition.getSourceState(), transition.getTargetState())
-
-            //状态转换之前执行的 action(Transition 内部的 action), action执行失败表示不接受事件，返回false
-            val accept = transition.transit(stateContext)
-
-            if (!accept) {
-                //状态机发生异常
-                globalInterceptor?.stateMachineError(this, StateMachineException("状态转换失败,source ${currentState.name} -> target ${transition.getTargetState()} Event ${e}"))
-                return
-            }
-
-            val guard = transition.getGuard()?.invoke()?:true
-
-            if (guard) {
-                transitionSuccess(transition,stateContext)
-            } else {
-                println("$transition 失败")
-
-                globalInterceptor?.stateMachineError(this, StateMachineException("状态转换失败: guard [${guard}], 状态 [${currentState.name}]，事件 [${e.javaClass.simpleName}]"))
-            }
-        } catch (exception:Exception) {
-
-            globalInterceptor?.stateMachineError(this, StateMachineException("This state [${this.currentState.name}] doesn't support transition on ${e.javaClass.simpleName}"))
+    internal fun executeTransition(transition: Transition, event: BaseEvent) {
+        val stateContext: StateContext = DefaultStateContext(event, transition, transition.getSourceState(), transition.getTargetState())
+        when (transition.getTransitionType()) {
+            TransitionType.External -> doExternalTransition(stateContext)
+            TransitionType.Local    -> doLocalTransition(stateContext)
+            TransitionType.Internal -> executeAction(stateContext)
         }
     }
 
-    private fun transitionSuccess(transition:Transition, stateContext: StateContext) {
-        getState(transition.getSourceState()).exit()
+    private fun doExternalTransition(stateContext: StateContext) {
+        val targetState = getState(stateContext.getTarget())
+        val lowestCommonAncestor: StateMachine = findLowestCommonAncestor(targetState)
+        lowestCommonAncestor.switchState(stateContext)
+    }
 
-        val state = transition.applyTransition { getState(stateContext.getTarget()) }
+    private fun doLocalTransition(stateContext: StateContext) {
+        val previousState = getState(stateContext.getSource())
+        val targetState = getState(stateContext.getTarget())
+        when {
+            previousState.getDescendantStates().contains(targetState) -> {
+                val stateMachine = findNextStateMachineOnPathTo(targetState)
+                stateMachine.switchState(stateContext)
+            }
+            targetState.getDescendantStates().contains(previousState) -> {
+                val targetLevel = targetState.owner!!.path.size
+                val stateMachine = path[targetLevel]
+                stateMachine.switchState(stateContext)
+            }
+            previousState == targetState -> {
+                executeAction(stateContext)
+            }
+            else -> doExternalTransition(stateContext)
+        }
+    }
 
-        val callbacks = transitionCallbacks.toList()
+    private fun findLowestCommonAncestor(targetState: State): StateMachine {
+        checkNotNull(targetState.owner) { "$targetState is not contained in state machine model." }
+        val targetPath = targetState.owner!!.path
+
+        (1..targetPath.size).forEach { index ->
+            try {
+                val targetAncestor = targetPath[index]
+                val localAncestor = path[index]
+                if (targetAncestor != localAncestor) {
+                    return path[index - 1]
+                }
+            } catch (e: IndexOutOfBoundsException) {
+                return path[index - 1]
+            }
+        }
+        return this
+    }
+
+    /**
+     * 状态切换
+     */
+    private fun switchState(stateContext: StateContext) {
+        try {
+            val guard = stateContext.getTransition().getGuard()?.invoke()?:true
+
+            if (guard) {
+                globalInterceptor?.transitionStarted(stateContext.getTransition())
+
+                exitState(stateContext)
+                executeAction(stateContext)
+
+                val callbacks = transitionCallbacks.toList()
+                callbacks.forEach { callback ->
+                    callback.enteringState(this, stateContext.getSource(), stateContext.getTransition(), stateContext.getTarget())
+                }
+                enterState(stateContext)
+
+                callbacks.forEach { callback ->
+                    callback.enteredState(this, stateContext.getSource(), stateContext.getTransition(), stateContext.getTarget())
+                }
+            } else {
+                println("${stateContext.getTransition()} 失败")
+                globalInterceptor?.stateMachineError(this, StateMachineException("状态转换失败: guard [${guard}], 状态 [${currentState.name}]，事件 [${stateContext.getEvent().javaClass.simpleName}]"))
+            }
+        } catch (exception:Exception) {
+            globalInterceptor?.stateMachineError(this, StateMachineException("This state [${this.currentState.name}] doesn't support transition on ${stateContext.getEvent().javaClass.simpleName}"))
+        }
+    }
+
+    private fun exitState(stateContext: StateContext) {
+        currentState.exit()
 
         globalInterceptor?.apply {
             stateContext(stateContext)
-            transition(transition)
+            transition(stateContext.getTransition())
             stateExited(currentState)
         }
-
-        callbacks.forEach { callback ->
-            callback.enteringState(this, stateContext.getSource(), transition, stateContext.getTarget())
-        }
-
-        state.enter()
-
-        callbacks.forEach { callback ->
-            callback.enteredState(this, stateContext.getSource(), transition, stateContext.getTarget())
-        }
-
-        globalInterceptor?.apply {
-            stateEntered(state)
-            stateChanged(currentState,state)
-            transitionEnded(transition)
-        }
-
-        currentState = state
     }
 
-    @Synchronized
-    fun getCurrentState(): BaseState? = if (isCurrentStateInitialized()) this.currentState.name else null
+    private fun executeAction(stateContext: StateContext) {
+        val transition = stateContext.getTransition()
+        transition.transit(stateContext)
+    }
 
-    private fun isCurrentStateInitialized() = ::currentState.isInitialized
+    private fun enterState(stateContext: StateContext) {
+        val sourceState = getState(stateContext.getSource())
+        val targetState = getState(stateContext.getTarget())
+        val targetLevel = targetState.owner!!.path.size
+        val localLevel = path.size
+        val nextState: State = when {
+            targetLevel < localLevel -> getState(initialState)
+            targetLevel == localLevel -> targetState
+            // targetLevel > localLevel
+            else -> findNextStateOnPathTo(targetState)
+        }
+
+        currentState = if (states.contains(nextState)) {
+            nextState
+        } else {
+            getState(initialState)
+        }
+
+        currentState.enter()
+
+        globalInterceptor?.apply {
+            stateEntered(currentState)
+            stateChanged(sourceState,currentState)
+            transitionEnded(stateContext.getTransition())
+        }
+    }
+
+    private fun findNextStateOnPathTo(targetState: State): State = findNextStateMachineOnPathTo(targetState).container
+
+    private fun findNextStateMachineOnPathTo(targetState: State): StateMachine {
+        val localLevel = path.size
+        val targetOwner = targetState.owner!!
+        return targetOwner.path[localLevel]
+    }
+
+    internal fun addParent(parent: StateMachine) {
+        path.add(0, parent)
+        states.forEach {
+            it.addParent(parent)
+        }
+    }
+
+    fun getAllActiveStates(): Set<State> {
+        if (!isCurrentStateInitialized()) {
+            return emptySet()
+        }
+
+        val activeStates: MutableSet<State> = mutableSetOf(currentState)
+        activeStates.addAll(currentState.getAllActiveStates())
+        return activeStates.toSet()
+    }
 
     /**
      * 注册 TransitionCallback
@@ -146,11 +255,12 @@ class StateMachine private constructor(private val initialState: BaseState) {
     fun unregisterCallback(transitionCallback: TransitionCallback) = transitionCallbacks.remove(transitionCallback)
 
     companion object {
-
-        fun buildStateMachine(initialStateName: BaseState, init: StateMachine.() -> Unit): StateMachine {
-            val stateMachine = StateMachine(initialStateName)
-            stateMachine.init()
-            return stateMachine
+        /**
+         * @param name 状态机的名称
+         * @param initialStateName 初始化状态机的 block
+         */
+        fun buildStateMachine(name:String = "StateMachine", initialStateName: BaseState, init: StateMachine.() -> Unit): StateMachine  = StateMachine(name,initialStateName).apply{
+            init()
         }
     }
 }
