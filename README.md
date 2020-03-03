@@ -21,13 +21,13 @@
 ```kotlin
 fun main() {
 
-    val sm = StateMachine.buildStateMachine(Initial()) {
+    val sm = StateMachine.buildStateMachine(initialStateName = Initial()) {
 
         state(Initial()) {
 
             entry {
                 action {
-                    println("Entered [$it] State")
+                    println("Entered [${it.name}] State")
                 }
             }
 
@@ -44,7 +44,7 @@ fun main() {
 
             exit {
                 action {
-                    println("Exited [$it] State")
+                    println("Exited [${it.name}] State")
                 }
             }
         }
@@ -53,7 +53,7 @@ fun main() {
 
             entry{
                 action {
-                    println("Entered [$it] State")
+                    println("Entered [${it.name}] State")
                 }
             }
 
@@ -73,7 +73,7 @@ fun main() {
 
             entry{
                 action {
-                    println("Entered [$it] State")
+                    println("Entered [${it.name}] State")
                 }
             }
         }
@@ -91,6 +91,7 @@ fun main() {
 
 ```
 Entered [Initial] State
+Exited [Initial] State
 Action: Wash Vegetables
 Action: Cook
 Entered [Eat] State
@@ -101,15 +102,16 @@ Entered [WatchTV] State
 
 ## Feature
 
-* 支持 DSL 构建的 FSM
+* 支持 DSL 的方式构建状态机
+* 支持 FSM、HSM
 * 支持全局的拦截器
 * 支持进入状态、离开状态的Actions
 * 支持 RxJava 2
-
 
 ## TODO：
 
 * 通过配置构建状态机，支持 yml、properties
 * 支持 Kotlin Coroutines
-* 支持 HSM
+
+
 
