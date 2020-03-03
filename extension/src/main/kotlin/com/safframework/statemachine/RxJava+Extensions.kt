@@ -19,9 +19,9 @@ import io.reactivex.ObservableEmitter
 val StateMachine.stateObservable: Observable<TransitionEvent>
     get() = Observable.create { emitter ->
         val rxCallback = RxStateCallback(emitter)
-        registerCallback(rxCallback)
+        registerInterceptor(rxCallback)
         emitter.setCancellable {
-            unregisterCallback(rxCallback)
+            unregisterInterceptor(rxCallback)
         }
     }
 

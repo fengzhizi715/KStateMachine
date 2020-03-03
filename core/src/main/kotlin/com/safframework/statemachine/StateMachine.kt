@@ -24,9 +24,9 @@ class StateMachine private constructor(var name: String?=null,private val initia
 
     private lateinit var currentState: State    // 当前状态
     private val states = mutableListOf<State>() // 状态列表
-    private val initialized = AtomicBoolean(false) // 是否初始化
-    private var globalInterceptor: GlobalInterceptor?=null
-    private val interceptors: MutableList<Interceptor> = mutableListOf()
+    private val initialized = AtomicBoolean(false)             // 是否初始化，保证状态机只初始化一次
+    private var globalInterceptor: GlobalInterceptor?=null               // 全局的拦截器
+    private val interceptors: MutableList<Interceptor> = mutableListOf() // 拦截器
     private val path = mutableListOf<StateMachine>()
     internal val descendantStates: Set<State> = mutableSetOf()
     lateinit var container:State
@@ -160,14 +160,14 @@ class StateMachine private constructor(var name: String?=null,private val initia
                 exitState(stateContext)
                 executeAction(stateContext)
 
-                val callbacks = interceptors.toList()
-                callbacks.forEach { callback ->
-                    callback.enteringState(this, stateContext.getSource(), stateContext.getTransition(), stateContext.getTarget())
+                interceptors.forEach { interceptor ->
+                    interceptor.enteringState(this, stateContext.getSource(), stateContext.getTransition(), stateContext.getTarget())
                 }
+
                 enterState(stateContext)
 
-                callbacks.forEach { callback ->
-                    callback.enteredState(this, stateContext.getSource(), stateContext.getTransition(), stateContext.getTarget())
+                interceptors.forEach { interceptor ->
+                    interceptor.enteredState(this, stateContext.getSource(), stateContext.getTransition(), stateContext.getTarget())
                 }
             } else {
                 println("${stateContext.getTransition()} 失败")
@@ -260,8 +260,7 @@ class StateMachine private constructor(var name: String?=null,private val initia
          * @param name 状态机的名称
          * @param initialStateName 初始化状态机的 block
          */
-        fun buildStateMachine(name:String = "StateMachine", initialStateName: BaseState, init: StateMachine.() -> Unit): StateMachine  = StateMachine(name,initialStateName).apply{
-            init()
-        }
+        fun buildStateMachine(name:String = "StateMachine", initialStateName: BaseState, init: StateMachine.() -> Unit): StateMachine  =
+            StateMachine(name,initialStateName).apply(init)
     }
 }
