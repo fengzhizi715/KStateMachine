@@ -79,6 +79,6 @@ fun main() {
     }
 
     sm.initialize()
-    sm.processEvent(Cook())
-    sm.processEvent(WashDishes())
+    sm.sendEvent(Cook())
+    sm.sendEvent(WashDishes())
 }
