@@ -54,23 +54,27 @@ open class State(val name: BaseState): IState {
     /**
      * 进入 State 时，添加 Action
      */
-    fun entry(block:StateEntry.() -> Unit) {
+    fun entry(block:StateEntry.() -> Unit):State {
         entry = entry?.apply {
             block()
         }?: run{
             StateEntry().apply(block)
         }
+
+        return this
     }
 
     /**
      * 退出 State 时，添加 Action
      */
-    fun exit(block:StateExit.() -> Unit) {
+    fun exit(block:StateExit.() -> Unit):State {
         exit = exit?.apply {
             block()
         }?: run{
             StateExit().apply(block)
         }
+
+        return this
     }
 
     /**
