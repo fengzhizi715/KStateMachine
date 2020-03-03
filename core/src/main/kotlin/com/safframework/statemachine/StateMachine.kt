@@ -40,7 +40,7 @@ class StateMachine private constructor(var name: String?=null,private val initia
     }
 
     /**
-     * 初始化状态机，并进入初始化状态
+     * 初始化状态机，并进入初始化状态，保证只初始化一次防止多次初始化
      */
     fun initialize() {
         if(initialized.compareAndSet(false, true)){
@@ -87,6 +87,10 @@ class StateMachine private constructor(var name: String?=null,private val initia
 
     private fun isCurrentStateInitialized() = ::currentState.isInitialized
 
+    /**
+     * 发送消息，驱动状态的转换
+     */
+    @Synchronized
     fun sendEvent(event: BaseEvent): Boolean = if (isCurrentStateInitialized()) currentState.processEvent(event) else false
 
     internal fun executeTransition(transition: Transition, event: BaseEvent) {
@@ -118,7 +122,6 @@ class StateMachine private constructor(var name: String?=null,private val initia
                 stateMachine.switchState(stateContext)
             }
             previousState == targetState -> {
-                // TODO clarify desired behavior for local transition on self currently behaves like an internal transition
                 executeAction(stateContext)
             }
             else -> doExternalTransition(stateContext)
@@ -143,6 +146,9 @@ class StateMachine private constructor(var name: String?=null,private val initia
         return this
     }
 
+    /**
+     * 状态切换
+     */
     private fun switchState(stateContext: StateContext) {
         try {
             val guard = stateContext.getTransition().getGuard()?.invoke()?:true
@@ -171,7 +177,7 @@ class StateMachine private constructor(var name: String?=null,private val initia
         }
     }
 
-    internal fun exitState(stateContext: StateContext) {
+    private fun exitState(stateContext: StateContext) {
         currentState.exit()
 
         globalInterceptor?.apply {
@@ -186,7 +192,7 @@ class StateMachine private constructor(var name: String?=null,private val initia
         transition.transit(stateContext)
     }
 
-    internal fun enterState(stateContext: StateContext) {
+    private fun enterState(stateContext: StateContext) {
         val sourceState = getState(stateContext.getSource())
         val targetState = getState(stateContext.getTarget())
         val targetLevel = targetState.owner!!.path.size
@@ -229,7 +235,6 @@ class StateMachine private constructor(var name: String?=null,private val initia
     }
 
     fun getAllActiveStates(): Set<State> {
-
         if (!isCurrentStateInitialized()) {
             return emptySet()
         }
