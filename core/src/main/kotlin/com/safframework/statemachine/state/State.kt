@@ -30,6 +30,7 @@ open class State(val name: BaseState): IState {
      *
      * @param event: 触发事件
      * @param targetState: 下一个状态
+     * @param transitionType: Transition 类型
      * @param guard: 断言接口，为了转换操作执行后检测结果是否满足特定条件从一个状态切换到某一个状态
      * @param init
      */

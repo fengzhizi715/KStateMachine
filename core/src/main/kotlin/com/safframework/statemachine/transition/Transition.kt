@@ -31,7 +31,6 @@ class Transition(private val event: BaseEvent, private val sourceState: BaseStat
      * 执行 Transition 的 Action
      */
     private fun executeTransitionActions(context: StateContext) {
-
         actions.forEach {
             try {
                 it.invoke(this)
@@ -45,15 +44,17 @@ class Transition(private val event: BaseEvent, private val sourceState: BaseStat
     /**
      * 添加一个 action，在状态转换时执行
      */
-    fun action(action: TransitionAction) {
+    fun action(action: TransitionAction):Transition {
         actions.add(action)
+        return this
     }
 
     /**
      * 设置检测条件，判断是否满足状态转换的条件，满足则执行状态转换
      */
-    fun guard(guard: Guard) {
+    fun guard(guard: Guard):Transition {
         this.guard = guard
+        return this
     }
 
     fun getGuard(): Guard? = guard
