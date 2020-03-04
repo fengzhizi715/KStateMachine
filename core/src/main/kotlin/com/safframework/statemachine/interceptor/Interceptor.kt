@@ -6,7 +6,7 @@ import com.safframework.statemachine.model.BaseState
 import com.safframework.statemachine.transition.Transition
 
 /**
- *
+ * 状态机的拦截器
  * @FileName:
  *          com.safframework.statemachine.interceptor.Interceptor
  * @author: Tony Shen

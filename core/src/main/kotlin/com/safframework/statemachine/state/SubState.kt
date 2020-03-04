@@ -21,9 +21,9 @@ class SubState(subStateName: BaseState,vararg states: State):State(subStateName)
         val initialState = stateList.removeAt(0)
         subStateMachine = StateMachine.buildStateMachine(subStateName.toString(),initialState.name) {
             states.forEach { this.addState(it) }
+            initialize()
+            container = this@SubState
         }
-        subStateMachine.initialize()
-        subStateMachine.container = this
     }
 
     override fun processEvent(event: BaseEvent): Boolean = when {
