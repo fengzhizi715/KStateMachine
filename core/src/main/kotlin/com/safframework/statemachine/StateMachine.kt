@@ -24,11 +24,11 @@ class StateMachine private constructor(var name: String?=null,private val initia
 
     private lateinit var currentState: State    // 当前状态
     private val states = mutableListOf<State>() // 状态的列表
-    private val initialized = AtomicBoolean(false)             // 是否初始化，保证状态机只初始化一次
+    private val initialized = AtomicBoolean(false)            // 是否初始化，保证状态机只初始化一次
     private var globalInterceptor: GlobalInterceptor?=null               // 全局的拦截器
     private val interceptors: MutableList<Interceptor> = mutableListOf() // 拦截器的列表
     private val path = mutableListOf<StateMachine>()
-    internal val descendantStates: Set<State> = mutableSetOf()
+    internal val descendantStates: MutableSet<State> = mutableSetOf()
     lateinit var container:State
 
     /**
@@ -49,7 +49,7 @@ class StateMachine private constructor(var name: String?=null,private val initia
             currentState.owner = this@StateMachine
             path.add(0, this)
             currentState.addParent(this)
-            descendantStates.plus(currentState)
+            descendantStates.add(currentState)
             globalInterceptor?.stateEntered(currentState)
             currentState.enter()
         }
@@ -63,7 +63,8 @@ class StateMachine private constructor(var name: String?=null,private val initia
             init()
             owner = this@StateMachine
             addParent(this@StateMachine)
-            descendantStates.plus(this.getDescendantStates())
+            descendantStates.add(this)
+            descendantStates.addAll(this.getDescendantStates())
         }
 
         states.add(state)
@@ -71,17 +72,20 @@ class StateMachine private constructor(var name: String?=null,private val initia
     }
 
     fun addState(state:State):StateMachine {
+
         state.owner = this@StateMachine
         state.addParent(this@StateMachine)
-        descendantStates.plus(state.getDescendantStates())
+        descendantStates.add(state)
+        descendantStates.addAll(state.getDescendantStates())
         states.add(state)
+        descendantStates.add(state)
         return this
     }
 
     /**
      * 通过状态名称获取状态
      */
-    private fun getState(stateType: BaseState): State = states.firstOrNull { stateType.javaClass == it.name.javaClass } ?: throw NoSuchElementException(stateType.javaClass.canonicalName)
+    private fun getState(stateType: BaseState): State = states.firstOrNull { stateType.javaClass == it.name.javaClass } ?: throw NoSuchElementException("$stateType is not in statemachine:$name")
 
     @Synchronized
     fun getCurrentState(): State? = if (isCurrentStateInitialized()) this.currentState else null
@@ -112,6 +116,7 @@ class StateMachine private constructor(var name: String?=null,private val initia
     private fun doLocalTransition(stateContext: StateContext) {
         val previousState = getState(stateContext.getSource())
         val targetState = getState(stateContext.getTarget())
+
         when {
             previousState.getDescendantStates().contains(targetState) -> {
                 val stateMachine = findNextStateMachineOnPathTo(targetState)
