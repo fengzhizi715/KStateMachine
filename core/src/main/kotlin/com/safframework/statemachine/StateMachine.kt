@@ -58,10 +58,7 @@ class StateMachine private constructor(var name: String?=null,private val initia
     /**
      * 向状态机添加 State
      */
-    fun state(stateName: BaseState, init: State.() -> Unit):StateMachine {
-        val state = State(stateName).apply(init)
-        return state(state)
-    }
+    fun state(stateName: BaseState, init: State.() -> Unit):StateMachine = state(State(stateName).apply(init))
 
     /**
      * 向状态机添加 State
@@ -259,9 +256,9 @@ class StateMachine private constructor(var name: String?=null,private val initia
     companion object {
         /**
          * @param name 状态机的名称
-         * @param initialStateName 初始化状态机的 block
+         * @param initialStateName 状态机初始的 State 名称
+         * @param init 初始化状态机的 block
          */
-        fun buildStateMachine(name:String = "StateMachine", initialStateName: BaseState, init: StateMachine.() -> Unit): StateMachine  =
-            StateMachine(name,initialStateName).apply(init)
+        fun buildStateMachine(name:String = "StateMachine", initialStateName: BaseState, init: StateMachine.() -> Unit): StateMachine  = StateMachine(name,initialStateName).apply(init)
     }
 }
