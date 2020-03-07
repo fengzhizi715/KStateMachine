@@ -8,6 +8,7 @@ import com.safframework.statemachine.interceptor.Interceptor
 import com.safframework.statemachine.model.BaseEvent
 import com.safframework.statemachine.model.BaseState
 import com.safframework.statemachine.state.State
+import com.safframework.statemachine.state.SubState
 import com.safframework.statemachine.transition.Transition
 import com.safframework.statemachine.transition.TransitionType
 import java.util.concurrent.atomic.AtomicBoolean
@@ -79,13 +80,19 @@ class StateMachine private constructor(var name: String?=null,private val initia
         descendantStates.addAll(state.getDescendantStates())
         states.add(state)
         descendantStates.add(state)
+
         return this
     }
 
     /**
      * 通过状态名称获取状态
      */
-    private fun getState(stateType: BaseState): State = states.firstOrNull { stateType.javaClass == it.name.javaClass } ?: throw NoSuchElementException("$stateType is not in statemachine:$name")
+    private fun getState(stateType: BaseState): State {
+
+        return states.firstOrNull { stateType.javaClass == it.name.javaClass }
+            ?: descendantStates.firstOrNull {stateType.javaClass == it.name.javaClass}
+            ?: throw NoSuchElementException("$stateType is not in statemachine:$name")
+    }
 
     @Synchronized
     fun getCurrentState(): State? = if (isCurrentStateInitialized()) this.currentState else null
@@ -199,6 +206,7 @@ class StateMachine private constructor(var name: String?=null,private val initia
         val targetState = getState(stateContext.getTarget())
         val targetLevel = targetState.owner!!.path.size
         val localLevel = path.size
+
         val nextState: State = when {
             targetLevel < localLevel -> getState(initialState)
             targetLevel == localLevel -> targetState
@@ -209,7 +217,7 @@ class StateMachine private constructor(var name: String?=null,private val initia
         currentState = if (states.contains(nextState)) {
             nextState
         } else {
-            getState(initialState)
+            getState(nextState.name)
         }
 
         currentState.enter()

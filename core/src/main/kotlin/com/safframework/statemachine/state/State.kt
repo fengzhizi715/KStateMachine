@@ -118,7 +118,5 @@ open class State(val name: BaseState): IState {
 
     internal open fun getAllActiveStates(): Collection<State> = setOf()
 
-    fun getTransitions() = transitions
-
     override fun toString(): String = "state: ${name.javaClass.simpleName},owner: ${owner?.name}"
 }

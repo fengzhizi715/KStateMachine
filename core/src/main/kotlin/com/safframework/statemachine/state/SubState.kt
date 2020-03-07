@@ -5,6 +5,8 @@ import com.safframework.statemachine.model.BaseEvent
 import com.safframework.statemachine.model.BaseState
 
 /**
+ * event 交给 SubState 中的 state 处理，
+ * 如果无法不处理，状态机会需要把这个 event 交给他的 SuperState 处理。
  *
  * @FileName:
  *          com.safframework.statemachine.state.SubState
@@ -15,13 +17,16 @@ import com.safframework.statemachine.model.BaseState
 class SubState(subStateName: BaseState,vararg states: State):State(subStateName) {
 
     private val subStateMachine: StateMachine
+    private val initialState:State
 
-    init {
+     init {
         val stateList = states.toMutableList()
-        val initialState = stateList.removeAt(0)
+        initialState = stateList.removeAt(0)
         subStateMachine = StateMachine.buildStateMachine(subStateName.toString(),initialState.name) {
-            states.forEach { this.addState(it) }
-            initialize()
+            states.forEach {
+                addState(it)
+            }
+//            initialize()
             container = this@SubState
         }
     }
