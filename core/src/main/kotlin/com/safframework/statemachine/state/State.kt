@@ -99,7 +99,10 @@ open class State(val name: BaseState): IState {
     /**
      * 通过 Event 查找 State 储存的 Transition
      */
-    private fun getTransitionForEvent(event: BaseEvent): Transition = transitions[event]?:throw IllegalStateException("Event $event isn't registered with state ${this.name}")
+    private fun getTransitionForEvent(event: BaseEvent): Transition {
+
+        return transitions[event]?:throw IllegalStateException("Event $event isn't registered with state ${this.name} in statemachine:${owner?.name}")
+    }
 
     internal open fun processEvent(event: BaseEvent): Boolean {
 
@@ -114,6 +117,8 @@ open class State(val name: BaseState): IState {
     internal open fun getDescendantStates(): Set<State> = setOf()
 
     internal open fun getAllActiveStates(): Collection<State> = setOf()
+
+    fun getTransitions() = transitions
 
     override fun toString(): String = "state: ${name.javaClass.simpleName},owner: ${owner?.name}"
 }
