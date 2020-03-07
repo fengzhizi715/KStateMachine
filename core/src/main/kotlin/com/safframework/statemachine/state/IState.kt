@@ -20,5 +20,5 @@ interface IState {
 
     fun exit()
 
-    fun transition(event: BaseEvent, targetState: BaseState, transitionType: TransitionType = TransitionType.External, guard: Guard?=null, init: Transition.() -> Unit): IState
+    fun transition(event: BaseEvent, targetState: BaseState, transitionType: TransitionType = TransitionType.External, guard: Guard?=null, init: (Transition.() -> Unit)?=null): IState
 }
