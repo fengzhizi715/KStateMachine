@@ -24,7 +24,7 @@ class SubState(subStateName: BaseState,vararg states: State):State(subStateName)
         initialState = stateList.removeAt(0)
         subStateMachine = StateMachine.buildStateMachine(subStateName.toString(),initialState.name) {
             states.forEach {
-                addState(it)
+                state(it)
             }
 //            initialize()
             container = this@SubState

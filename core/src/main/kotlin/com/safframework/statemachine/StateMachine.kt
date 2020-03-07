@@ -8,7 +8,6 @@ import com.safframework.statemachine.interceptor.Interceptor
 import com.safframework.statemachine.model.BaseEvent
 import com.safframework.statemachine.model.BaseState
 import com.safframework.statemachine.state.State
-import com.safframework.statemachine.state.SubState
 import com.safframework.statemachine.transition.Transition
 import com.safframework.statemachine.transition.TransitionType
 import java.util.concurrent.atomic.AtomicBoolean
@@ -60,26 +59,19 @@ class StateMachine private constructor(var name: String?=null,private val initia
      * 向状态机添加 State
      */
     fun state(stateName: BaseState, init: State.() -> Unit):StateMachine {
-        val state = State(stateName).apply{
-            init()
-            owner = this@StateMachine
-            addParent(this@StateMachine)
-            descendantStates.add(this)
-            descendantStates.addAll(this.getDescendantStates())
-        }
-
-        states.add(state)
-        return this
+        val state = State(stateName).apply(init)
+        return state(state)
     }
 
-    fun addState(state:State):StateMachine {
-
+    /**
+     * 向状态机添加 State
+     */
+    fun state(state:State):StateMachine {
         state.owner = this@StateMachine
         state.addParent(this@StateMachine)
         descendantStates.add(state)
         descendantStates.addAll(state.getDescendantStates())
         states.add(state)
-        descendantStates.add(state)
 
         return this
     }

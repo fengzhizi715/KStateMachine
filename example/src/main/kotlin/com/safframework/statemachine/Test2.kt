@@ -55,9 +55,9 @@ fun main() {
 
     val sm = StateMachine.buildStateMachine(initialStateName = initial.name) {
 
-        addState(initial)
-        addState(eat)
-        addState(watchTV)
+        state(initial)
+        state(eat)
+        state(watchTV)
     }
 
     sm.initialize()
