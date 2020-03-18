@@ -118,14 +118,15 @@ class StateMachine private constructor(var name: String?=null,private val initia
                 val stateMachine = findNextStateMachineOnPathTo(targetState)
                 stateMachine.switchState(stateContext)
             }
+
             targetState.getDescendantStates().contains(previousState) -> {
                 val targetLevel = targetState.owner!!.path.size
                 val stateMachine = path[targetLevel]
                 stateMachine.switchState(stateContext)
             }
-            previousState == targetState -> {
-                executeAction(stateContext)
-            }
+
+            previousState == targetState -> executeAction(stateContext)
+
             else -> doExternalTransition(stateContext)
         }
     }
