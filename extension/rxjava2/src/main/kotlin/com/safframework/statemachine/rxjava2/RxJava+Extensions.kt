@@ -1,5 +1,6 @@
-package com.safframework.statemachine
+package com.safframework.statemachine.rxjava2
 
+import com.safframework.statemachine.StateMachine
 import com.safframework.statemachine.context.StateContext
 import com.safframework.statemachine.interceptor.Interceptor
 import com.safframework.statemachine.model.TransitionEvent
