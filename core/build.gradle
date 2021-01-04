@@ -30,6 +30,6 @@ publish{
     groupId = 'com.safframework.statemachine'
     artifactId = 'statemachine-core'
     publishVersion = "$statemachine_version"
-    desc = 'A statemachine library write by Kotlin.'
+    desc = 'A statemachine library written by Kotlin.'
     website = 'https://github.com/fengzhizi715/KStateMachine'
 }

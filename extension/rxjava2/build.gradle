@@ -16,7 +16,7 @@ repositories {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation "io.reactivex.rxjava2:rxjava:${libs.rxjava2}"
+    compileOnly "io.reactivex.rxjava2:rxjava:${libs.rxjava2}"
 
     implementation project(":core")
 }
@@ -34,6 +34,6 @@ publish{
     groupId = 'com.safframework.statemachine'
     artifactId = 'statemachine-rxjava2'
     publishVersion = "$statemachine_version"
-    desc = 'A statemachine library write by Kotlin.'
+    desc = 'A statemachine library written by Kotlin.'
     website = 'https://github.com/fengzhizi715/KStateMachine'
 }
