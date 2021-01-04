@@ -1,5 +1,13 @@
 apply plugin: 'java'
 
+ext {
+    libraries = [
+            rxjava3                   : "3.0.7",
+
+            rxjava2                   : "2.2.20",
+    ]
+}
+
 group 'com.safframework.statemachine'
 version '1.0-SNAPSHOT'
 
