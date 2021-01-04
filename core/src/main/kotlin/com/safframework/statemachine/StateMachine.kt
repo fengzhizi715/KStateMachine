@@ -76,12 +76,10 @@ class StateMachine private constructor(var name: String?=null,private val initia
     /**
      * 通过状态名称获取状态
      */
-    private fun getState(stateType: BaseState): State {
-
-        return states.firstOrNull { stateType.javaClass == it.name.javaClass }
+    private fun getState(stateType: BaseState): State =
+        states.firstOrNull { stateType.javaClass == it.name.javaClass }
             ?: descendantStates.firstOrNull {stateType.javaClass == it.name.javaClass}
             ?: throw NoSuchElementException("$stateType is not in statemachine:$name")
-    }
 
     @Synchronized
     fun getCurrentState(): State? = if (isCurrentStateInitialized()) this.currentState else null
@@ -255,11 +253,13 @@ class StateMachine private constructor(var name: String?=null,private val initia
     fun unregisterInterceptor(interceptor: Interceptor) = interceptors.remove(interceptor)
 
     companion object {
+
         /**
          * @param name 状态机的名称
          * @param initialStateName 状态机初始的 State 名称
          * @param init 初始化状态机的 block
          */
-        fun buildStateMachine(name:String = "StateMachine", initialStateName: BaseState, init: StateMachine.() -> Unit): StateMachine  = StateMachine(name,initialStateName).apply(init)
+        fun buildStateMachine(name:String = "StateMachine", initialStateName: BaseState, init: StateMachine.() -> Unit): StateMachine =
+            StateMachine(name,initialStateName).apply(init)
     }
 }

@@ -15,13 +15,7 @@ import com.safframework.statemachine.transition.Transition
  */
 interface Interceptor {
 
-    fun enteringState(
-        stateMachine: StateMachine,
-        stateContext: StateContext
-    )
+    fun enteringState(stateMachine: StateMachine, stateContext: StateContext)
 
-    fun enteredState(
-        stateMachine: StateMachine,
-        stateContext: StateContext
-    )
+    fun enteredState(stateMachine: StateMachine, stateContext: StateContext)
 }

@@ -39,13 +39,9 @@ private class RxInterceptor(
     private val emitter: ObservableEmitter<TransitionEvent>
 ) : Interceptor {
 
-    override fun enteringState(
-        stateMachine: StateMachine,
-        stateContext: StateContext
-    ) = emitter.onNext(TransitionEvent.EnterTransition(stateMachine, stateContext))
+    override fun enteringState(stateMachine: StateMachine, stateContext: StateContext) =
+        emitter.onNext(TransitionEvent.EnterTransition(stateMachine, stateContext))
 
-    override fun enteredState(
-        stateMachine: StateMachine,
-        stateContext: StateContext
-    ) = emitter.onNext(TransitionEvent.ExitTransition(stateMachine, stateContext))
+    override fun enteredState(stateMachine: StateMachine, stateContext: StateContext) =
+        emitter.onNext(TransitionEvent.ExitTransition(stateMachine, stateContext))
 }
