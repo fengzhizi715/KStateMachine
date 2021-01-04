@@ -14,13 +14,7 @@ import com.safframework.statemachine.transition.Transition
  */
 sealed class TransitionEvent {
 
-    data class EnterTransition(
-        val stateMachine: StateMachine,
-        val stateContext: StateContext
-    ) : TransitionEvent()
+    data class EnterTransition(val stateMachine: StateMachine, val stateContext: StateContext) : TransitionEvent()
 
-    data class ExitTransition(
-        val stateMachine: StateMachine,
-        val stateContext: StateContext
-    ) : TransitionEvent()
+    data class ExitTransition(val stateMachine: StateMachine, val stateContext: StateContext) : TransitionEvent()
 }
