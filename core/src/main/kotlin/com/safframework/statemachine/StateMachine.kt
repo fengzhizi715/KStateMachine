@@ -22,7 +22,9 @@ import java.util.concurrent.atomic.AtomicBoolean
  */
 class StateMachine private constructor(var name: String?=null,private val initialState: BaseState) {
 
+    @Volatile
     private lateinit var currentState: State    // 当前状态
+
     private val states = mutableListOf<State>() // 状态的列表
     private val initialized = AtomicBoolean(false)            // 是否初始化，保证状态机只初始化一次
     private var globalInterceptor: GlobalInterceptor?=null               // 全局的拦截器

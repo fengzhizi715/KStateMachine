@@ -24,7 +24,7 @@ dependencies {
 
 buildscript {
     ext.kotlin_version = '1.4.20'
-    ext.statemachine_version = '1.0.1'
+    ext.statemachine_version = '1.0.2'
 
     repositories {
         jcenter()
