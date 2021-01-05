@@ -1,3 +1,6 @@
+[![@Tony沈哲 on weibo](https://img.shields.io/badge/weibo-%40Tony%E6%B2%88%E5%93%B2-blue.svg)](http://www.weibo.com/fengzhizi715)
+[![License](https://img.shields.io/badge/license-Apache%202-lightgrey.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
+
 # KStateMachine
 
 使用 Kotlin 特性实现的有限状态机 (FSM) 框架，基于事件驱动。
@@ -105,13 +108,25 @@ Entered [WatchTV] State
 * 支持 DSL 的方式构建状态机
 * 支持 FSM、HSM
 * 支持拦截器、以及全局的拦截器
-* 支持进入状态、离开状态的Actions
-* 支持 RxJava 2
+* 支持进入状态、离开状态的 Actions
+* 支持 RxJava 2、RxJava 3
+
+## 最新版本
+
+模块|最新版本
+---|:-------------:
+statemachine-core｜[ ![Download](https://api.bintray.com/packages/fengzhizi715/maven/statemachine-core/images/download.svg) ](https://bintray.com/fengzhizi715/maven/statemachine-core/_latestVersion)
+statemachine-rxjava2｜[ ![Download](https://api.bintray.com/packages/fengzhizi715/maven/statemachine-rxjava2/images/download.svg) ](https://bintray.com/fengzhizi715/maven/statemachine-rxjava2/_latestVersion)
+statemachine-rxjava3｜[ ![Download](https://api.bintray.com/packages/fengzhizi715/maven/statemachine-rxjava3/images/download.svg) ](https://bintray.com/fengzhizi715/maven/statemachine-rxjava3/_latestVersion)
+
+
+## 下载：
 
 ## TODO：
 
-* 通过配置的方式构建状态机，支持 yml、properties
 * 支持 Kotlin Coroutines
+* 通过配置的方式构建状态机，支持 yml、properties
+
 
 
 
