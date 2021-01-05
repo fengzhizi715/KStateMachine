@@ -115,9 +115,9 @@ Entered [WatchTV] State
 
 模块|最新版本
 ---|:-------------:
-statemachine-core｜[ ![Download](https://api.bintray.com/packages/fengzhizi715/maven/statemachine-core/images/download.svg) ](https://bintray.com/fengzhizi715/maven/statemachine-core/_latestVersion)
-statemachine-rxjava2｜[ ![Download](https://api.bintray.com/packages/fengzhizi715/maven/statemachine-rxjava2/images/download.svg) ](https://bintray.com/fengzhizi715/maven/statemachine-rxjava2/_latestVersion)
-statemachine-rxjava3｜[ ![Download](https://api.bintray.com/packages/fengzhizi715/maven/statemachine-rxjava3/images/download.svg) ](https://bintray.com/fengzhizi715/maven/statemachine-rxjava3/_latestVersion)
+statemachine-core|[ ![Download](https://api.bintray.com/packages/fengzhizi715/maven/statemachine-core/images/download.svg) ](https://bintray.com/fengzhizi715/maven/statemachine-core/_latestVersion)
+statemachine-rxjava2|[ ![Download](https://api.bintray.com/packages/fengzhizi715/maven/statemachine-rxjava2/images/download.svg) ](https://bintray.com/fengzhizi715/maven/statemachine-rxjava2/_latestVersion)
+statemachine-rxjava3|[ ![Download](https://api.bintray.com/packages/fengzhizi715/maven/statemachine-rxjava3/images/download.svg) ](https://bintray.com/fengzhizi715/maven/statemachine-rxjava3/_latestVersion)
 
 
 ## 下载：
