@@ -136,8 +136,8 @@ implementation 'com.safframework.statemachine:statemachine-rxjava3:<latest-versi
 ## TODO：
 
 * 支持 Kotlin Coroutines
-* 通过配置的方式构建状态机，支持 yml、properties
-
+* 优化 HSM
+* 增加异常的处理机制
 
 
 
