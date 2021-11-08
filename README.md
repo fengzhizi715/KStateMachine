@@ -119,6 +119,17 @@ statemachine-core|[ ![Download](https://api.bintray.com/packages/fengzhizi715/ma
 statemachine-rxjava2|[ ![Download](https://api.bintray.com/packages/fengzhizi715/maven/statemachine-rxjava2/images/download.svg) ](https://bintray.com/fengzhizi715/maven/statemachine-rxjava2/_latestVersion)
 statemachine-rxjava3|[ ![Download](https://api.bintray.com/packages/fengzhizi715/maven/statemachine-rxjava3/images/download.svg) ](https://bintray.com/fengzhizi715/maven/statemachine-rxjava3/_latestVersion)
 
+将它添加到项目的 root build.gradle 中：
+
+```groovy
+	allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+```
+
 ## 下载：
 
 ```groovy
