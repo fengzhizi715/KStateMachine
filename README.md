@@ -116,9 +116,9 @@ Entered [WatchTV] State
 
 模块|最新版本
 ---|:-------------:
-statemachine-core|[ ![Download](https://api.bintray.com/packages/fengzhizi715/maven/statemachine-core/images/download.svg) ](https://bintray.com/fengzhizi715/maven/statemachine-core/_latestVersion)
-statemachine-rxjava2|[ ![Download](https://api.bintray.com/packages/fengzhizi715/maven/statemachine-rxjava2/images/download.svg) ](https://bintray.com/fengzhizi715/maven/statemachine-rxjava2/_latestVersion)
-statemachine-rxjava3|[ ![Download](https://api.bintray.com/packages/fengzhizi715/maven/statemachine-rxjava3/images/download.svg) ](https://bintray.com/fengzhizi715/maven/statemachine-rxjava3/_latestVersion)
+statemachine-core|[![](https://jitpack.io/v/fengzhizi715/KStateMachine.svg)](https://jitpack.io/#fengzhizi715/KStateMachine)
+statemachine-rxjava2|[![](https://jitpack.io/v/fengzhizi715/KStateMachine.svg)](https://jitpack.io/#fengzhizi715/KStateMachine)
+statemachine-rxjava3|[![](https://jitpack.io/v/fengzhizi715/KStateMachine.svg)](https://jitpack.io/#fengzhizi715/KStateMachine)
 
 将它添加到项目的 root build.gradle 中：
 
@@ -134,15 +134,15 @@ statemachine-rxjava3|[ ![Download](https://api.bintray.com/packages/fengzhizi715
 ## 下载：
 
 ```groovy
-implementation 'com.safframework.statemachine:statemachine-core:<latest-version>'
+implementation 'com.github.fengzhizi715.KStateMachine:core:<latest-version>'
 ```
 
 ```groovy
-implementation 'com.safframework.statemachine:statemachine-rxjava2:<latest-version>'
+implementation 'com.github.fengzhizi715.KStateMachine:rxjava2:<latest-version>'
 ```
 
 ```groovy
-implementation 'com.safframework.statemachine:statemachine-rxjava3:<latest-version>'
+implementation 'com.github.fengzhizi715.KStateMachine:rxjava3:<latest-version>'
 ```
 
 ## TODO：
