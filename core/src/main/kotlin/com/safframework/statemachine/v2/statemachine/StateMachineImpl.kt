@@ -1,11 +1,11 @@
 package com.safframework.statemachine.v2.statemachine
 
+import com.safframework.statemachine.v2.domain.ChildMode
 import com.safframework.statemachine.v2.domain.Event
-import com.safframework.statemachine.v2.transition.TransitionParams
-import com.safframework.statemachine.v2.state.ChildMode
 import com.safframework.statemachine.v2.state.DefaultState
 import com.safframework.statemachine.v2.state.IState
 import com.safframework.statemachine.v2.state.InternalState
+import com.safframework.statemachine.v2.transition.TransitionParams
 import com.safframework.statemachine.v2.transition.transitionNotify
 import com.safframework.statemachine.v2.utils.extension.machineNotify
 import com.safframework.statemachine.v2.visitors.CheckUniqueNamesVisitor

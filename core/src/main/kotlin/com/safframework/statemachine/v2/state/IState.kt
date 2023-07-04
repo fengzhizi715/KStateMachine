@@ -2,6 +2,7 @@ package com.safframework.statemachine.v2.state
 
 import com.safframework.statemachine.v2.StateBlock
 import com.safframework.statemachine.v2.StateTransitionsHelper
+import com.safframework.statemachine.v2.domain.ChildMode
 import com.safframework.statemachine.v2.transition.TransitionParams
 import com.safframework.statemachine.v2.statemachine.StateMachine
 import com.safframework.statemachine.v2.statemachine.StateMachineDslMarker
@@ -57,5 +58,3 @@ interface IState : StateTransitionsHelper, VisitorAcceptor {
         fun onFinished(transitionParams: TransitionParams<*>) = Unit
     }
 }
-
-enum class ChildMode { EXCLUSIVE, PARALLEL }

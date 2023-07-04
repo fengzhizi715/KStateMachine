@@ -1,6 +1,7 @@
 package com.safframework.statemachine.v2.utils.extension
 
 import com.safframework.statemachine.v2.StateBlock
+import com.safframework.statemachine.v2.domain.ChildMode
 import com.safframework.statemachine.v2.transition.TransitionParams
 import com.safframework.statemachine.v2.state.*
 import kotlin.reflect.KClass

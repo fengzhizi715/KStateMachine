@@ -3,6 +3,7 @@ package com.safframework.statemachine.v2.state
 import com.safframework.statemachine.v2.ResolvedTransition
 import com.safframework.statemachine.v2.StateBlock
 import com.safframework.statemachine.v2.algorithm.TreeAlgorithm.findPathFromTargetToLca
+import com.safframework.statemachine.v2.domain.ChildMode
 import com.safframework.statemachine.v2.domain.Event
 import com.safframework.statemachine.v2.domain.StartEvent
 import com.safframework.statemachine.v2.transition.TransitionParams
