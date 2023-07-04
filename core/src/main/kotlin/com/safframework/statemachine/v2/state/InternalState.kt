@@ -1,7 +1,9 @@
 package com.safframework.statemachine.v2.state
 
+import com.safframework.statemachine.v2.InterceptorBlock
 import com.safframework.statemachine.v2.ResolvedTransition
 import com.safframework.statemachine.v2.domain.Event
+import com.safframework.statemachine.v2.interceptor.Interceptor
 import com.safframework.statemachine.v2.transition.TransitionParams
 import com.safframework.statemachine.v2.transition.InternalTransition
 import com.safframework.statemachine.v2.transition.NoTransition
@@ -42,7 +44,7 @@ internal fun InternalState.isNeighbor(state: IState) = parent?.states?.contains(
 
 internal fun InternalState.requireParent() = requireNotNull(parent) { "Parent is not set" }
 
-internal fun InternalState.stateNotify(block: IState.Listener.() -> Unit) = listeners.forEach { it.apply(block) }
+internal fun InternalState.stateNotify(block: InterceptorBlock) = interceptors.forEach { it.apply(block) }
 
 internal fun <E : Event> InternalState.findTransitionsByEvent(event: E): List<InternalTransition<E>> {
     val triggeringTransitions = transitions.filter { it.isMatchingEvent(event) }

@@ -6,6 +6,7 @@ import com.safframework.statemachine.v2.algorithm.TreeAlgorithm.findPathFromTarg
 import com.safframework.statemachine.v2.domain.ChildMode
 import com.safframework.statemachine.v2.domain.Event
 import com.safframework.statemachine.v2.domain.StartEvent
+import com.safframework.statemachine.v2.interceptor.Interceptor
 import com.safframework.statemachine.v2.transition.TransitionParams
 import com.safframework.statemachine.v2.statemachine.InternalStateMachine
 import com.safframework.statemachine.v2.statemachine.StateMachine
@@ -27,8 +28,8 @@ import java.util.concurrent.CopyOnWriteArraySet
  */
 open class BaseStateImpl(override val name: String?, override val childMode: ChildMode) : InternalState {
 
-    private val _listeners = CopyOnWriteArraySet<IState.Listener>()
-    override val listeners: Collection<IState.Listener> get() = _listeners
+    private val _listeners = CopyOnWriteArraySet<Interceptor>()
+    override val interceptors: Collection<Interceptor> get() = _listeners
 
     private val _states = mutableSetOf<InternalState>()
     override val states: Set<IState> get() = _states
@@ -54,12 +55,12 @@ open class BaseStateImpl(override val name: String?, override val childMode: Chi
     private var _isFinished = false
     override val isFinished get() = _isFinished
 
-    override fun <L : IState.Listener> addListener(listener: L): L {
+    override fun <L : Interceptor> addInterceptor(listener: L): L {
         require(_listeners.add(listener)) { "$listener is already added" }
         return listener
     }
 
-    override fun removeListener(listener: IState.Listener) {
+    override fun removeInterceptor(listener: Interceptor) {
         _listeners.remove(listener)
     }
 

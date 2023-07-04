@@ -2,6 +2,7 @@ package com.safframework.statemachine.v2.utils.extension
 
 import com.safframework.statemachine.v2.StateBlock
 import com.safframework.statemachine.v2.domain.ChildMode
+import com.safframework.statemachine.v2.interceptor.Interceptor
 import com.safframework.statemachine.v2.transition.TransitionParams
 import com.safframework.statemachine.v2.state.*
 import kotlin.reflect.KClass
@@ -14,6 +15,7 @@ import kotlin.reflect.KClass
  * @date: 2023/7/4 10:22
  * @version: V1.0 <描述当前版本功能>
  */
+
 /**
  * Get state by name. This might be used to start listening to state after state machine setup.
  */
@@ -67,19 +69,19 @@ inline fun <reified S : IState> IState.requireState(recursive: Boolean = true) =
 operator fun <S : IState> S.invoke(block: StateBlock<S>) = block()
 
 fun <S : IState> S.onEntry(block: S.(TransitionParams<*>) -> Unit) {
-    addListener(object : IState.Listener {
+    addInterceptor(object : Interceptor {
         override fun onEntry(transitionParams: TransitionParams<*>) = block(transitionParams)
     })
 }
 
 fun <S : IState> S.onExit(block: S.(TransitionParams<*>) -> Unit) {
-    addListener(object : IState.Listener {
+    addInterceptor(object : Interceptor {
         override fun onExit(transitionParams: TransitionParams<*>) = block(transitionParams)
     })
 }
 
 fun <S : IState> S.onFinished(block: S.(TransitionParams<*>) -> Unit) {
-    addListener(object : IState.Listener {
+    addInterceptor(object : Interceptor {
         override fun onFinished(transitionParams: TransitionParams<*>) = block(transitionParams)
     })
 }

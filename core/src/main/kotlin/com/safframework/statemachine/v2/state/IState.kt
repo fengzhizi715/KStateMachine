@@ -3,6 +3,7 @@ package com.safframework.statemachine.v2.state
 import com.safframework.statemachine.v2.StateBlock
 import com.safframework.statemachine.v2.StateTransitionsHelper
 import com.safframework.statemachine.v2.domain.ChildMode
+import com.safframework.statemachine.v2.interceptor.Interceptor
 import com.safframework.statemachine.v2.transition.TransitionParams
 import com.safframework.statemachine.v2.statemachine.StateMachine
 import com.safframework.statemachine.v2.statemachine.StateMachineDslMarker
@@ -26,11 +27,11 @@ interface IState : StateTransitionsHelper, VisitorAcceptor {
     val machine: StateMachine
     val isActive: Boolean
     val isFinished: Boolean
-    val listeners: Collection<Listener>
+    val interceptors: Collection<Interceptor>
     val childMode: ChildMode
 
-    fun <L : Listener> addListener(listener: L): L
-    fun removeListener(listener: Listener)
+    fun <L : Interceptor> addInterceptor(listener: L): L
+    fun removeInterceptor(listener: Interceptor)
 
     fun <S : IState> addState(state: S, init: StateBlock<S>? = null): S
 
@@ -46,15 +47,4 @@ interface IState : StateTransitionsHelper, VisitorAcceptor {
     fun activeStates(selfIncluding: Boolean = false): Set<IState>
 
     override fun accept(visitor: Visitor) = visitor.visit(this)
-
-    interface Listener {
-        fun onEntry(transitionParams: TransitionParams<*>) = Unit
-        fun onExit(transitionParams: TransitionParams<*>) = Unit
-
-        /**
-         * If child mode is [ChildMode.EXCLUSIVE] notifies that child [IFinalState] is entered.
-         * If child mode is [ChildMode.PARALLEL] notifies that all children has finished.
-         */
-        fun onFinished(transitionParams: TransitionParams<*>) = Unit
-    }
 }
