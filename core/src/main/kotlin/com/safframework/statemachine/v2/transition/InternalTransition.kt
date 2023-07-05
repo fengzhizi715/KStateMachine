@@ -1,5 +1,7 @@
 package com.safframework.statemachine.v2.transition
 
+import com.safframework.statemachine.v2.TransitionAction
+import com.safframework.statemachine.v2.TransitionActionBlock
 import com.safframework.statemachine.v2.domain.Event
 import com.safframework.statemachine.v2.state.InternalState
 
@@ -18,5 +20,5 @@ interface InternalTransition<E : Event> : Transition<E> {
     fun produceTargetStateDirection(policy: TransitionDirectionProducerPolicy<E>): TransitionDirection
 }
 
-internal fun InternalTransition<*>.transitionNotify(block: Transition.Listener.() -> Unit) =
+internal fun InternalTransition<*>.transitionNotify(block: TransitionActionBlock) =
     listeners.forEach { it.apply(block) }

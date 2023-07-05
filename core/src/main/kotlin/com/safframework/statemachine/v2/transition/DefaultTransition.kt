@@ -1,5 +1,6 @@
 package com.safframework.statemachine.v2.transition
 
+import com.safframework.statemachine.v2.TransitionAction
 import com.safframework.statemachine.v2.TransitionDirectionProducer
 import com.safframework.statemachine.v2.domain.Event
 import com.safframework.statemachine.v2.state.IState
@@ -19,8 +20,8 @@ open class DefaultTransition<E : Event>(
     override val eventMatcher: EventMatcher<E>,
     sourceState: IState
 ) : InternalTransition<E> {
-    private val _listeners = CopyOnWriteArraySet<Transition.Listener>()
-    override val listeners: Collection<Transition.Listener> get() = _listeners
+    private val _listeners = CopyOnWriteArraySet<TransitionAction>()
+    override val listeners: Collection<TransitionAction> get() = _listeners
     override val sourceState = sourceState as InternalState
 
     /**
@@ -56,12 +57,12 @@ open class DefaultTransition<E : Event>(
         this.targetStateDirectionProducer = targetStateDirectionProducer
     }
 
-    override fun <L : Transition.Listener> addListener(listener: L): L {
+    override fun <L : TransitionAction> addListener(listener: L): L {
         require(_listeners.add(listener)) { "$listener is already added" }
         return listener
     }
 
-    override fun removeListener(listener: Transition.Listener) {
+    override fun removeListener(listener: TransitionAction) {
         _listeners.remove(listener)
     }
 

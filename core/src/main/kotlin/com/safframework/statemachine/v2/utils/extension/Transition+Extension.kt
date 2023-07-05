@@ -1,5 +1,6 @@
 package com.safframework.statemachine.v2.utils.extension
 
+import com.safframework.statemachine.v2.TransitionAction
 import com.safframework.statemachine.v2.domain.Event
 import com.safframework.statemachine.v2.transition.TransitionParams
 import com.safframework.statemachine.v2.transition.Transition
@@ -13,8 +14,8 @@ import com.safframework.statemachine.v2.transition.Transition
  * @version: V1.0 <描述当前版本功能>
  */
 inline fun <reified E : Event> Transition<E>.onTriggered(crossinline block: (TransitionParams<E>) -> Unit) {
-    addListener(object : Transition.Listener {
+    addListener(object : TransitionAction {
         @Suppress("UNCHECKED_CAST")
-        override fun onTriggered(transitionParams: TransitionParams<*>) = block(transitionParams as TransitionParams<E>)
+        override fun invoke(transitionParams: TransitionParams<*>) = block(transitionParams as TransitionParams<E>)
     })
 }

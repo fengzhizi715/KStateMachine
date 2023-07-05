@@ -1,5 +1,6 @@
 package com.safframework.statemachine.v2.transition
 
+import com.safframework.statemachine.v2.TransitionAction
 import com.safframework.statemachine.v2.domain.Event
 import com.safframework.statemachine.v2.state.IState
 import com.safframework.statemachine.v2.visitors.Visitor
@@ -24,10 +25,10 @@ interface Transition<E : Event> : VisitorAcceptor {
      * that sets the argument.
      */
     var argument: Any?
-    val listeners: Collection<Listener>
+    val listeners: Collection<TransitionAction>
 
-    fun <L : Listener> addListener(listener: L): L
-    fun removeListener(listener: Listener)
+    fun <L : TransitionAction> addListener(listener: L): L
+    fun removeListener(listener: TransitionAction)
 
     /**
      * Checks if the [event] matches this [Transition]
@@ -36,7 +37,7 @@ interface Transition<E : Event> : VisitorAcceptor {
 
     override fun accept(visitor: Visitor) = visitor.visit(this)
 
-    interface Listener {
-        fun onTriggered(transitionParams: TransitionParams<*>) = Unit
-    }
+//    interface Listener {
+//        fun onTriggered(transitionParams: TransitionParams<*>) = Unit
+//    }
 }

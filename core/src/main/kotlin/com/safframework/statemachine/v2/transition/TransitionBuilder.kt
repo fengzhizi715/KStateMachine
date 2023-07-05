@@ -1,5 +1,6 @@
 package com.safframework.statemachine.v2.transition
 
+import com.safframework.statemachine.v2.TransitionAction
 import com.safframework.statemachine.v2.TransitionDirectionProducer
 import com.safframework.statemachine.v2.domain.DataEvent
 import com.safframework.statemachine.v2.domain.Event
@@ -20,7 +21,7 @@ import com.safframework.statemachine.v2.transition.TransitionDirectionProducerPo
  */
 @StateMachineDslMarker
 abstract class TransitionBuilder<E : Event>(protected val name: String?, protected val sourceState: IState) {
-    var listener: Transition.Listener? = null
+    var listener: TransitionAction? = null
     lateinit var eventMatcher: EventMatcher<E>
 
     abstract fun build(): Transition<E>
@@ -118,9 +119,9 @@ class DataGuardedTransitionOnBuilder<E : DataEvent<D>, D>(name: String?, sourceS
 inline fun <reified E : Event> TransitionBuilder<E>.onTriggered(crossinline block: (TransitionParams<E>) -> Unit) {
     require(listener == null) { "Listener is already set, only one listener is allowed in a builder" }
 
-    listener = object : Transition.Listener {
+    listener = object : TransitionAction{
         @Suppress("UNCHECKED_CAST")
-        override fun onTriggered(transitionParams: TransitionParams<*>) =
+        override fun invoke(transitionParams: TransitionParams<*>) =
             block(transitionParams as TransitionParams<E>)
     }
 }
