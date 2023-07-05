@@ -13,7 +13,7 @@ import com.safframework.statemachine.v2.transition.Transition
  * @date: 2023/7/4 11:58
  * @version: V1.0 <描述当前版本功能>
  */
-inline fun <reified E : Event> Transition<E>.onTriggered(crossinline block: (TransitionParams<E>) -> Unit) {
+inline fun <reified E : Event> Transition<E>.onAction(crossinline block: TransitionAction) {
     addListener(object : TransitionAction {
         @Suppress("UNCHECKED_CAST")
         override fun invoke(transitionParams: TransitionParams<*>) = block(transitionParams as TransitionParams<E>)

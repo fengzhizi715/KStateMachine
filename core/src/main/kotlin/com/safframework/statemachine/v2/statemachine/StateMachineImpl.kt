@@ -125,7 +125,9 @@ internal class StateMachineImpl(name: String?, childMode: ChildMode) :
             invoke(transitionParams)
         }
 
-        machineNotify { onTransition(transitionParams) }
+        machineNotify {
+            onTransition(transitionParams)
+        }
 
         targetState?.let { switchToTargetState(it, transition.sourceState, transitionParams) }
         return true

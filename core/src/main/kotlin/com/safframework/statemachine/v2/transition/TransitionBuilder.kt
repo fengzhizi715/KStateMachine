@@ -21,7 +21,7 @@ import com.safframework.statemachine.v2.transition.TransitionDirectionProducerPo
  */
 @StateMachineDslMarker
 abstract class TransitionBuilder<E : Event>(protected val name: String?, protected val sourceState: IState) {
-    var listener: TransitionAction? = null
+    var action: TransitionAction? = null
     lateinit var eventMatcher: EventMatcher<E>
 
     abstract fun build(): Transition<E>
@@ -54,7 +54,7 @@ abstract class GuardedTransitionBuilder<E : Event, S : IState>(name: String?, so
         }
 
         val transition = DefaultTransition(name, eventMatcher, sourceState, direction)
-        listener?.let { transition.addListener(it) }
+        action?.let { transition.addListener(it) }
         return transition
     }
 }
@@ -72,7 +72,7 @@ abstract class GuardedTransitionOnBuilder<E : Event, S : IState>(name: String?, 
         }
 
         val transition = DefaultTransition(name, eventMatcher, sourceState, direction)
-        listener?.let { transition.addListener(it) }
+        action?.let { transition.addListener(it) }
         return transition
     }
 }
@@ -90,7 +90,7 @@ class ConditionalTransitionBuilder<E : Event>(name: String?, sourceState: IState
         }
 
         val transition = DefaultTransition(name, eventMatcher, sourceState, direction)
-        listener?.let { transition.addListener(it) }
+        action?.let { transition.addListener(it) }
         return transition
     }
 }
@@ -116,13 +116,12 @@ class DataGuardedTransitionBuilder<E : DataEvent<D>, D>(name: String?, sourceSta
 class DataGuardedTransitionOnBuilder<E : DataEvent<D>, D>(name: String?, sourceState: IState) :
     GuardedTransitionOnBuilder<E, DataState<D>>(name, sourceState)
 
-inline fun <reified E : Event> TransitionBuilder<E>.onTriggered(crossinline block: (TransitionParams<E>) -> Unit) {
-    require(listener == null) { "Listener is already set, only one listener is allowed in a builder" }
+inline fun <reified E : Event> TransitionBuilder<E>.onAction(crossinline block: TransitionAction) {
+    require(action == null) { "Listener is already set, only one listener is allowed in a builder" }
 
-    listener = object : TransitionAction{
+    action = object : TransitionAction{
         @Suppress("UNCHECKED_CAST")
-        override fun invoke(transitionParams: TransitionParams<*>) =
-            block(transitionParams as TransitionParams<E>)
+        override fun invoke(transitionParams: TransitionParams<*>) = block(transitionParams as TransitionParams<E>)
     }
 }
 
