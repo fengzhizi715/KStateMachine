@@ -20,8 +20,8 @@ open class DefaultTransition<E : Event>(
     override val eventMatcher: EventMatcher<E>,
     sourceState: IState
 ) : InternalTransition<E> {
-    private val _listeners = CopyOnWriteArraySet<TransitionAction>()
-    override val listeners: Collection<TransitionAction> get() = _listeners
+    private val _actions = CopyOnWriteArraySet<TransitionAction>()
+    override val actions: Collection<TransitionAction> get() = _actions
     override val sourceState = sourceState as InternalState
 
     /**
@@ -57,19 +57,18 @@ open class DefaultTransition<E : Event>(
         this.targetStateDirectionProducer = targetStateDirectionProducer
     }
 
-    override fun <L : TransitionAction> addListener(listener: L): L {
-        require(_listeners.add(listener)) { "$listener is already added" }
-        return listener
+    override fun <T : TransitionAction> addAction(action: T): T {
+        require(_actions.add(action)) { "$action is already added" }
+        return action
     }
 
-    override fun removeListener(listener: TransitionAction) {
-        _listeners.remove(listener)
+    override fun removeAction(action: TransitionAction) {
+        _actions.remove(action)
     }
 
     override fun isMatchingEvent(event: Event) = eventMatcher.match(event)
 
-    override fun produceTargetStateDirection(policy: TransitionDirectionProducerPolicy<E>) =
-        targetStateDirectionProducer(policy)
+    override fun produceTargetStateDirection(policy: TransitionDirectionProducerPolicy<E>) = targetStateDirectionProducer(policy)
 
     override fun toString() = "${this::class.simpleName}${if (name != null) "($name)" else ""}"
 }

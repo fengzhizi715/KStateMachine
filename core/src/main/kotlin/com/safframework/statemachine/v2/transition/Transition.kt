@@ -25,10 +25,10 @@ interface Transition<E : Event> : VisitorAcceptor {
      * that sets the argument.
      */
     var argument: Any?
-    val listeners: Collection<TransitionAction>
+    val actions: Collection<TransitionAction>
 
-    fun <L : TransitionAction> addListener(listener: L): L
-    fun removeListener(listener: TransitionAction)
+    fun <T : TransitionAction> addAction(action: T): T
+    fun removeAction(action: TransitionAction)
 
     /**
      * Checks if the [event] matches this [Transition]
@@ -36,8 +36,4 @@ interface Transition<E : Event> : VisitorAcceptor {
     fun isMatchingEvent(event: Event): Boolean
 
     override fun accept(visitor: Visitor) = visitor.visit(this)
-
-//    interface Listener {
-//        fun onTriggered(transitionParams: TransitionParams<*>) = Unit
-//    }
 }

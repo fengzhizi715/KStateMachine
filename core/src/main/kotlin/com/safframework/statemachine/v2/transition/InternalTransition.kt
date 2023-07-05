@@ -21,4 +21,4 @@ interface InternalTransition<E : Event> : Transition<E> {
 }
 
 internal fun InternalTransition<*>.transitionNotify(block: TransitionActionBlock) =
-    listeners.forEach { it.apply(block) }
+    actions.forEach { it.apply(block) }
