@@ -155,8 +155,7 @@ open class BaseStateImpl(override val name: String?, override val childMode: Chi
 
         when (childMode) {
             ChildMode.EXCLUSIVE -> {
-                val initialState =
-                    checkNotNull(initialState) { "Initial state is not set, call setInitialState() first" }
+                val initialState = checkNotNull(initialState) { "Initial state is not set, call setInitialState() first" }
                 setCurrentState(initialState, makeStartTransitionParams(initialState))
                 initialState.recursiveEnterInitialStates()
             }
@@ -213,7 +212,7 @@ open class BaseStateImpl(override val name: String?, override val childMode: Chi
 
     private fun getCurrentStates() = when (childMode) {
         ChildMode.EXCLUSIVE -> listOfNotNull(currentState)
-        ChildMode.PARALLEL -> _states.toList()
+        ChildMode.PARALLEL  -> _states.toList()
     }
 
     private fun setCurrentState(state: InternalState, transitionParams: TransitionParams<*>) {
@@ -230,7 +229,7 @@ open class BaseStateImpl(override val name: String?, override val childMode: Chi
     private fun notifyStateEntry(state: InternalState, transitionParams: TransitionParams<*>) {
         val finish = when (childMode) {
             ChildMode.EXCLUSIVE -> state is IFinalState
-            ChildMode.PARALLEL -> states.all { it.isFinished }
+            ChildMode.PARALLEL  -> states.all { it.isFinished }
         }
 
         if (finish) {
@@ -250,7 +249,8 @@ open class BaseStateImpl(override val name: String?, override val childMode: Chi
             onStateChanged(state)
         }
 
-        if (finish) parent?.afterChildFinished(this, transitionParams)
+        if (finish)
+            parent?.afterChildFinished(this, transitionParams)
     }
 
     internal fun switchToTargetState(
