@@ -14,9 +14,7 @@ import com.safframework.statemachine.v2.transition.Transition
  * @date: 2023/7/4 10:26
  * @version: V1.0 <描述当前版本功能>
  */
-open class DefaultState(name: String? = null, childMode: ChildMode = ChildMode.EXCLUSIVE) :
-    BaseStateImpl(name, childMode), State
-
+open class DefaultState(name: String? = null, childMode: ChildMode = ChildMode.EXCLUSIVE) : BaseStateImpl(name, childMode), State
 
 open class DefaultDataState<out D>(name: String? = null, childMode: ChildMode = ChildMode.EXCLUSIVE) :
     BaseStateImpl(name, childMode), DataState<D> {

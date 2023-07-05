@@ -57,7 +57,7 @@ open class DefaultTransition<E : Event>(
         this.targetStateDirectionProducer = targetStateDirectionProducer
     }
 
-    override fun <T : TransitionAction> addAction(action: T): T {
+    override fun <A: TransitionAction> addAction(action: A): A {
         require(_actions.add(action)) { "$action is already added" }
         return action
     }

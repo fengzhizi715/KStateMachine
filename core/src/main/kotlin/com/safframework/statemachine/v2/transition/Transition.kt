@@ -27,7 +27,7 @@ interface Transition<E : Event> : VisitorAcceptor {
     var argument: Any?
     val actions: Collection<TransitionAction>
 
-    fun <T : TransitionAction> addAction(action: T): T
+    fun <A : TransitionAction> addAction(action: A): A
     fun removeAction(action: TransitionAction)
 
     /**
