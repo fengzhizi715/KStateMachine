@@ -6,7 +6,7 @@ import com.safframework.statemachine.v2.algorithm.TreeAlgorithm.findPathFromTarg
 import com.safframework.statemachine.v2.domain.ChildMode
 import com.safframework.statemachine.v2.domain.Event
 import com.safframework.statemachine.v2.domain.StartEvent
-import com.safframework.statemachine.v2.interceptor.Interceptor
+import com.safframework.statemachine.v2.listener.Interceptor
 import com.safframework.statemachine.v2.transition.TransitionParams
 import com.safframework.statemachine.v2.statemachine.InternalStateMachine
 import com.safframework.statemachine.v2.statemachine.StateMachine
@@ -98,7 +98,7 @@ open class BaseStateImpl(override val name: String?, override val childMode: Chi
         return transition
     }
 
-    override fun toString() = "${this::class.simpleName}${if (name != null) "($name)" else ""}"
+    override fun toString() = "${this::class.simpleName}${if (name != null) "[$name]" else ""}"
 
     override fun toState() = this
 
@@ -115,7 +115,9 @@ open class BaseStateImpl(override val name: String?, override val childMode: Chi
             if (parent != null) machine.log { "Parent $parent entering child $this" }
             _isActive = true
             onDoEnter(transitionParams)
-            stateNotify { onEntry(transitionParams) }
+            stateNotify {
+                onEntry(transitionParams)
+            }
         }
     }
 
@@ -124,7 +126,9 @@ open class BaseStateImpl(override val name: String?, override val childMode: Chi
             machine.log { "Exiting $this" }
             onDoExit(transitionParams)
             _isActive = false
-            stateNotify { onExit(transitionParams) }
+            stateNotify {
+                onExit(transitionParams)
+            }
         }
     }
 
@@ -132,7 +136,9 @@ open class BaseStateImpl(override val name: String?, override val childMode: Chi
         if (childMode == ChildMode.PARALLEL && states.all { it.isFinished }) {
             _isFinished = true
             machine.log { "$this finishes" }
-            stateNotify { onFinished(transitionParams) }
+            stateNotify {
+                onFinished(transitionParams)
+            }
         }
     }
 
@@ -235,9 +241,14 @@ open class BaseStateImpl(override val name: String?, override val childMode: Chi
         state.doEnter(transitionParams)
 
         val machine = machine as InternalStateMachine
-        if (finish) stateNotify { onFinished(transitionParams) }
+        if (finish)
+            stateNotify {
+                onFinished(transitionParams)
+            }
 
-        machine.machineNotify { onStateChanged(state) }
+        machine.machineNotify {
+            onStateChanged(state)
+        }
 
         if (finish) parent?.afterChildFinished(this, transitionParams)
     }
