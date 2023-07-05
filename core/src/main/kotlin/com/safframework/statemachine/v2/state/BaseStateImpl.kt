@@ -28,8 +28,8 @@ import java.util.concurrent.CopyOnWriteArraySet
  */
 open class BaseStateImpl(override val name: String?, override val childMode: ChildMode) : InternalState {
 
-    private val _listeners = CopyOnWriteArraySet<Interceptor>()
-    override val interceptors: Collection<Interceptor> get() = _listeners
+    private val _interceptors = CopyOnWriteArraySet<Interceptor>()
+    override val interceptors: Collection<Interceptor> get() = _interceptors
 
     private val _states = mutableSetOf<InternalState>()
     override val states: Set<IState> get() = _states
@@ -55,13 +55,13 @@ open class BaseStateImpl(override val name: String?, override val childMode: Chi
     private var _isFinished = false
     override val isFinished get() = _isFinished
 
-    override fun <L : Interceptor> addInterceptor(listener: L): L {
-        require(_listeners.add(listener)) { "$listener is already added" }
-        return listener
+    override fun <I : Interceptor> addInterceptor(interceptor: I): I {
+        require(_interceptors.add(interceptor)) { "$interceptor is already added" }
+        return interceptor
     }
 
-    override fun removeInterceptor(listener: Interceptor) {
-        _listeners.remove(listener)
+    override fun removeInterceptor(interceptor: Interceptor) {
+        _interceptors.remove(interceptor)
     }
 
     override fun <S : IState> addState(state: S, init: StateBlock<S>?): S {

@@ -29,8 +29,8 @@ interface IState : StateTransitionsHelper, VisitorAcceptor {
     val interceptors: Collection<Interceptor>
     val childMode: ChildMode
 
-    fun <L : Interceptor> addInterceptor(listener: L): L
-    fun removeInterceptor(listener: Interceptor)
+    fun <I : Interceptor> addInterceptor(interceptor: I): I
+    fun removeInterceptor(interceptor: Interceptor)
 
     fun <S : IState> addState(state: S, init: StateBlock<S>? = null): S
 
