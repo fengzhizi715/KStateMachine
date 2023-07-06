@@ -89,7 +89,7 @@ internal class StateMachineImpl(name: String?, childMode: ChildMode) :
     }
 
     @Synchronized
-    override fun processEvent(event: Event, argument: Any?) {
+    override fun sendEvent(event: Event, argument: Any?) {
         check(isRunning) { "$this is not started, call start() first" }
 
         if (isProcessingEvent)

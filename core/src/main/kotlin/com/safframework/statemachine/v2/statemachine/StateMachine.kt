@@ -44,7 +44,7 @@ interface StateMachine: State {
     /**
      * Machine must be started to process events
      */
-    fun processEvent(event: Event, argument: Any? = null)
+    fun sendEvent(event: Event, argument: Any? = null)
 
     fun log(lazyMessage: () -> String)
 

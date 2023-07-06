@@ -61,6 +61,6 @@ fun main() {
         }
     }
 
-    machine.processEvent(CookEvent())
-    machine.processEvent(WashDishesEvent())
+    machine.sendEvent(CookEvent())
+    machine.sendEvent(WashDishesEvent())
 }
