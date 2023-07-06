@@ -12,6 +12,10 @@ import com.safframework.statemachine.v2.state.IState
  */
 sealed class TransitionDirection {
     open val targetState: IState? = null
+
+    override fun toString():String {
+        return "targetState{$targetState}"
+    }
 }
 
 internal object Stay : TransitionDirection()
