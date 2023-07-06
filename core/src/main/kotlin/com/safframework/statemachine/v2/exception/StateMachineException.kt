@@ -1,4 +1,4 @@
-package com.safframework.statemachine.exception
+package com.safframework.statemachine.v2.exception
 
 import java.lang.RuntimeException
 

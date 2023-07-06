@@ -95,7 +95,7 @@ class ExportPlantUmlVisitor : Visitor {
         const val STAR = "[*]"
         const val SINGLE_INDENT = "    "
         const val PARALLEL = "--"
-        fun IState.graphName() = name?.replace(" ", "_") ?: "State${hashCode()}"
+        fun IState.graphName() = name?.replace(" ", "_") ?: "State[${javaClass.simpleName}]"
         fun label(name: String?) = if (name != null) " : $name" else ""
     }
 }

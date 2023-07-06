@@ -31,3 +31,5 @@ typealias InterceptorBlock =  Interceptor.() -> Unit
 typealias TransitionAction = (TransitionParams<*>) -> Unit
 
 typealias TransitionActionBlock = TransitionAction.() -> Unit
+
+typealias Guard<E> = (E) -> Boolean

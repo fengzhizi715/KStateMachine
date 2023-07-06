@@ -1,5 +1,6 @@
 package com.safframework.statemachine.v2.transition
 
+import com.safframework.statemachine.v2.Guard
 import com.safframework.statemachine.v2.TransitionAction
 import com.safframework.statemachine.v2.TransitionDirectionProducer
 import com.safframework.statemachine.v2.domain.DataEvent
@@ -29,7 +30,7 @@ abstract class TransitionBuilder<E : Event>(protected val name: String?, protect
 
 abstract class BaseGuardedTransitionBuilder<E : Event>(name: String?, sourceState: IState) :
     TransitionBuilder<E>(name, sourceState) {
-    var guard: (E) -> Boolean = { true }
+    var guard: Guard<E> = { true }
 }
 
 abstract class GuardedTransitionBuilder<E : Event, S : IState>(name: String?, sourceState: IState) :

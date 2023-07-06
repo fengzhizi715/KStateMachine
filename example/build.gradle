@@ -19,7 +19,6 @@ dependencies {
     implementation "io.reactivex.rxjava3:rxjava:${libs.rxjava3}"
 
     implementation project(":core")
-    implementation project(":extension:rxjava3")
 }
 
 compileKotlin {
