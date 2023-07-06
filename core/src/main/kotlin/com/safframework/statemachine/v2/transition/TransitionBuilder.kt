@@ -117,7 +117,7 @@ class DataGuardedTransitionBuilder<E : DataEvent<D>, D>(name: String?, sourceSta
 class DataGuardedTransitionOnBuilder<E : DataEvent<D>, D>(name: String?, sourceState: IState) :
     GuardedTransitionOnBuilder<E, DataState<D>>(name, sourceState)
 
-inline fun <reified E : Event> TransitionBuilder<E>.onAction(crossinline block: TransitionAction) {
+inline fun <reified E : Event> TransitionBuilder<E>.action(crossinline block: TransitionAction) {
     require(action == null) { "Listener is already set, only one listener is allowed in a builder" }
 
     action = object : TransitionAction{

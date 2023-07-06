@@ -3,9 +3,8 @@ package com.safframework.statemachine
 import com.safframework.statemachine.v2.domain.Event
 import com.safframework.statemachine.v2.statemachine.StateMachine
 import com.safframework.statemachine.v2.statemachine.createStateMachine
-import com.safframework.statemachine.v2.transition.onAction
+import com.safframework.statemachine.v2.transition.action
 import com.safframework.statemachine.v2.utils.extension.*
-import com.safframework.statemachine.v2.visitors.exportToPlantUml
 
 /**
  *
@@ -23,23 +22,23 @@ fun main() {
         logger = StateMachine.Logger { println(it) }
 
         val init = initialState("init") {
-            onEntry {
+            entry {
                 println("Entered [${name}] State")
             }
 
-            onExit {
+            exit {
                 println("Exited [${name}] State")
             }
         }
 
         val eat = state("eat") {
-            onEntry {
+            entry {
                 println("Entered [${name}] State")
             }
         }
 
         val watchTV = state("watchTV") {
-            onEntry {
+            entry {
                 println("Entered [${name}] State")
             }
         }
@@ -47,7 +46,7 @@ fun main() {
         init {
             transition<CookEvent>("cook") {
                 targetState = eat
-                onAction {
+                action {
                     println("Action: Wash Vegetables")
                     println("Action: Cook")
                 }

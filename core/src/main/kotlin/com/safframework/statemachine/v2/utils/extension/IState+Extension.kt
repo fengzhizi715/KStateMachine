@@ -68,19 +68,19 @@ inline fun <reified S : IState> IState.requireState(recursive: Boolean = true) =
 
 operator fun <S : IState> S.invoke(block: StateBlock<S>) = block()
 
-fun <S : IState> S.onEntry(block: S.(TransitionParams<*>) -> Unit) {
+fun <S : IState> S.entry(block: S.(TransitionParams<*>) -> Unit) {
     addInterceptor(object : Interceptor {
         override fun onEntry(transitionParams: TransitionParams<*>) = block(transitionParams)
     })
 }
 
-fun <S : IState> S.onExit(block: S.(TransitionParams<*>) -> Unit) {
+fun <S : IState> S.exit(block: S.(TransitionParams<*>) -> Unit) {
     addInterceptor(object : Interceptor {
         override fun onExit(transitionParams: TransitionParams<*>) = block(transitionParams)
     })
 }
 
-fun <S : IState> S.onFinished(block: S.(TransitionParams<*>) -> Unit) {
+fun <S : IState> S.finished(block: S.(TransitionParams<*>) -> Unit) {
     addInterceptor(object : Interceptor {
         override fun onFinished(transitionParams: TransitionParams<*>) = block(transitionParams)
     })
