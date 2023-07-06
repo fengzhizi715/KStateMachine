@@ -1,10 +1,10 @@
 package com.safframework.statemachine
 
-import com.safframework.statemachine.v2.domain.Event
-import com.safframework.statemachine.v2.statemachine.StateMachine
-import com.safframework.statemachine.v2.statemachine.createStateMachine
-import com.safframework.statemachine.v2.transition.action
-import com.safframework.statemachine.v2.utils.extension.*
+import com.safframework.statemachine.domain.Event
+import com.safframework.statemachine.statemachine.StateMachine
+import com.safframework.statemachine.statemachine.createStateMachine
+import com.safframework.statemachine.transition.action
+import com.safframework.statemachine.utils.extension.*
 
 /**
  *
