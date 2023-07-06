@@ -6,7 +6,7 @@ import com.safframework.statemachine.v2.algorithm.TreeAlgorithm.findPathFromTarg
 import com.safframework.statemachine.v2.domain.ChildMode
 import com.safframework.statemachine.v2.domain.Event
 import com.safframework.statemachine.v2.domain.StartEvent
-import com.safframework.statemachine.v2.listener.Interceptor
+import com.safframework.statemachine.v2.interceptor.Interceptor
 import com.safframework.statemachine.v2.transition.TransitionParams
 import com.safframework.statemachine.v2.statemachine.InternalStateMachine
 import com.safframework.statemachine.v2.statemachine.StateMachine

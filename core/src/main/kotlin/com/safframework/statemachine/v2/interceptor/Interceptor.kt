@@ -1,4 +1,4 @@
-package com.safframework.statemachine.v2.listener
+package com.safframework.statemachine.v2.interceptor
 
 import com.safframework.statemachine.v2.domain.ChildMode
 import com.safframework.statemachine.v2.state.IFinalState

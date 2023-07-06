@@ -3,7 +3,7 @@ package com.safframework.statemachine.v2.state
 import com.safframework.statemachine.v2.StateBlock
 import com.safframework.statemachine.v2.StateTransitionsHelper
 import com.safframework.statemachine.v2.domain.ChildMode
-import com.safframework.statemachine.v2.listener.Interceptor
+import com.safframework.statemachine.v2.interceptor.Interceptor
 import com.safframework.statemachine.v2.statemachine.StateMachine
 import com.safframework.statemachine.v2.statemachine.StateMachineDslMarker
 import com.safframework.statemachine.v2.visitors.Visitor
