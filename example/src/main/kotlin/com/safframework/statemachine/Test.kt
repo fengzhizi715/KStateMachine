@@ -18,7 +18,7 @@ class CookEvent : Event
 class WashDishesEvent : Event
 
 fun main() {
-    val machine = createStateMachine("test") {
+    val sm = createStateMachine("test") {
         logger = StateMachine.Logger { println(it) }
 
         val init = initialState("init") {
@@ -60,6 +60,6 @@ fun main() {
         }
     }
 
-    machine.sendEvent(CookEvent())
-    machine.sendEvent(WashDishesEvent())
+    sm.sendEvent(CookEvent())
+    sm.sendEvent(WashDishesEvent())
 }
