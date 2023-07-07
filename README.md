@@ -24,68 +24,51 @@
 
 ```kotlin
 fun main() {
+    
+    val sm = createStateMachine("test") {
+        logger = StateMachine.Logger { println(it) }
 
-    val sm = StateMachine.buildStateMachine(initialStateName = Initial()) {
-
-        state(Initial()) {
-
+        val init = initialState("init") {
             entry {
-                action {
-                    println("Entered [${it.name}] State")
-                }
-            }
-
-            transition(Cook(), Eat()) {
-
-                action {
-                    println("Action: Wash Vegetables")
-                }
-
-                action {
-                    println("Action: Cook")
-                }
+                println("Entered [${name}] State")
             }
 
             exit {
+                println("Exited [${name}] State")
+            }
+        }
+
+        val eat = state("eat") {
+            entry {
+                println("Entered [${name}] State")
+            }
+        }
+
+        val watchTV = state("watchTV") {
+            entry {
+                println("Entered [${name}] State")
+            }
+        }
+
+        init {
+            transition<CookEvent>("cook") {
+                targetState = eat
                 action {
-                    println("Exited [${it.name}] State")
+                    println("Action: Wash Vegetables")
+                    println("Action: Cook")
                 }
             }
         }
 
-        state(Eat()) {
-
-            entry{
-                action {
-                    println("Entered [${it.name}] State")
-                }
-            }
-
-            transition(WashDishes(), WatchTV()) {
-
-                action {
-                    println("Action: Wash Dishes")
-                }
-
-                action {
-                    println("Action: Turn on the TV")
-                }
-            }
-        }
-
-        state(WatchTV()) {
-
-            entry{
-                action {
-                    println("Entered [${it.name}] State")
-                }
+        eat{
+            transition<WashDishesEvent>("washDishes")  {
+                targetState = watchTV
             }
         }
     }
 
-    sm.initialize()
-    sm.sendEvent(Cook())
-    sm.sendEvent(WashDishes())
+    sm.sendEvent(CookEvent())
+    sm.sendEvent(WashDishesEvent())
 }
 ```
 
