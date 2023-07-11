@@ -77,14 +77,12 @@ fun main() {
 执行结果：
 
 ```
-Entered [Initial] State
-Exited [Initial] State
+Entered [init] State
 Action: Wash Vegetables
 Action: Cook
-Entered [Eat] State
-Action: Wash Dishes
-Action: Turn on the TV
-Entered [WatchTV] State
+Exited [init] State
+Entered [eat] State
+Entered [watchTV] State
 ```
 
 ## Feature
@@ -93,14 +91,13 @@ Entered [WatchTV] State
 * 支持 FSM、HSM
 * 支持拦截器、以及全局的拦截器
 * 支持进入状态、离开状态的 Actions
+* 支持将状态机导出成 PlantUML
 
 ## 最新版本
 
 模块|最新版本
 ---|:-------------:
 statemachine-core|[![](https://jitpack.io/v/fengzhizi715/KStateMachine.svg)](https://jitpack.io/#fengzhizi715/KStateMachine)
-statemachine-rxjava2|[![](https://jitpack.io/v/fengzhizi715/KStateMachine.svg)](https://jitpack.io/#fengzhizi715/KStateMachine)
-statemachine-rxjava3|[![](https://jitpack.io/v/fengzhizi715/KStateMachine.svg)](https://jitpack.io/#fengzhizi715/KStateMachine)
 
 将它添加到项目的 root build.gradle 中：
 
@@ -117,14 +114,6 @@ statemachine-rxjava3|[![](https://jitpack.io/v/fengzhizi715/KStateMachine.svg)](
 
 ```groovy
 implementation 'com.github.fengzhizi715.KStateMachine:core:<latest-version>'
-```
-
-```groovy
-implementation 'com.github.fengzhizi715.KStateMachine:rxjava2:<latest-version>'
-```
-
-```groovy
-implementation 'com.github.fengzhizi715.KStateMachine:rxjava3:<latest-version>'
 ```
 
 ## TODO：
