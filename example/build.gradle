@@ -6,8 +6,6 @@ plugins {
 group 'com.safframework.statemachine'
 version '1.0-SNAPSHOT'
 
-def libs = rootProject.ext.libraries // 库
-
 sourceCompatibility = 1.8
 
 repositories {
@@ -16,7 +14,6 @@ repositories {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation "io.reactivex.rxjava3:rxjava:${libs.rxjava3}"
 
     implementation project(":core")
 }
