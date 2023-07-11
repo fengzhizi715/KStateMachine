@@ -88,7 +88,8 @@ Entered [watchTV] State
 ## Feature
 
 * 支持 DSL 的方式构建状态机
-* 支持 FSM、HSM
+* 支持 FSM、HSM(Nest State)
+* 支持 Event 传递参数
 * 支持拦截器、以及全局的拦截器
 * 支持进入状态、离开状态的 Actions
 * 支持将状态机导出成 PlantUML
