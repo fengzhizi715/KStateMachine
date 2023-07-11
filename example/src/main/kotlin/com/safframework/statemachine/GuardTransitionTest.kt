@@ -1,10 +1,7 @@
 package com.safframework.statemachine
 
 import com.safframework.statemachine.domain.DataEvent
-import com.safframework.statemachine.domain.Event
 import com.safframework.statemachine.state.DataState
-import com.safframework.statemachine.state.IState
-import com.safframework.statemachine.state.State
 import com.safframework.statemachine.statemachine.StateMachine
 import com.safframework.statemachine.statemachine.createStateMachine
 import com.safframework.statemachine.utils.extension.*
@@ -25,6 +22,8 @@ fun main() {
 
         lateinit var choice: DataState<Int>
 
+        val finalState = finalState("final")
+
         initialState("init") {
             dataTransitionOn<ChoiceEvent,Int>("choice") {
                 guard = {
@@ -38,9 +37,14 @@ fun main() {
             entry {
                 println(this.data)
             }
+
+            transitionOn<EndEvent> {
+                targetState = { finalState }
+            }
         }
     }
 
     sm.sendEvent(ChoiceEvent(5))
     sm.sendEvent(ChoiceEvent(20))
+    sm.sendEvent(EndEvent())
 }

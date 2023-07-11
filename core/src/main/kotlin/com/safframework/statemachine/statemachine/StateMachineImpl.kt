@@ -1,6 +1,7 @@
 package com.safframework.statemachine.statemachine
 
 import com.safframework.statemachine.domain.ChildMode
+import com.safframework.statemachine.domain.DataEvent
 import com.safframework.statemachine.domain.Event
 import com.safframework.statemachine.state.DefaultState
 import com.safframework.statemachine.state.IState
@@ -98,7 +99,11 @@ internal class StateMachineImpl(name: String?, childMode: ChildMode) :
 
         try {
             if (!doProcessEvent(event, argument)) {
-                log { "$this ignored $event" }
+                if (event is DataEvent<*>) {
+                    log { "$this ignored ${event::class.simpleName}(${event.data})" }
+                } else {
+                    log { "$this ignored ${event::class.simpleName}" }
+                }
                 ignoredEventHandler.onIgnoredEvent(event, argument)
             }
         } finally {
@@ -119,7 +124,13 @@ internal class StateMachineImpl(name: String?, childMode: ChildMode) :
         val targetState = direction.targetState as? InternalState
 
         val targetText = if (targetState != null) "to $targetState" else "[targetless]"
-        log { "event:${event::class.simpleName}, triggers $transition from ${transition.sourceState} $targetText" }
+
+        if (event is DataEvent<*>) {
+            log { "event:${event::class.simpleName}(${event.data}), triggers $transition from ${transition.sourceState} $targetText" }
+        } else {
+            log { "event:${event::class.simpleName}, triggers $transition from ${transition.sourceState} $targetText" }
+        }
+
 
         transition.transitionNotify {
             invoke(transitionParams)
