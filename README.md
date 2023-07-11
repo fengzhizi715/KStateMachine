@@ -93,7 +93,6 @@ Entered [WatchTV] State
 * 支持 FSM、HSM
 * 支持拦截器、以及全局的拦截器
 * 支持进入状态、离开状态的 Actions
-* 支持 RxJava 2、RxJava 3
 
 ## 最新版本
 
@@ -131,7 +130,6 @@ implementation 'com.github.fengzhizi715.KStateMachine:rxjava3:<latest-version>'
 ## TODO：
 
 * 支持 Kotlin Coroutines
-* 优化 HSM
 * 增加异常的处理机制
 
 
