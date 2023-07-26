@@ -92,6 +92,7 @@ Entered [watchTV] State
 * 支持 Event 传递参数
 * 支持拦截器、以及全局的拦截器
 * 支持 Transition 时执行的 Action
+* 支持 Transition 的 extend 和 override
 * 支持将状态机导出成 PlantUML
 
 ## 最新版本
