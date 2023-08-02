@@ -9,6 +9,7 @@ import com.safframework.statemachine.statemachine.StateMachine
 import com.safframework.statemachine.transition.InternalTransition
 import com.safframework.statemachine.transition.Transition
 import com.safframework.statemachine.transition.TransitionDirectionProducerPolicy
+import kotlin.reflect.full.createInstance
 
 /**
  *
@@ -56,7 +57,10 @@ class ExportPlantUmlVisitor : Visitor {
         transition as InternalTransition<E>
 
         val sourceState = transition.sourceState.graphName()
-        val targetState = transition.produceTargetStateDirection(TransitionDirectionProducerPolicy.CollectTargetStatesPolicy()).targetState ?: return
+        val eventClass = transition.eventMatcher.eventClass
+        val targetState = transition.produceTargetStateDirection(TransitionDirectionProducerPolicy.CollectTargetStatesPolicy()).targetState
+            ?: transition.produceTargetStateDirection(TransitionDirectionProducerPolicy.DefaultPolicy(eventClass.createInstance())).targetState
+            ?: return
 
         val transitionString = "$sourceState --> ${targetState.graphName()}${label(transition.name)}"
 

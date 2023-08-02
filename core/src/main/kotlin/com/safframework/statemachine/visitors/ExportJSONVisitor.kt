@@ -8,6 +8,7 @@ import com.safframework.statemachine.transition.InternalTransition
 import com.safframework.statemachine.transition.Transition
 import com.safframework.statemachine.transition.TransitionDirectionProducerPolicy
 import java.io.Serializable
+import kotlin.reflect.full.createInstance
 
 /**
  *
@@ -57,6 +58,8 @@ class ExportJSONVisitor: Visitor {
 
         line("]",indent)
         line("}")
+
+        println(transitionMap)
     }
 
     private fun processState(stateName:String, initName:String, indent:Int, flag:Boolean=false, endWithComma:Boolean=false) {
@@ -137,11 +140,14 @@ class ExportJSONVisitor: Visitor {
         transition as InternalTransition<E>
 
         val sourceState = transition.sourceState.graphName()
-        val targetState = transition.produceTargetStateDirection(TransitionDirectionProducerPolicy.CollectTargetStatesPolicy()).targetState ?: return
+        val eventClass = transition.eventMatcher.eventClass
+        val targetState = transition.produceTargetStateDirection(TransitionDirectionProducerPolicy.CollectTargetStatesPolicy()).targetState
+            ?: transition.produceTargetStateDirection(TransitionDirectionProducerPolicy.DefaultPolicy(eventClass.createInstance())).targetState
+            ?: return
 
         val list:MutableList<Quadruple<String,String,String,String>> = transitionMap[sourceState] ?: arrayListOf()
 
-        val transitionQuadruple = Quadruple(sourceState, targetState.graphName(), label(transition.name), transition.eventMatcher.eventClass.qualifiedName?:"")
+        val transitionQuadruple = Quadruple(sourceState, targetState.graphName(), label(transition.name), eventClass.qualifiedName?:"")
         list.add(transitionQuadruple)
 
         transitionMap[sourceState] = list

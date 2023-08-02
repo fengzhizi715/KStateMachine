@@ -5,7 +5,6 @@ import com.safframework.statemachine.state.State
 import com.safframework.statemachine.statemachine.StateMachine
 import com.safframework.statemachine.statemachine.createStateMachine
 import com.safframework.statemachine.utils.extension.*
-import com.safframework.statemachine.visitors.exportToPlantUml
 
 /**
  *
