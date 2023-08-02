@@ -22,6 +22,10 @@
 
 * Interceptor（拦截器）：对当前状态改变前、后进行监听拦截。
 
+## 分层状态机定义
+
+分层状态机，（英语：Hierarchical State Machine, HSM）
+
 ```kotlin
 fun main() {
     
@@ -90,7 +94,8 @@ Entered [watchTV] State
 * 支持 DSL 的方式构建状态机
 * 支持 FSM、HSM(Nested State)
 * 支持 Event 传递参数
-* 支持拦截器、以及全局的拦截器
+* 支持拦截器以及全局的拦截器
+* 支持 State 的 entry 和 exit 的 Action
 * 支持 Transition 时执行的 Action
 * 支持 Transition 的 extend 和 override
 * 支持将状态机导出成 PlantUML、JSON
