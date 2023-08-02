@@ -7,6 +7,7 @@ import com.safframework.statemachine.statemachine.StateMachine
 import com.safframework.statemachine.transition.InternalTransition
 import com.safframework.statemachine.transition.Transition
 import com.safframework.statemachine.transition.TransitionDirectionProducerPolicy
+import com.safframework.statemachine.utils.extension.isFinal
 import java.io.Serializable
 import kotlin.reflect.full.createInstance
 
@@ -58,8 +59,6 @@ class ExportJSONVisitor: Visitor {
 
         line("]",indent)
         line("}")
-
-        println(transitionMap)
     }
 
     private fun processState(stateName:String, initName:String, indent:Int, flag:Boolean=false, endWithComma:Boolean=false) {
@@ -194,4 +193,3 @@ fun StateMachine.exportToJSON() = with(ExportJSONVisitor()) {
     export()
 }
 
-fun IState.isFinal() = this is IFinalState

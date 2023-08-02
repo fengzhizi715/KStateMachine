@@ -133,7 +133,7 @@ fun IState.finalState(name: String? = null, init: StateBlock<FinalState>? = null
 fun <D> IState.finalDataState(name: String? = null, init: StateBlock<FinalDataState<D>>? = null) =
     addFinalState(DefaultFinalDataState(name), init)
 
-
+fun IState.isFinal() = this is IFinalState
 
 
 
