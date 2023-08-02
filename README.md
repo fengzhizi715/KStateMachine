@@ -4,7 +4,7 @@
 
 # KStateMachine
 
-使用 Kotlin 特性实现的有限状态机 (FSM) 框架，基于事件驱动。
+使用 Kotlin 特性实现的 FSM、HSM 框架，基于事件驱动。
 
 ## 有限状态机定义
 
@@ -93,7 +93,7 @@ Entered [watchTV] State
 * 支持拦截器、以及全局的拦截器
 * 支持 Transition 时执行的 Action
 * 支持 Transition 的 extend 和 override
-* 支持将状态机导出成 PlantUML
+* 支持将状态机导出成 PlantUML、JSON
 
 ## 最新版本
 
