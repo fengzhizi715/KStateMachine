@@ -1,7 +1,6 @@
 package com.safframework.statemachine.visitors
 
 import com.safframework.statemachine.domain.Event
-import com.safframework.statemachine.state.IFinalState
 import com.safframework.statemachine.state.IState
 import com.safframework.statemachine.statemachine.StateMachine
 import com.safframework.statemachine.transition.InternalTransition
