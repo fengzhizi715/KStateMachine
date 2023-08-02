@@ -7,6 +7,7 @@ import com.safframework.statemachine.statemachine.StateMachine
 import com.safframework.statemachine.transition.InternalTransition
 import com.safframework.statemachine.transition.Transition
 import com.safframework.statemachine.transition.TransitionDirectionProducerPolicy
+import java.io.Serializable
 
 /**
  *
@@ -16,12 +17,16 @@ import com.safframework.statemachine.transition.TransitionDirectionProducerPolic
  * @date: 2023/7/31 20:20
  * @version: V1.0 <描述当前版本功能>
  */
+data class Quadruple<A,B,C,D>(var first: A, var second: B, var third: C, var fourth: D): Serializable {
+    override fun toString(): String = "($first, $second, $third, $fourth)"
+}
+
 class ExportJSONVisitor: Visitor {
     private val builder = StringBuilder()
 
     private val stateMap = mutableMapOf<String,MutableList<String>?>()
     private val stateInfoMap = mutableMapOf<String,IState>()
-    private val transitionMap = mutableMapOf<String,MutableList<Triple<String,String,String>>>()
+    private val transitionMap = mutableMapOf<String,MutableList<Quadruple<String,String,String,String>>>()
 
     fun export() = builder.toString()
 
@@ -72,7 +77,8 @@ class ExportJSONVisitor: Visitor {
                     tempIndent++
                     line("\"name\":\"${transition.third}\",",tempIndent)
                     line("\"sourceState\":\"${transition.first}\",",tempIndent)
-                    line("\"targetState\":\"${transition.second}\"",tempIndent)
+                    line("\"targetState\":\"${transition.second}\",",tempIndent)
+                    line("\"event\":\"${transition.fourth}\"",tempIndent)
                     tempIndent--
                     if (size != list.size) {
                         line("},",tempIndent)
@@ -133,10 +139,10 @@ class ExportJSONVisitor: Visitor {
         val sourceState = transition.sourceState.graphName()
         val targetState = transition.produceTargetStateDirection(TransitionDirectionProducerPolicy.CollectTargetStatesPolicy()).targetState ?: return
 
-        val list:MutableList<Triple<String,String,String>> = transitionMap[sourceState] ?: arrayListOf()
+        val list:MutableList<Quadruple<String,String,String,String>> = transitionMap[sourceState] ?: arrayListOf()
 
-        val transitionTriple = Triple(sourceState, targetState.graphName(), label(transition.name))
-        list.add(transitionTriple)
+        val transitionQuadruple = Quadruple(sourceState, targetState.graphName(), label(transition.name), transition.eventMatcher.eventClass.qualifiedName?:"")
+        list.add(transitionQuadruple)
 
         transitionMap[sourceState] = list
     }
