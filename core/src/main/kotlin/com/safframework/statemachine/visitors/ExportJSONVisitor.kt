@@ -35,7 +35,7 @@ class ExportJSONVisitor: Visitor {
         // 先遍历一遍状态机
         processStateBody(machine)
 
-        // 然后开始进行拼装 json 字符串
+        // 然后才开始进行拼装 json 字符串
         val machineName = machine.name ?: machine.graphName()
         val indent = 1
         line("{")
@@ -169,10 +169,6 @@ class ExportJSONVisitor: Visitor {
 
         // visit transitions
         states.flatMap { it.transitions }.forEach { visit(it) }
-
-//        // add finish transitions
-//        states.filterIsInstance<IFinalState>()
-//            .forEach { line("${it.graphName()} --> ${STAR}") }
     }
 
     private fun line(text: String,indent:Int = 0) = builder.appendLine(SINGLE_INDENT.repeat(indent) + text)
