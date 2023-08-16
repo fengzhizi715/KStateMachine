@@ -126,9 +126,9 @@ internal class StateMachineImpl(name: String?, childMode: ChildMode) :
         val targetText = if (targetState != null) "to $targetState" else "[targetless]"
 
         if (event is DataEvent<*>) {
-            log { "event:${event::class.simpleName}(${event.data}), triggers $transition from ${transition.sourceState} $targetText" }
+            log { "event:${event::class.simpleName}(${event.data}), argument:${argument}, triggers $transition from ${transition.sourceState} $targetText" }
         } else {
-            log { "event:${event::class.simpleName}, triggers $transition from ${transition.sourceState} $targetText" }
+            log { "event:${event::class.simpleName}, argument:${argument}, triggers $transition from ${transition.sourceState} $targetText" }
         }
 
         transition.transitionNotify {

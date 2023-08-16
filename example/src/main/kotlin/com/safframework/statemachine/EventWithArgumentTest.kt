@@ -34,18 +34,12 @@ fun main() {
         init {
             transition<TransitionWithArgumentEvent>("TransitionWithArgument1") {
                 targetState = state1
-                action{
-                    println("argument = "+it.argument)
-                }
             }
         }
 
         state1 {
             transition<TransitionWithArgumentEvent>("TransitionWithArgument2") {
                 targetState = state2
-                action{
-                    println("argument = "+it.argument)
-                }
             }
         }
     }
