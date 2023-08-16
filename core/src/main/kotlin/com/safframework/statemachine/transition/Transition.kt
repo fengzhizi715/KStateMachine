@@ -14,6 +14,11 @@ import com.safframework.statemachine.visitors.VisitorAcceptor
  * @date: 2023/7/3 20:42
  * @version: V1.0 <描述当前版本功能>
  */
+enum class TransitionType {
+    LOCAL,
+    EXTERNAL
+}
+
 interface Transition<E : Event> : VisitorAcceptor {
     val name: String?
     val eventMatcher: EventMatcher<E>
@@ -37,10 +42,4 @@ interface Transition<E : Event> : VisitorAcceptor {
     fun isMatchingEvent(event: Event): Boolean
 
     override fun accept(visitor: Visitor) = visitor.visit(this)
-}
-
-enum class TransitionType {
-    /** Default */
-    LOCAL,
-    EXTERNAL
 }

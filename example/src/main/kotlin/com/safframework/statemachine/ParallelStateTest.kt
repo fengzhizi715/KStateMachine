@@ -1,7 +1,7 @@
 package com.safframework.statemachine
 
-import com.safframework.statemachine.domain.ChildMode
 import com.safframework.statemachine.domain.Event
+import com.safframework.statemachine.state.ChildMode
 import com.safframework.statemachine.state.State
 import com.safframework.statemachine.statemachine.StateMachine
 import com.safframework.statemachine.statemachine.createStateMachine

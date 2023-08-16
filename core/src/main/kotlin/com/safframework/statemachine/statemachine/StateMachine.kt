@@ -1,8 +1,8 @@
 package com.safframework.statemachine.statemachine
 
 import com.safframework.statemachine.StateMachineBlock
-import com.safframework.statemachine.domain.ChildMode
 import com.safframework.statemachine.domain.Event
+import com.safframework.statemachine.state.ChildMode
 import com.safframework.statemachine.state.IState
 import com.safframework.statemachine.state.State
 import com.safframework.statemachine.transition.TransitionParams

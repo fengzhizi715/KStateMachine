@@ -1,7 +1,7 @@
 package com.safframework.statemachine.state
 
 import com.safframework.statemachine.StateBlock
-import com.safframework.statemachine.domain.ChildMode
+import com.safframework.statemachine.StateTransitionsHelper
 import com.safframework.statemachine.interceptor.Interceptor
 import com.safframework.statemachine.statemachine.StateMachine
 import com.safframework.statemachine.statemachine.StateMachineDslMarker
@@ -16,8 +16,10 @@ import com.safframework.statemachine.visitors.VisitorAcceptor
  * @date: 2023/7/4 09:52
  * @version: V1.0 <描述当前版本功能>
  */
+enum class ChildMode { EXCLUSIVE, PARALLEL }
+
 @StateMachineDslMarker
-interface IState : com.safframework.statemachine.StateTransitionsHelper, VisitorAcceptor {
+interface IState : StateTransitionsHelper, VisitorAcceptor {
     val name: String?
     val states: Set<IState>
     val initialState: IState?

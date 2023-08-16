@@ -1,6 +1,5 @@
 package com.safframework.statemachine.interceptor
 
-import com.safframework.statemachine.domain.ChildMode
 import com.safframework.statemachine.state.IFinalState
 import com.safframework.statemachine.transition.TransitionParams
 

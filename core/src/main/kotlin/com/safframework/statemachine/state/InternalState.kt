@@ -19,6 +19,7 @@ import com.safframework.statemachine.transition.TransitionDirectionProducerPolic
 interface InternalState: IState {
 
     override val parent: IState? get() = internalParent
+
     val internalParent: InternalState?
     fun setParent(parent: InternalState)
 

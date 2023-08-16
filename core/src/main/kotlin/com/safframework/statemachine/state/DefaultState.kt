@@ -1,6 +1,5 @@
 package com.safframework.statemachine.state
 
-import com.safframework.statemachine.domain.ChildMode
 import com.safframework.statemachine.domain.DataEvent
 import com.safframework.statemachine.domain.Event
 import com.safframework.statemachine.transition.TransitionParams
