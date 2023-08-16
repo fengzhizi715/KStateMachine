@@ -26,6 +26,10 @@
 
 分层状态机，（英语：Hierarchical State Machine, HSM）
 
+## 状态机的使用
+
+### FSM 的使用
+
 ```kotlin
 fun main() {
     
@@ -88,6 +92,8 @@ Exited [init] State
 Entered [eat] State
 Entered [watchTV] State
 ```
+
+### HSM 的使用
 
 ## Feature
 
