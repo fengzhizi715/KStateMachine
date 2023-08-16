@@ -1,6 +1,7 @@
 package com.safframework.statemachine
 
 import com.safframework.statemachine.domain.Event
+import com.safframework.statemachine.statemachine.StateMachine
 import com.safframework.statemachine.statemachine.createStateMachine
 import com.safframework.statemachine.transition.action
 import com.safframework.statemachine.utils.extension.*
@@ -18,7 +19,7 @@ class WashDishesEvent : Event
 
 fun main() {
     val sm = createStateMachine("test") {
-//        logger = StateMachine.Logger { println(it) }
+        logger = StateMachine.Logger { println(it) }
 
         val init = initialState("init") {
             entry {
@@ -52,7 +53,7 @@ fun main() {
             }
         }
 
-        eat{
+        eat {
             transition<WashDishesEvent>("washDishes")  {
                 targetState = watchTV
             }
