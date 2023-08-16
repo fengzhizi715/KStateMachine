@@ -24,12 +24,10 @@ fun main() {
         logger = StateMachine.Logger { println(it) }
 
         lateinit var state1: State
-        lateinit var nested11: State
-        lateinit var nested12: State
 
         val finalState = finalState("final")
 
-        val init = initialState("init") {
+        initialState("init") {
 
             transitionOn<ParallelTransitionEvent1> {
                 targetState = { state1 }
@@ -37,8 +35,8 @@ fun main() {
         }
 
         state1 = state("Top level 1",childMode = ChildMode.PARALLEL) {
-            nested11 = state("Nested 11")
-            nested12 = state("Nested 12")
+            state("Nested 11")
+            state("Nested 12")
 
             transition<ParallelTransitionEvent2> {
                 targetState = finalState
