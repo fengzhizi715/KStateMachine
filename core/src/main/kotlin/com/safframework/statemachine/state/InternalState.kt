@@ -18,7 +18,9 @@ import com.safframework.statemachine.transition.TransitionDirectionProducerPolic
  */
 interface InternalState: IState {
 
-    override var parent: InternalState?
+    override val parent: IState? get() = internalParent
+    val internalParent: InternalState?
+    fun setParent(parent: InternalState)
 
     fun doEnter(transitionParams: TransitionParams<*>)
 
@@ -41,7 +43,7 @@ interface InternalState: IState {
 
 internal fun InternalState.isNeighbor(state: IState) = parent?.states?.contains(state) == true
 
-internal fun InternalState.requireParent() = requireNotNull(parent) { "Parent is not set" }
+internal fun InternalState.requireInternalParent() = requireNotNull(internalParent) { "$this parent is not set" }
 
 internal fun InternalState.stateNotify(block: InterceptorBlock) = interceptors.forEach { it.apply(block) }
 

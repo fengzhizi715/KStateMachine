@@ -2,7 +2,7 @@ package com.safframework.statemachine.algorithm
 
 import com.safframework.statemachine.state.IState
 import com.safframework.statemachine.state.InternalState
-import com.safframework.statemachine.state.requireParent
+import com.safframework.statemachine.state.requireInternalParent
 
 /**
  *
@@ -23,21 +23,21 @@ object TreeAlgorithm{
 
         while (thisDepth != targetDepth) {
             if (thisDepth > targetDepth) {
-                thisNode = thisNode.requireParent()
+                thisNode = thisNode.requireInternalParent()
                 thisDepth--
             } else {
                 targetPath.add(targetNode)
 
-                targetNode = targetNode.requireParent()
+                targetNode = targetNode.requireInternalParent()
                 targetDepth--
             }
         }
 
         while (thisNode !== targetNode) {
-            thisNode = thisNode.requireParent()
+            thisNode = thisNode.requireInternalParent()
 
             targetPath.add(targetNode)
-            targetNode = targetNode.requireParent()
+            targetNode = targetNode.requireInternalParent()
         }
 
         targetPath.add(thisNode) // add lca

@@ -38,8 +38,9 @@ inline fun <reified E : Event> StateTransitionsHelper.requireTransition() =
  */
 inline fun <reified E : Event> StateTransitionsHelper.transition(
     name: String? = null,
-    targetState: State? = null
-): Transition<E> = addTransition(DefaultTransition(name, isInstanceOf(), toState(), targetState))
+    targetState: State? = null,
+    type: TransitionType = TransitionType.LOCAL,
+): Transition<E> = addTransition(DefaultTransition(name, isInstanceOf(), type, toState(), targetState))
 
 /**
  * Creates transition.
@@ -98,12 +99,13 @@ inline fun <reified E : Event> StateTransitionsHelper.transitionConditionally(
  */
 inline fun <reified E : DataEvent<D>, D> StateTransitionsHelper.dataTransition(
     name: String? = null,
-    targetState: DataState<D>
+    targetState: DataState<D>,
+    type: TransitionType = TransitionType.LOCAL,
 ): Transition<E> {
     require(targetState != toState()) {
         "data transition should no be self targeted, use simple transition instead"
     }
-    return addTransition(DefaultTransition(name, isInstanceOf(), toState(), targetState))
+    return addTransition(DefaultTransition(name, isInstanceOf(), type, toState(), targetState))
 }
 
 /**

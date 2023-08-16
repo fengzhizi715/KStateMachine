@@ -7,12 +7,9 @@ import com.safframework.statemachine.domain.ChildMode
 import com.safframework.statemachine.domain.Event
 import com.safframework.statemachine.domain.StartEvent
 import com.safframework.statemachine.interceptor.Interceptor
-import com.safframework.statemachine.transition.TransitionParams
 import com.safframework.statemachine.statemachine.InternalStateMachine
 import com.safframework.statemachine.statemachine.StateMachine
-import com.safframework.statemachine.transition.DefaultTransition
-import com.safframework.statemachine.transition.EventMatcher
-import com.safframework.statemachine.transition.Transition
+import com.safframework.statemachine.transition.*
 import com.safframework.statemachine.transition.TransitionDirectionProducerPolicy.DefaultPolicy
 import com.safframework.statemachine.utils.extension.findState
 import com.safframework.statemachine.utils.extension.machineNotify
@@ -42,9 +39,14 @@ open class BaseStateImpl(override val name: String?, override val childMode: Chi
     private var _initialState: InternalState? = null
     override val initialState get() = _initialState
 
-    override var parent: InternalState? = null
+    override var internalParent: InternalState? = null
 
-    override val machine get() = if (this is StateMachine) this else requireParent().machine
+    override fun setParent(parent: InternalState) {
+        check(parent !== internalParent) { "$parent is already a parent of $this" }
+        internalParent = parent
+    }
+
+    override val machine get() = if (this is StateMachine) this else requireInternalParent().machine
 
     private val _transitions = mutableSetOf<Transition<*>>()
     override val transitions: Set<Transition<*>> get() = _transitions
@@ -75,7 +77,7 @@ open class BaseStateImpl(override val name: String?, override val childMode: Chi
 
         state as InternalState
         require(_states.add(state)) { "$state already added" }
-        state.parent = this
+        state.setParent(this)
         if (init != null)
             state.init()
         return state
@@ -219,7 +221,7 @@ open class BaseStateImpl(override val name: String?, override val childMode: Chi
         require(childMode == ChildMode.EXCLUSIVE) { "Cannot set current state in child mode $childMode" }
         require(states.contains(state)) { "$state is not a child of $this" }
 
-        if (currentState == state) return
+        if (currentState == state && transitionParams.transition.type != TransitionType.EXTERNAL) return
         currentState?.recursiveExit(transitionParams)
         currentState = state
 
@@ -250,7 +252,7 @@ open class BaseStateImpl(override val name: String?, override val childMode: Chi
         }
 
         if (finish)
-            parent?.afterChildFinished(this, transitionParams)
+            internalParent?.afterChildFinished(this, transitionParams)
     }
 
     internal fun switchToTargetState(
@@ -259,6 +261,8 @@ open class BaseStateImpl(override val name: String?, override val childMode: Chi
         transitionParams: TransitionParams<*>
     ) {
         val path = fromState.findPathFromTargetToLca(targetState)
+        if (transitionParams.transition.type == TransitionType.EXTERNAL)
+            path.last().internalParent?.let { path.add(it) }
         val lca = path.removeLast()
         lca.recursiveEnterStatePath(path, transitionParams)
     }
@@ -270,6 +274,7 @@ open class BaseStateImpl(override val name: String?, override val childMode: Chi
         val transition = DefaultTransition(
             "Starting",
             EventMatcher.isInstanceOf<StartEvent>(),
+            TransitionType.LOCAL,
             sourceState,
             targetState,
         )
