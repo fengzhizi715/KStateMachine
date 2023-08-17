@@ -7,7 +7,6 @@ import com.safframework.statemachine.transition.InternalTransition
 import com.safframework.statemachine.transition.Transition
 import com.safframework.statemachine.transition.TransitionDirectionProducerPolicy
 import com.safframework.statemachine.utils.extension.isFinal
-import java.io.Serializable
 import kotlin.reflect.full.createInstance
 
 /**
@@ -18,16 +17,18 @@ import kotlin.reflect.full.createInstance
  * @date: 2023/7/31 20:20
  * @version: V1.0 <描述当前版本功能>
  */
-data class Quadruple<A,B,C,D>(var first: A, var second: B, var third: C, var fourth: D): Serializable {
-    override fun toString(): String = "($first, $second, $third, $fourth)"
-}
+data class TransitionDesc(val name:String,
+                          val sourceState:String,
+                          val targetState:String,
+                          val event:String,
+                          val type:String)
 
 class ExportJSONVisitor: Visitor {
     private val builder = StringBuilder()
 
     private val stateMap = mutableMapOf<String,MutableList<String>?>()
     private val stateInfoMap = mutableMapOf<String,IState>()
-    private val transitionMap = mutableMapOf<String,MutableList<Quadruple<String,String,String,String>>>()
+    private val transitionMap = mutableMapOf<String,MutableList<TransitionDesc>>()
 
     fun export() = builder.toString()
 
@@ -76,10 +77,11 @@ class ExportJSONVisitor: Visitor {
                     size++
                     line("{",tempIndent)
                     tempIndent++
-                    line("\"name\":\"${transition.third}\",",tempIndent)
-                    line("\"sourceState\":\"${transition.first}\",",tempIndent)
-                    line("\"targetState\":\"${transition.second}\",",tempIndent)
-                    line("\"event\":\"${transition.fourth}\"",tempIndent)
+                    line("\"name\":\"${transition.name}\",",tempIndent)
+                    line("\"sourceState\":\"${transition.sourceState}\",",tempIndent)
+                    line("\"targetState\":\"${transition.targetState}\",",tempIndent)
+                    line("\"event\":\"${transition.event}\",",tempIndent)
+                    line("\"type\":\"${transition.type}\"",tempIndent)
                     tempIndent--
                     if (size != list.size) {
                         line("},",tempIndent)
@@ -143,9 +145,9 @@ class ExportJSONVisitor: Visitor {
             ?: transition.produceTargetStateDirection(TransitionDirectionProducerPolicy.DefaultPolicy(eventClass.createInstance())).targetState
             ?: return
 
-        val list:MutableList<Quadruple<String,String,String,String>> = transitionMap[sourceState] ?: arrayListOf()
+        val list:MutableList<TransitionDesc> = transitionMap[sourceState] ?: arrayListOf()
 
-        val transitionQuadruple = Quadruple(sourceState, targetState.graphName(), label(transition.name), eventClass.qualifiedName?:"")
+        val transitionQuadruple = TransitionDesc(label(transition.name), sourceState, targetState.graphName(), eventClass.qualifiedName?:"", transition.type.name)
         list.add(transitionQuadruple)
 
         transitionMap[sourceState] = list
@@ -175,7 +177,6 @@ class ExportJSONVisitor: Visitor {
 
     private companion object {
         const val SINGLE_INDENT = "    "
-        const val PARALLEL = "--"
 
         fun IState.graphName() = name?.replace(" ", "_") ?: javaClass.simpleName
 
