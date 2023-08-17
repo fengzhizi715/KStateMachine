@@ -104,6 +104,7 @@ class ExportJSONVisitor: Visitor {
         if (subStates == null || subStates?.size==0) {
             line("\"subStates\":null",tempIndent)
         } else {
+            line("\"childMode\":${state?.childMode?.name},",tempIndent)
             line("\"subStates\":[",tempIndent)
             var size = 0
             subStates.forEach {
