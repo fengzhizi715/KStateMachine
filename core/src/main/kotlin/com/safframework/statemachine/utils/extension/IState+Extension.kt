@@ -1,6 +1,6 @@
 package com.safframework.statemachine.utils.extension
 
-import com.safframework.statemachine.StateBlock
+import com.safframework.statemachine.utils.StateBlock
 import com.safframework.statemachine.interceptor.Interceptor
 import com.safframework.statemachine.transition.TransitionParams
 import com.safframework.statemachine.state.*

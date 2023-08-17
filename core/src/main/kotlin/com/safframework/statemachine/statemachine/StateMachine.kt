@@ -1,6 +1,6 @@
 package com.safframework.statemachine.statemachine
 
-import com.safframework.statemachine.StateMachineBlock
+import com.safframework.statemachine.utils.StateMachineBlock
 import com.safframework.statemachine.domain.Event
 import com.safframework.statemachine.state.ChildMode
 import com.safframework.statemachine.state.IState

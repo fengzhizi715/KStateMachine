@@ -1,6 +1,6 @@
 package com.safframework.statemachine.transition
 
-import com.safframework.statemachine.TransitionActionBlock
+import com.safframework.statemachine.utils.TransitionActionBlock
 import com.safframework.statemachine.domain.Event
 import com.safframework.statemachine.state.InternalState
 

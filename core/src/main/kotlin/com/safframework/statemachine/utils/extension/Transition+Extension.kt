@@ -1,6 +1,6 @@
 package com.safframework.statemachine.utils.extension
 
-import com.safframework.statemachine.TransitionAction
+import com.safframework.statemachine.utils.TransitionAction
 import com.safframework.statemachine.domain.Event
 import com.safframework.statemachine.transition.TransitionParams
 import com.safframework.statemachine.transition.Transition

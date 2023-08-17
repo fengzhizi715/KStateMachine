@@ -1,7 +1,7 @@
 package com.safframework.statemachine.state
 
-import com.safframework.statemachine.ResolvedTransition
-import com.safframework.statemachine.StateBlock
+import com.safframework.statemachine.utils.ResolvedTransition
+import com.safframework.statemachine.utils.StateBlock
 import com.safframework.statemachine.algorithm.TreeAlgorithm.findPathFromTargetToLca
 import com.safframework.statemachine.domain.Event
 import com.safframework.statemachine.domain.StartEvent

@@ -1,4 +1,4 @@
-package com.safframework.statemachine
+package com.safframework.statemachine.utils
 
 import com.safframework.statemachine.interceptor.Interceptor
 import com.safframework.statemachine.statemachine.StateMachine

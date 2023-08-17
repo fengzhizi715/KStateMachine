@@ -1,7 +1,7 @@
 package com.safframework.statemachine.transition
 
-import com.safframework.statemachine.TransitionAction
-import com.safframework.statemachine.TransitionDirectionProducer
+import com.safframework.statemachine.utils.TransitionAction
+import com.safframework.statemachine.utils.TransitionDirectionProducer
 import com.safframework.statemachine.domain.Event
 import com.safframework.statemachine.state.IState
 import com.safframework.statemachine.state.InternalState

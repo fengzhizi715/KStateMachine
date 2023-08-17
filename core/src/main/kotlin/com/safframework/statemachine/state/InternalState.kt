@@ -1,7 +1,7 @@
 package com.safframework.statemachine.state
 
-import com.safframework.statemachine.InterceptorBlock
-import com.safframework.statemachine.ResolvedTransition
+import com.safframework.statemachine.utils.InterceptorBlock
+import com.safframework.statemachine.utils.ResolvedTransition
 import com.safframework.statemachine.domain.Event
 import com.safframework.statemachine.transition.TransitionParams
 import com.safframework.statemachine.transition.InternalTransition
