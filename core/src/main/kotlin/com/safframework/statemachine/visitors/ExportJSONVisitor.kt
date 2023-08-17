@@ -36,6 +36,9 @@ class ExportJSONVisitor: Visitor {
         // 先遍历一遍状态机
         processStateBody(machine)
 
+        println("stateMap = $stateMap")
+        println("stateInfoMap = $stateInfoMap")
+
         // 然后才开始进行拼装 json 字符串
         val machineName = machine.name ?: machine.graphName()
         val indent = 1
@@ -178,7 +181,7 @@ class ExportJSONVisitor: Visitor {
     private companion object {
         const val SINGLE_INDENT = "    "
 
-        fun IState.graphName() = name?.replace(" ", "_") ?: javaClass.simpleName
+        fun IState.graphName() = name ?: javaClass.simpleName
 
         fun label(name: String?) = if (name != null) "$name" else ""
     }
