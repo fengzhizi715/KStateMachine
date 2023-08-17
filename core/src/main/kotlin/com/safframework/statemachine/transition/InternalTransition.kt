@@ -19,5 +19,4 @@ interface InternalTransition<E : Event> : Transition<E> {
     fun produceTargetStateDirection(policy: TransitionDirectionProducerPolicy<E>): TransitionDirection
 }
 
-internal fun InternalTransition<*>.transitionNotify(block: TransitionActionBlock) =
-    actions.forEach { it.apply(block) }
+internal fun InternalTransition<*>.transitionNotify(block: TransitionActionBlock) = actions.forEach { it.apply(block) }
