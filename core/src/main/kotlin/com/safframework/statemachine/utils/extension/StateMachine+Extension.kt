@@ -32,6 +32,13 @@ fun StateMachine.transition(block: StateMachine.(TransitionParams<*>) -> Unit) {
     })
 }
 
+fun StateMachine.transitionComplete(block: StateMachine.(TransitionParams<*>) -> Unit) {
+    addListener(object : StateMachine.Listener {
+        override fun onTransitionComplete(transitionParams: TransitionParams<*>) =
+            block(transitionParams)
+    })
+}
+
 fun StateMachine.stateChanged(block: StateMachine.(newState: IState) -> Unit) {
     addListener(object : StateMachine.Listener {
         override fun onStateChanged(newState: IState) = block(newState)

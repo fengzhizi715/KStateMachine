@@ -64,6 +64,8 @@ interface StateMachine: State {
          */
         fun onTransition(transitionParams: TransitionParams<*>) = Unit
 
+        fun onTransitionComplete(transitionParams: TransitionParams<*>) = Unit
+
         /**
          * Notifies about state changes.
          */
