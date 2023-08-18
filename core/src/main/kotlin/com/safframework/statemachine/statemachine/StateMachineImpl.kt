@@ -131,9 +131,7 @@ internal class StateMachineImpl(name: String?, childMode: ChildMode) :
             log { "event:${event::class.simpleName}, argument:${argument}, triggers $transition from ${transition.sourceState} $targetText" }
         }
 
-        transition.transitionNotify {
-            invoke(transitionParams)
-        }
+        transition.transitionNotify { this.onTriggered(transitionParams) }
 
         machineNotify {
             onTransition(transitionParams)

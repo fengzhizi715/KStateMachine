@@ -1,10 +1,10 @@
 package com.safframework.statemachine.transition
 
-import com.safframework.statemachine.utils.TransitionAction
-import com.safframework.statemachine.utils.TransitionDirectionProducer
 import com.safframework.statemachine.domain.Event
+import com.safframework.statemachine.interceptor.TransitionInterceptor
 import com.safframework.statemachine.state.IState
 import com.safframework.statemachine.state.InternalState
+import com.safframework.statemachine.utils.TransitionDirectionProducer
 import java.util.concurrent.CopyOnWriteArraySet
 
 /**
@@ -21,8 +21,8 @@ open class DefaultTransition<E : Event>(
     override val type: TransitionType,
     sourceState: IState
 ) : InternalTransition<E> {
-    private val _actions = CopyOnWriteArraySet<TransitionAction>()
-    override val actions: Collection<TransitionAction> get() = _actions
+    private val _interceptors = CopyOnWriteArraySet<TransitionInterceptor>()
+    override val interceptors: Collection<TransitionInterceptor> get() = _interceptors
     override val sourceState = sourceState as InternalState
 
     /**
@@ -60,13 +60,13 @@ open class DefaultTransition<E : Event>(
         this.targetStateDirectionProducer = targetStateDirectionProducer
     }
 
-    override fun <A: TransitionAction> addAction(action: A): A {
-        require(_actions.add(action)) { "$action is already added" }
-        return action
+    override fun <A: TransitionInterceptor> addTransitionInterceptor(interceptor: A): A {
+        require(_interceptors.add(interceptor)) { "$interceptor is already added" }
+        return interceptor
     }
 
-    override fun removeAction(action: TransitionAction) {
-        _actions.remove(action)
+    override fun removeTransitionInterceptor(interceptor: TransitionInterceptor) {
+        _interceptors.remove(interceptor)
     }
 
     override fun isMatchingEvent(event: Event) = eventMatcher.match(event)

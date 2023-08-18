@@ -1,6 +1,7 @@
 package com.safframework.statemachine.utils
 
 import com.safframework.statemachine.interceptor.StateInterceptor
+import com.safframework.statemachine.interceptor.TransitionInterceptor
 import com.safframework.statemachine.statemachine.StateMachine
 import com.safframework.statemachine.transition.InternalTransition
 import com.safframework.statemachine.transition.TransitionDirection
@@ -28,8 +29,6 @@ typealias StateMachineBlock = StateMachine.() -> Unit
 
 typealias StateInterceptorBlock =  StateInterceptor.() -> Unit
 
-typealias TransitionAction = (TransitionParams<*>) -> Unit
-
-typealias TransitionActionBlock = TransitionAction.() -> Unit
+typealias TransitionInterceptorBlock = TransitionInterceptor.() -> Unit
 
 typealias Guard<E> = (E) -> Boolean

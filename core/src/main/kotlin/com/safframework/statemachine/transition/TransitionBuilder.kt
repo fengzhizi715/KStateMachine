@@ -1,10 +1,10 @@
 package com.safframework.statemachine.transition
 
 import com.safframework.statemachine.utils.Guard
-import com.safframework.statemachine.utils.TransitionAction
 import com.safframework.statemachine.utils.TransitionDirectionProducer
 import com.safframework.statemachine.domain.DataEvent
 import com.safframework.statemachine.domain.Event
+import com.safframework.statemachine.interceptor.TransitionInterceptor
 import com.safframework.statemachine.state.DataState
 import com.safframework.statemachine.state.IState
 import com.safframework.statemachine.state.State
@@ -22,7 +22,7 @@ import com.safframework.statemachine.transition.TransitionDirectionProducerPolic
  */
 @StateMachineDslMarker
 abstract class TransitionBuilder<E : Event>(protected val name: String?, protected val sourceState: IState) {
-    var action: TransitionAction? = null
+    var interceptors = mutableListOf<TransitionInterceptor>()
     lateinit var eventMatcher: EventMatcher<E>
     var type = TransitionType.LOCAL
 
@@ -56,7 +56,7 @@ abstract class GuardedTransitionBuilder<E : Event, S : IState>(name: String?, so
         }
 
         val transition = DefaultTransition(name, eventMatcher, type, sourceState, direction)
-        action?.let { transition.addAction(it) }
+        interceptors.forEach { transition.addTransitionInterceptor(it) }
         return transition
     }
 }
@@ -74,7 +74,7 @@ abstract class GuardedTransitionOnBuilder<E : Event, S : IState>(name: String?, 
         }
 
         val transition = DefaultTransition(name, eventMatcher, type, sourceState, direction)
-        action?.let { transition.addAction(it) }
+        interceptors.forEach { transition.addTransitionInterceptor(it) }
         return transition
     }
 }
@@ -92,7 +92,7 @@ class ConditionalTransitionBuilder<E : Event>(name: String?, sourceState: IState
         }
 
         val transition = DefaultTransition(name, eventMatcher, type, sourceState, direction)
-        action?.let { transition.addAction(it) }
+        interceptors.forEach { transition.addTransitionInterceptor(it) }
         return transition
     }
 }
@@ -118,13 +118,12 @@ class DataGuardedTransitionBuilder<E : DataEvent<D>, D>(name: String?, sourceSta
 class DataGuardedTransitionOnBuilder<E : DataEvent<D>, D>(name: String?, sourceState: IState) :
     GuardedTransitionOnBuilder<E, DataState<D>>(name, sourceState)
 
-inline fun <reified E : Event> TransitionBuilder<E>.action(crossinline block: TransitionAction) {
-    require(action == null) { "Listener is already set, only one listener is allowed in a builder" }
+inline fun <reified E : Event> TransitionBuilder<E>.action(crossinline block: (TransitionParams<E>) -> Unit): TransitionInterceptor{
 
-    action = object : TransitionAction {
+    return object : TransitionInterceptor {
         @Suppress("UNCHECKED_CAST")
-        override fun invoke(transitionParams: TransitionParams<*>) = block(transitionParams as TransitionParams<E>)
-    }
+        override fun onTriggered(transitionParams: TransitionParams<*>) = block(transitionParams as TransitionParams<E>)
+    }.also { interceptors.add(it) }
 }
 
 @Suppress("UNUSED") // The unused warning is probably a bug

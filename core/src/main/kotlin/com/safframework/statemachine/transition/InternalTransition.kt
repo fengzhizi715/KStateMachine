@@ -1,8 +1,8 @@
 package com.safframework.statemachine.transition
 
-import com.safframework.statemachine.utils.TransitionActionBlock
 import com.safframework.statemachine.domain.Event
 import com.safframework.statemachine.state.InternalState
+import com.safframework.statemachine.utils.TransitionInterceptorBlock
 
 /**
  *
@@ -19,4 +19,4 @@ interface InternalTransition<E : Event> : Transition<E> {
     fun produceTargetStateDirection(policy: TransitionDirectionProducerPolicy<E>): TransitionDirection
 }
 
-internal fun InternalTransition<*>.transitionNotify(block: TransitionActionBlock) = actions.forEach { it.apply(block) }
+internal fun InternalTransition<*>.transitionNotify(block: TransitionInterceptorBlock) = interceptors.forEach { it.apply(block) }

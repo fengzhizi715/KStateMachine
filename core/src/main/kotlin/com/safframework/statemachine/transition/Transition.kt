@@ -1,7 +1,7 @@
 package com.safframework.statemachine.transition
 
-import com.safframework.statemachine.utils.TransitionAction
 import com.safframework.statemachine.domain.Event
+import com.safframework.statemachine.interceptor.TransitionInterceptor
 import com.safframework.statemachine.state.IState
 import com.safframework.statemachine.visitors.Visitor
 import com.safframework.statemachine.visitors.VisitorAcceptor
@@ -31,10 +31,10 @@ interface Transition<E : Event> : VisitorAcceptor {
      * that sets the argument.
      */
     var argument: Any?
-    val actions: Collection<TransitionAction>
+    val interceptors: Collection<TransitionInterceptor>
 
-    fun <A : TransitionAction> addAction(action: A): A
-    fun removeAction(action: TransitionAction)
+    fun <I : TransitionInterceptor> addTransitionInterceptor(interceptor: I): I
+    fun removeTransitionInterceptor(interceptor: TransitionInterceptor)
 
     /**
      * Checks if the [event] matches this [Transition]
