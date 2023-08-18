@@ -185,7 +185,7 @@ class ExportJSONVisitor: Visitor {
     private companion object {
         const val SINGLE_INDENT = "    "
 
-        fun IState.graphName() = name ?: javaClass.simpleName
+        fun IState.graphName(): String = name ?: javaClass.simpleName
 
         fun label(name: String?) = if (name != null) "$name" else ""
     }
