@@ -1,7 +1,7 @@
 package com.safframework.statemachine.utils.extension
 
 import com.safframework.statemachine.utils.StateBlock
-import com.safframework.statemachine.interceptor.Interceptor
+import com.safframework.statemachine.interceptor.StateInterceptor
 import com.safframework.statemachine.transition.TransitionParams
 import com.safframework.statemachine.state.*
 import kotlin.reflect.KClass
@@ -68,19 +68,19 @@ inline fun <reified S : IState> IState.requireState(recursive: Boolean = true) =
 operator fun <S : IState> S.invoke(block: StateBlock<S>) = block()
 
 fun <S : IState> S.entry(block: S.(TransitionParams<*>) -> Unit) {
-    addInterceptor(object : Interceptor {
+    addInterceptor(object : StateInterceptor {
         override fun onEntry(transitionParams: TransitionParams<*>) = block(transitionParams)
     })
 }
 
 fun <S : IState> S.exit(block: S.(TransitionParams<*>) -> Unit) {
-    addInterceptor(object : Interceptor {
+    addInterceptor(object : StateInterceptor {
         override fun onExit(transitionParams: TransitionParams<*>) = block(transitionParams)
     })
 }
 
 fun <S : IState> S.finished(block: S.(TransitionParams<*>) -> Unit) {
-    addInterceptor(object : Interceptor {
+    addInterceptor(object : StateInterceptor {
         override fun onFinished(transitionParams: TransitionParams<*>) = block(transitionParams)
     })
 }

@@ -5,7 +5,7 @@ import com.safframework.statemachine.utils.StateBlock
 import com.safframework.statemachine.algorithm.TreeAlgorithm.findPathFromTargetToLca
 import com.safframework.statemachine.domain.Event
 import com.safframework.statemachine.domain.StartEvent
-import com.safframework.statemachine.interceptor.Interceptor
+import com.safframework.statemachine.interceptor.StateInterceptor
 import com.safframework.statemachine.statemachine.InternalStateMachine
 import com.safframework.statemachine.statemachine.StateMachine
 import com.safframework.statemachine.transition.*
@@ -24,8 +24,8 @@ import java.util.concurrent.CopyOnWriteArraySet
  */
 open class BaseStateImpl(override val name: String?, override val childMode: ChildMode) : InternalState {
 
-    private val _interceptors = CopyOnWriteArraySet<Interceptor>()
-    override val interceptors: Collection<Interceptor> get() = _interceptors
+    private val _interceptors = CopyOnWriteArraySet<StateInterceptor>()
+    override val interceptors: Collection<StateInterceptor> get() = _interceptors
 
     private val _states = mutableSetOf<InternalState>()
     override val states: Set<IState> get() = _states
@@ -56,12 +56,12 @@ open class BaseStateImpl(override val name: String?, override val childMode: Chi
     private var _isFinished = false
     override val isFinished get() = _isFinished
 
-    override fun <I : Interceptor> addInterceptor(interceptor: I): I {
+    override fun <I : StateInterceptor> addInterceptor(interceptor: I): I {
         require(_interceptors.add(interceptor)) { "$interceptor is already added" }
         return interceptor
     }
 
-    override fun removeInterceptor(interceptor: Interceptor) {
+    override fun removeInterceptor(interceptor: StateInterceptor) {
         _interceptors.remove(interceptor)
     }
 

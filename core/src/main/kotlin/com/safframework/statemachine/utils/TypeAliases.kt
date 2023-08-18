@@ -1,6 +1,6 @@
 package com.safframework.statemachine.utils
 
-import com.safframework.statemachine.interceptor.Interceptor
+import com.safframework.statemachine.interceptor.StateInterceptor
 import com.safframework.statemachine.statemachine.StateMachine
 import com.safframework.statemachine.transition.InternalTransition
 import com.safframework.statemachine.transition.TransitionDirection
@@ -26,7 +26,7 @@ internal typealias TransitionDirectionProducer<E> = (TransitionDirectionProducer
 
 typealias StateMachineBlock = StateMachine.() -> Unit
 
-typealias InterceptorBlock =  Interceptor.() -> Unit
+typealias StateInterceptorBlock =  StateInterceptor.() -> Unit
 
 typealias TransitionAction = (TransitionParams<*>) -> Unit
 

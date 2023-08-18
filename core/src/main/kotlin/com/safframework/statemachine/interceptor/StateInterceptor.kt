@@ -9,9 +9,9 @@ import com.safframework.statemachine.transition.TransitionParams
  *          com.safframework.statemachine.interceptor.Interceptor
  * @author: Tony Shen
  * @date: 2023/7/4 20:04
- * @version: V1.0 <描述当前版本功能>
+ * @version: V1.0 状态的拦截器
  */
-interface Interceptor {
+interface StateInterceptor {
 
     fun onEntry(transitionParams: TransitionParams<*>) = Unit
 

@@ -2,7 +2,7 @@ package com.safframework.statemachine.state
 
 import com.safframework.statemachine.utils.StateBlock
 import com.safframework.statemachine.StateTransitionsHelper
-import com.safframework.statemachine.interceptor.Interceptor
+import com.safframework.statemachine.interceptor.StateInterceptor
 import com.safframework.statemachine.statemachine.StateMachine
 import com.safframework.statemachine.statemachine.StateMachineDslMarker
 import com.safframework.statemachine.visitors.Visitor
@@ -27,11 +27,11 @@ interface IState : StateTransitionsHelper, VisitorAcceptor {
     val machine: StateMachine
     val isActive: Boolean
     val isFinished: Boolean
-    val interceptors: Collection<Interceptor>
+    val interceptors: Collection<StateInterceptor>
     val childMode: ChildMode
 
-    fun <I : Interceptor> addInterceptor(interceptor: I): I
-    fun removeInterceptor(interceptor: Interceptor)
+    fun <I : StateInterceptor> addInterceptor(interceptor: I): I
+    fun removeInterceptor(interceptor: StateInterceptor)
 
     fun <S : IState> addState(state: S, init: StateBlock<S>? = null): S
 
