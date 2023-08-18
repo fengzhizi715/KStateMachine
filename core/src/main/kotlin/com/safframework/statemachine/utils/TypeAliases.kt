@@ -31,4 +31,6 @@ typealias StateInterceptorBlock =  StateInterceptor.() -> Unit
 
 typealias TransitionInterceptorBlock = TransitionInterceptor.() -> Unit
 
+typealias TransitionParamsBlock<E> = (TransitionParams<E>) -> Unit
+
 typealias Guard<E> = (E) -> Boolean

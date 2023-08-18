@@ -11,6 +11,7 @@ import com.safframework.statemachine.state.State
 import com.safframework.statemachine.statemachine.StateMachineDslMarker
 import com.safframework.statemachine.transition.TransitionDirectionProducerPolicy.CollectTargetStatesPolicy
 import com.safframework.statemachine.transition.TransitionDirectionProducerPolicy.DefaultPolicy
+import com.safframework.statemachine.utils.TransitionParamsBlock
 
 /**
  *
@@ -118,7 +119,7 @@ class DataGuardedTransitionBuilder<E : DataEvent<D>, D>(name: String?, sourceSta
 class DataGuardedTransitionOnBuilder<E : DataEvent<D>, D>(name: String?, sourceState: IState) :
     GuardedTransitionOnBuilder<E, DataState<D>>(name, sourceState)
 
-inline fun <reified E : Event> TransitionBuilder<E>.action(crossinline block: (TransitionParams<E>) -> Unit): TransitionInterceptor{
+inline fun <reified E : Event> TransitionBuilder<E>.action(crossinline block: TransitionParamsBlock<E>): TransitionInterceptor{
 
     return object : TransitionInterceptor {
         @Suppress("UNCHECKED_CAST")
@@ -126,7 +127,7 @@ inline fun <reified E : Event> TransitionBuilder<E>.action(crossinline block: (T
     }.also { interceptors.add(it) }
 }
 
-inline fun <reified E : Event> TransitionBuilder<E>.complete(crossinline block: (TransitionParams<E>) -> Unit): TransitionInterceptor{
+inline fun <reified E : Event> TransitionBuilder<E>.complete(crossinline block: TransitionParamsBlock<E>): TransitionInterceptor{
 
     return object : TransitionInterceptor {
         @Suppress("UNCHECKED_CAST")
