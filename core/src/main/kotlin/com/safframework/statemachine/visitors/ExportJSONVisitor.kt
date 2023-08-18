@@ -61,6 +61,14 @@ class ExportJSONVisitor: Visitor {
         line("}")
     }
 
+    /**
+     * 对每个状态绘制 json 字符串
+     * @param stateName 状态名称
+     * @param initName  当前状态机(或者子状态机) init 状态的名称
+     * @param indent    json 需要空格的步长
+     * @param flag      是否需要}符号
+     * @param endWithComma 是否以,结尾
+     */
     private fun processState(stateName:String, initName:String, indent:Int, flag:Boolean=false, endWithComma:Boolean=false) {
         var tempIndent = indent
         line("{",tempIndent)

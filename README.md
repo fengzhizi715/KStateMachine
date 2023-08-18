@@ -132,9 +132,6 @@ implementation 'com.github.fengzhizi715.KStateMachine:core:<latest-version>'
 
 ## TODO：
 
-* 支持 Kotlin Coroutines
 * 增加异常的处理机制
 * 支持 JSON 导入创建状态机
-
-
-
+* 支持 Kotlin Coroutines
