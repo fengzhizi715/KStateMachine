@@ -126,6 +126,14 @@ inline fun <reified E : Event> TransitionBuilder<E>.action(crossinline block: (T
     }.also { interceptors.add(it) }
 }
 
+inline fun <reified E : Event> TransitionBuilder<E>.complete(crossinline block: (TransitionParams<E>) -> Unit): TransitionInterceptor{
+
+    return object : TransitionInterceptor {
+        @Suppress("UNCHECKED_CAST")
+        override fun onComplete(transitionParams: TransitionParams<*>) = block(transitionParams as TransitionParams<E>)
+    }.also { interceptors.add(it) }
+}
+
 @Suppress("UNUSED") // The unused warning is probably a bug
 inline fun <reified E : Event> TransitionBuilder<E>.isInstanceOf() = EventMatcher.isInstanceOf<E>()
 

@@ -138,6 +138,8 @@ internal class StateMachineImpl(name: String?, childMode: ChildMode) :
         }
 
         targetState?.let { switchToTargetState(it, transition.sourceState, transitionParams) }
+        transition.transitionNotify { this.onComplete(transitionParams) }
+
         return true
     }
 
