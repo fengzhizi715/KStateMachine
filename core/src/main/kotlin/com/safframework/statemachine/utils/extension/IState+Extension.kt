@@ -4,6 +4,7 @@ import com.safframework.statemachine.utils.StateBlock
 import com.safframework.statemachine.interceptor.StateInterceptor
 import com.safframework.statemachine.transition.TransitionParams
 import com.safframework.statemachine.state.*
+import com.safframework.statemachine.statemachine.StateMachine
 import kotlin.reflect.KClass
 
 /**
@@ -133,6 +134,16 @@ fun <D> IState.finalDataState(name: String? = null, init: StateBlock<FinalDataSt
     addFinalState(DefaultFinalDataState(name), init)
 
 fun IState.isFinal() = this is IFinalState
+
+fun IState.isSubStateOf(state: IState): Boolean {
+    state.states.forEach {
+        if (it === this)
+            return true
+        else if (it !is StateMachine && this.isSubStateOf(it)) // do not process sub-states of composed machines
+            return true
+    }
+    return false
+}
 
 
 
