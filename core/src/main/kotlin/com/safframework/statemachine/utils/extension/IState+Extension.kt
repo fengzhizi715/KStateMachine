@@ -135,6 +135,8 @@ fun <D> IState.finalDataState(name: String? = null, init: StateBlock<FinalDataSt
 
 fun IState.isFinal() = this is IFinalState
 
+fun IState.isData() = this is DataState<*>
+
 fun IState.isSubStateOf(state: IState): Boolean {
     state.states.forEach {
         if (it === this)

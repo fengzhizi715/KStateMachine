@@ -6,6 +6,7 @@ import com.safframework.statemachine.statemachine.StateMachine
 import com.safframework.statemachine.transition.InternalTransition
 import com.safframework.statemachine.transition.Transition
 import com.safframework.statemachine.transition.TransitionDirectionProducerPolicy
+import com.safframework.statemachine.utils.extension.isData
 import com.safframework.statemachine.utils.extension.isFinal
 import kotlin.reflect.full.createInstance
 
@@ -76,6 +77,7 @@ class ExportJSONVisitor: Visitor {
         line("\"name\":\"${stateName}\",",tempIndent)
         val state = stateInfoMap[stateName]
         line("\"isInit\":${stateName == initName},",tempIndent)
+        line("\"isData\":${state?.isData()?:false},",tempIndent)
         line("\"isFinal\":${state?.isFinal()?:false},",tempIndent)
         transitionMap[stateName]?.let { list->
             if(list.size>0) {
