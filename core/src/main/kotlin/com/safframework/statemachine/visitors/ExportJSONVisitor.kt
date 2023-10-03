@@ -37,6 +37,8 @@ class ExportJSONVisitor: Visitor {
         // 先遍历一遍状态机
         processStateBody(machine)
 
+        println(stateInfoMap)
+
         // 然后才开始进行拼装 json 字符串
         val machineName = machine.name ?: machine.graphName()
         val indent = 1
@@ -158,8 +160,8 @@ class ExportJSONVisitor: Visitor {
 
         val list:MutableList<TransitionDesc> = transitionMap[sourceState] ?: arrayListOf()
 
-        val transitionQuadruple = TransitionDesc(label(transition.name), sourceState, targetState.graphName(), eventClass.qualifiedName?:"", transition.type.name)
-        list.add(transitionQuadruple)
+        val transitionDesc = TransitionDesc(label(transition.name), sourceState, targetState.graphName(), eventClass.qualifiedName?:"", transition.type.name)
+        list.add(transitionDesc)
 
         transitionMap[sourceState] = list
     }
