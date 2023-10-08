@@ -7,6 +7,7 @@ import com.safframework.statemachine.state.IState
 import com.safframework.statemachine.state.State
 import com.safframework.statemachine.transition.TransitionParams
 import com.safframework.statemachine.visitors.Visitor
+import java.lang.Exception
 
 /**
  *
@@ -16,6 +17,19 @@ import com.safframework.statemachine.visitors.Visitor
  * @date: 2023/7/4 09:50
  * @version: V1.0 <描述当前版本功能>
  */
+data class EventAndArgument<E : Event>(val event: E, val argument: Any?)
+
+enum class ProcessingResult {
+    /** Event was sent to [PendingEventHandler] */
+    PENDING,
+
+    /** Event was processed */
+    PROCESSED,
+
+    /** Event was ignored */
+    IGNORED,
+}
+
 @DslMarker
 annotation class StateMachineDslMarker
 
@@ -24,6 +38,7 @@ interface StateMachine: State {
     var logger: Logger
     var ignoredEventHandler: IgnoredEventHandler
     var pendingEventHandler: PendingEventHandler
+    var exceptionListener: ExceptionListener
     val isRunning: Boolean
     val machineListeners: Collection<Listener>
 
@@ -44,7 +59,7 @@ interface StateMachine: State {
     /**
      * Machine must be started to process events
      */
-    fun sendEvent(event: Event, argument: Any? = null)
+    fun sendEvent(event: Event, argument: Any? = null): ProcessingResult
 
     fun log(lazyMessage: () -> String)
 
@@ -87,12 +102,17 @@ interface StateMachine: State {
 
     fun interface IgnoredEventHandler {
 
-        fun onIgnoredEvent(event: Event, argument: Any?)
+        fun onIgnoredEvent(eventAndArgument: EventAndArgument<*>)
     }
 
     fun interface PendingEventHandler {
 
-        fun onPendingEvent(pendingEvent: Event, argument: Any?)
+        fun onPendingEvent(eventAndArgument: EventAndArgument<*>)
+    }
+
+    fun interface ExceptionListener {
+
+        fun onException(exception: Exception)
     }
 }
 

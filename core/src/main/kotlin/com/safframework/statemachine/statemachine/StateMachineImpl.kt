@@ -26,18 +26,18 @@ internal class StateMachineImpl(name: String?, childMode: ChildMode) :
     override val machineListeners: Collection<StateMachine.Listener> get() = _machineListeners
 
     override var logger: StateMachine.Logger = NullLogger
-    override var ignoredEventHandler = StateMachine.IgnoredEventHandler { event, _ ->
+    override var ignoredEventHandler = StateMachine.IgnoredEventHandler { eventAndArgument ->
+        val event = eventAndArgument.event
         if (event is DataEvent<*>) {
             log { "$this ignored ${event::class.simpleName}(${event.data})" }
         } else {
             log { "$this ignored ${event::class.simpleName}" }
         }
     }
-    override var pendingEventHandler = StateMachine.PendingEventHandler { pendingEvent, _ ->
-        error(
-            "$this can not process pending $pendingEvent as event processing is already running. " +
-                    "Do not call processEvent() from notification listeners."
-        )
+    override var pendingEventHandler: StateMachine.PendingEventHandler = QueuePendingEventHandlerImpl(this)
+
+    override var exceptionListener = StateMachine.ExceptionListener {
+        throw it
     }
 
     /**
@@ -96,23 +96,60 @@ internal class StateMachineImpl(name: String?, childMode: ChildMode) :
     }
 
     @Synchronized
-    override fun sendEvent(event: Event, argument: Any?) {
+    override fun sendEvent(event: Event, argument: Any?): ProcessingResult {
         check(isRunning) { "$this is not started, call start() first" }
 
-        if (isProcessingEvent)
-            pendingEventHandler.onPendingEvent(event, argument)
+        val eventAndArgument = EventAndArgument(event, argument)
+
+        if (isProcessingEvent) {
+            pendingEventHandler.onPendingEvent(eventAndArgument)
+
+            return ProcessingResult.PENDING
+        }
+
+        val queue = pendingEventHandler as? QueuePendingEventHandler
+        queue?.checkEmpty()
+
         isProcessingEvent = true
 
+        var result: ProcessingResult
+
         try {
-            if (!doProcessEvent(event, argument)) {
-                ignoredEventHandler.onIgnoredEvent(event, argument)
+            result = process(eventAndArgument)
+
+            queue?.let {
+                var eventAndArgument = it.nextEventAndArgument()
+                while (eventAndArgument != null) {
+                    if (!isRunning) { // if it happens while event processing
+                        it.clear()
+                        return result
+                    }
+                    process(eventAndArgument)
+
+                    eventAndArgument = it.nextEventAndArgument()
+                }
             }
+        } catch (e: Exception) {
+            queue?.clear()
+            throw e
         } finally {
             isProcessingEvent = false
         }
+
+        return result
     }
 
-    private fun doProcessEvent(event: Event, argument: Any?): Boolean {
+    private fun process(eventAndArgument: EventAndArgument<*>): ProcessingResult {
+        val eventProcessed = doProcessEvent(eventAndArgument)
+
+        if (!eventProcessed) {
+            ignoredEventHandler.onIgnoredEvent(eventAndArgument)
+        }
+        return if (eventProcessed) ProcessingResult.PROCESSED else ProcessingResult.IGNORED
+    }
+
+    private fun <E : Event> doProcessEvent(eventAndArgument: EventAndArgument<E>): Boolean {
+        val (event, argument) = eventAndArgument
         if (isFinished) {
             log { "$this is finished, skipping event $event, with argument $argument" }
             return false
