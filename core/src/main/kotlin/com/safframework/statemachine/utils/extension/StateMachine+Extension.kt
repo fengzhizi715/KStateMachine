@@ -47,3 +47,16 @@ fun StateMachine.stateChanged(block: StateMachine.(newState: IState) -> Unit) {
 
 fun InternalStateMachine.machineNotify(block: StateMachine.Listener.() -> Unit) =
     machineListeners.forEach { it.apply(block) }
+
+fun StateMachine.allStates():List<IState> {
+
+    val result = mutableListOf<IState>()
+
+    this.states.let { result.addAll(it) }
+
+    this.states.forEach {
+        result.addAll(it.allSubStates())
+    }
+
+    return result
+}

@@ -147,5 +147,17 @@ fun IState.isSubStateOf(state: IState): Boolean {
     return false
 }
 
+fun IState.allSubStates():List<IState> {
+
+    val result = mutableListOf<IState>()
+
+    this.states?.let { result.addAll(it) }
+
+    this.states?.forEach {
+        result.addAll(it.allSubStates())
+    }
+
+    return result
+}
 
 
