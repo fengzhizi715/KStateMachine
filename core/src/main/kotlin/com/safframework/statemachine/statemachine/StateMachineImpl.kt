@@ -26,7 +26,13 @@ internal class StateMachineImpl(name: String?, childMode: ChildMode) :
     override val machineListeners: Collection<StateMachine.Listener> get() = _machineListeners
 
     override var logger: StateMachine.Logger = NullLogger
-    override var ignoredEventHandler = StateMachine.IgnoredEventHandler { _, _ -> }
+    override var ignoredEventHandler = StateMachine.IgnoredEventHandler { event, _ ->
+        if (event is DataEvent<*>) {
+            log { "$this ignored ${event::class.simpleName}(${event.data})" }
+        } else {
+            log { "$this ignored ${event::class.simpleName}" }
+        }
+    }
     override var pendingEventHandler = StateMachine.PendingEventHandler { pendingEvent, _ ->
         error(
             "$this can not process pending $pendingEvent as event processing is already running. " +
@@ -99,11 +105,6 @@ internal class StateMachineImpl(name: String?, childMode: ChildMode) :
 
         try {
             if (!doProcessEvent(event, argument)) {
-                if (event is DataEvent<*>) {
-                    log { "$this ignored ${event::class.simpleName}(${event.data})" }
-                } else {
-                    log { "$this ignored ${event::class.simpleName}" }
-                }
                 ignoredEventHandler.onIgnoredEvent(event, argument)
             }
         } finally {
