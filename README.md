@@ -26,6 +26,8 @@
 
 分层状态机，（英语：Hierarchical State Machine, HSM）
 
+分层状态机是一种用于描述系统行为和控制流的模型，它将系统划分为多个层级，并将每个层级表示为一个状态机。每个状态机描述了一个特定的状态集合以及状态之间的转移规则。每个状态机都有自己的输入和输出，可以与其他状态机进行交互，从而形成整个系统的行为。
+
 ## 状态机的使用
 
 ### FSM 的使用
@@ -132,5 +134,5 @@ implementation 'com.github.fengzhizi715.KStateMachine:core:<latest-version>'
 
 ## TODO：
 
-* 增加异常的处理机制
+* 完善异常的处理机制
 * 支持 Kotlin Coroutines
