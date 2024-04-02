@@ -160,4 +160,6 @@ fun IState.allSubStates():List<IState> {
     return result
 }
 
+fun IState.hasSubState():Boolean = this.states.isNotEmpty()
+
 

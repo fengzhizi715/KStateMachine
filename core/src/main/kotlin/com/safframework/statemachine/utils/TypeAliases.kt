@@ -23,7 +23,7 @@ typealias StateBlock<S> = S.() -> Unit
  */
 typealias ResolvedTransition<E> = Pair<InternalTransition<E>, TransitionDirection>
 
-internal typealias TransitionDirectionProducer<E> = (TransitionDirectionProducerPolicy<E>) -> TransitionDirection
+typealias TransitionDirectionProducer<E> = (TransitionDirectionProducerPolicy<E>) -> TransitionDirection
 
 typealias StateMachineBlock = StateMachine.() -> Unit
 
