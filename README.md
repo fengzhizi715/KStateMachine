@@ -136,3 +136,4 @@ implementation 'com.github.fengzhizi715.KStateMachine:core:<latest-version>'
 
 * 完善异常的处理机制
 * 支持 Kotlin Coroutines
+* 支持导出状态图
