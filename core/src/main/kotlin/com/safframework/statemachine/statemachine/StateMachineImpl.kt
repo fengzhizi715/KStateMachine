@@ -28,6 +28,7 @@ internal class StateMachineImpl(name: String?, childMode: ChildMode) :
     override val machineListeners: Collection<StateMachine.Listener> get() = _machineListeners
 
     override var logger: StateMachine.Logger = NullLogger
+
     override var ignoredEventHandler = StateMachine.IgnoredEventHandler { eventAndArgument ->
         val event = eventAndArgument.event
         if (event is DataEvent<*>) {
@@ -36,6 +37,7 @@ internal class StateMachineImpl(name: String?, childMode: ChildMode) :
             log { "$this ignored ${event::class.simpleName}" }
         }
     }
+
     override var pendingEventHandler: StateMachine.PendingEventHandler = QueuePendingEventHandlerImpl(this)
 
     override var exceptionListener = StateMachine.ExceptionListener {
@@ -147,8 +149,10 @@ internal class StateMachineImpl(name: String?, childMode: ChildMode) :
 
         if (!eventProcessed) {
             ignoredEventHandler.onIgnoredEvent(eventAndArgument)
+            return ProcessingResult.IGNORED
         }
-        return if (eventProcessed) ProcessingResult.PROCESSED else ProcessingResult.IGNORED
+
+        return ProcessingResult.PROCESSED
     }
 
     private fun <E : Event> doProcessEvent(eventAndArgument: EventAndArgument<E>): Boolean {
@@ -177,7 +181,9 @@ internal class StateMachineImpl(name: String?, childMode: ChildMode) :
             onTransition(transitionParams)
         }
 
-        targetState?.let { switchToTargetState(it, transition.sourceState, transitionParams) }
+        targetState?.let {
+            switchToTargetState(it, transition.sourceState, transitionParams)
+        }
         transition.transitionNotify { this.onComplete(transitionParams) }
         machineNotify { onTransitionComplete(transitionParams) }
 
