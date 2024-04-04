@@ -166,9 +166,9 @@ internal class StateMachineImpl(name: String?, childMode: ChildMode) :
 
         val transitionParams = TransitionParams(transition, direction, event, argument)
 
-        val targetState = direction.targetState as? InternalState
+        val targetState = direction.targetState as? InternalState ?: return false
 
-        val targetText = if (targetState != null) "to $targetState" else "[targetless]"
+        val targetText = "to $targetState"
 
         if (event is DataEvent<*>) {
             log { "event:${event::class.simpleName}(${event.data}), argument:${argument}, triggers $transition from ${transition.sourceState} $targetText" }
@@ -181,9 +181,7 @@ internal class StateMachineImpl(name: String?, childMode: ChildMode) :
             onTransition(transitionParams)
         }
 
-        targetState?.let {
-            switchToTargetState(it, transition.sourceState, transitionParams)
-        }
+        switchToTargetState(targetState, transition.sourceState, transitionParams)
         transition.transitionNotify { this.onComplete(transitionParams) }
         machineNotify { onTransitionComplete(transitionParams) }
 
