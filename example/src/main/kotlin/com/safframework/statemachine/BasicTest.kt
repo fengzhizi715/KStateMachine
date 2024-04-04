@@ -1,6 +1,7 @@
 package com.safframework.statemachine
 
 import com.safframework.statemachine.domain.Event
+import com.safframework.statemachine.exception.StateMachineException
 import com.safframework.statemachine.statemachine.StateMachine
 import com.safframework.statemachine.statemachine.createStateMachine
 import com.safframework.statemachine.transition.action
@@ -60,6 +61,10 @@ fun main() {
         }
     }
 
-    sm.sendEvent(CookEvent())
-    sm.sendEvent(WashDishesEvent())
+    try {
+        sm.sendEvent(CookEvent())
+        sm.sendEvent(WashDishesEvent())
+    } catch (e:StateMachineException) {
+        e.printStackTrace()
+    }
 }

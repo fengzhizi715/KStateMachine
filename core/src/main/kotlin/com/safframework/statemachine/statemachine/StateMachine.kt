@@ -2,12 +2,14 @@ package com.safframework.statemachine.statemachine
 
 import com.safframework.statemachine.utils.StateMachineBlock
 import com.safframework.statemachine.domain.Event
+import com.safframework.statemachine.exception.StateMachineException
 import com.safframework.statemachine.state.ChildMode
 import com.safframework.statemachine.state.IState
 import com.safframework.statemachine.state.State
 import com.safframework.statemachine.transition.TransitionParams
 import com.safframework.statemachine.visitors.Visitor
 import java.lang.Exception
+import kotlin.jvm.Throws
 
 /**
  *
@@ -59,6 +61,7 @@ interface StateMachine: State {
     /**
      * Machine must be started to process events
      */
+    @Throws(StateMachineException::class)
     fun sendEvent(event: Event, argument: Any? = null): ProcessingResult
 
     fun log(lazyMessage: () -> String)

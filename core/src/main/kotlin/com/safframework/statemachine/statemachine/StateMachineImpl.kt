@@ -2,6 +2,7 @@ package com.safframework.statemachine.statemachine
 
 import com.safframework.statemachine.domain.DataEvent
 import com.safframework.statemachine.domain.Event
+import com.safframework.statemachine.exception.StateMachineException
 import com.safframework.statemachine.state.ChildMode
 import com.safframework.statemachine.state.DefaultState
 import com.safframework.statemachine.state.IState
@@ -10,6 +11,7 @@ import com.safframework.statemachine.transition.TransitionParams
 import com.safframework.statemachine.transition.transitionNotify
 import com.safframework.statemachine.utils.extension.machineNotify
 import com.safframework.statemachine.visitors.CheckUniqueNamesVisitor
+import kotlin.jvm.Throws
 
 /**
  *
@@ -96,6 +98,7 @@ internal class StateMachineImpl(name: String?, childMode: ChildMode) :
     }
 
     @Synchronized
+    @Throws(StateMachineException::class)
     override fun sendEvent(event: Event, argument: Any?): ProcessingResult {
         check(isRunning) { "$this is not started, call start() first" }
 
@@ -131,7 +134,7 @@ internal class StateMachineImpl(name: String?, childMode: ChildMode) :
             }
         } catch (e: Exception) {
             queue?.clear()
-            throw e
+            throw StateMachineException(e.message?:"")
         } finally {
             isProcessingEvent = false
         }
