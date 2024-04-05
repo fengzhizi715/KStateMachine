@@ -23,9 +23,7 @@ fun main() {
     val sm = createStateMachine {
         logger = StateMachine.Logger { println(it) }
 
-        val init = initialState {
-
-        }
+        val init = initialState {}
 
         val state1 = state("state1")
         val state2 = state("state2")
