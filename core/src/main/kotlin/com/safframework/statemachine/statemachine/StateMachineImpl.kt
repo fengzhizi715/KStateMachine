@@ -12,6 +12,7 @@ import com.safframework.statemachine.transition.transitionNotify
 import com.safframework.statemachine.utils.extension.machineNotify
 import com.safframework.statemachine.visitors.CheckUniqueNamesVisitor
 import kotlin.jvm.Throws
+import kotlin.reflect.KClass
 
 /**
  *
@@ -28,21 +29,28 @@ internal class StateMachineImpl(name: String?, childMode: ChildMode) :
     override val machineListeners: Collection<StateMachine.Listener> get() = _machineListeners
 
     override var logger: StateMachine.Logger = NullLogger
-
-    override var ignoredEventHandler = StateMachine.IgnoredEventHandler { eventAndArgument ->
-        val event = eventAndArgument.event
-        if (event is DataEvent<*>) {
-            log { "$this ignored ${event::class.simpleName}(${event.data})" }
-        } else {
-            log { "$this ignored ${event::class.simpleName}" }
+        set(value) {
+            checkPropertyNotMutedOnRunningMachine(StateMachine.Logger::class)
+            field = value
         }
-    }
+
+    override var ignoredEventHandler:StateMachine.IgnoredEventHandler = DefaultIgnoredEventHandlerImpl(this)
+        set(value) {
+            checkPropertyNotMutedOnRunningMachine(StateMachine.IgnoredEventHandler::class)
+            field = value
+        }
 
     override var pendingEventHandler: StateMachine.PendingEventHandler = QueuePendingEventHandlerImpl(this)
+        set(value) {
+            checkPropertyNotMutedOnRunningMachine(StateMachine.PendingEventHandler::class)
+            field = value
+        }
 
-    override var exceptionListener = StateMachine.ExceptionListener {
-        throw it
-    }
+    override var exceptionListener = StateMachine.ExceptionListener { throw it }
+        set(value) {
+            checkPropertyNotMutedOnRunningMachine(StateMachine.ExceptionListener::class)
+            field = value
+        }
 
     /**
      * Help to check that [processEvent] is not called from state machine notification method.
@@ -52,10 +60,6 @@ internal class StateMachineImpl(name: String?, childMode: ChildMode) :
 
     private var _isRunning = false
     override val isRunning get() = _isRunning
-
-    private object NullLogger : StateMachine.Logger {
-        override fun log(message: String) {}
-    }
 
     @Synchronized
     override fun <L : StateMachine.Listener> addListener(listener: L): L {
@@ -199,3 +203,6 @@ internal class StateMachineImpl(name: String?, childMode: ChildMode) :
     override fun doEnter(transitionParams: TransitionParams<*>) =
         if (!isRunning) start() else super.doEnter(transitionParams)
 }
+
+private fun StateMachine.checkPropertyNotMutedOnRunningMachine(propertyType: KClass<*>) =
+    check(!isRunning) { "Can not change ${propertyType.simpleName} after state machine started" }
