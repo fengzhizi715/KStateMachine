@@ -4,6 +4,7 @@ import com.safframework.statemachine.transition.TransitionParams
 import com.safframework.statemachine.state.IState
 import com.safframework.statemachine.statemachine.InternalStateMachine
 import com.safframework.statemachine.statemachine.StateMachine
+import com.safframework.statemachine.statemachine.runDelayingException
 
 /**
  *
@@ -46,7 +47,11 @@ fun StateMachine.stateChanged(block: StateMachine.(newState: IState) -> Unit) {
 }
 
 fun InternalStateMachine.machineNotify(block: StateMachine.Listener.() -> Unit) =
-    machineListeners.forEach { it.apply(block) }
+    machineListeners.forEach {
+        runDelayingException {
+            it.apply(block)
+        }
+    }
 
 fun StateMachine.allStates():List<IState> {
 

@@ -1,6 +1,8 @@
 package com.safframework.statemachine.statemachine
 
 import com.safframework.statemachine.domain.DataEvent
+import com.safframework.statemachine.exception.StateMachineException
+import java.lang.Exception
 
 /**
  *
@@ -23,5 +25,11 @@ internal class DefaultIgnoredEventHandlerImpl(private val machine: StateMachine)
         } else {
             machine.log { "$this ignored ${event::class.simpleName}" }
         }
+    }
+}
+
+internal object DefaultExceptionListener : StateMachine.ExceptionListener {
+    override fun onException(exception: Exception) {
+        throw StateMachineException(exception.message?:"")
     }
 }

@@ -34,7 +34,7 @@ internal class StateMachineImpl(name: String?, childMode: ChildMode) :
             field = value
         }
 
-    override var ignoredEventHandler:StateMachine.IgnoredEventHandler = DefaultIgnoredEventHandlerImpl(this)
+    override var ignoredEventHandler: StateMachine.IgnoredEventHandler = DefaultIgnoredEventHandlerImpl(this)
         set(value) {
             checkPropertyNotMutedOnRunningMachine(StateMachine.IgnoredEventHandler::class)
             field = value
@@ -46,7 +46,7 @@ internal class StateMachineImpl(name: String?, childMode: ChildMode) :
             field = value
         }
 
-    override var exceptionListener = StateMachine.ExceptionListener { throw it }
+    override var exceptionListener: StateMachine.ExceptionListener = DefaultExceptionListener
         set(value) {
             checkPropertyNotMutedOnRunningMachine(StateMachine.ExceptionListener::class)
             field = value
@@ -60,6 +60,8 @@ internal class StateMachineImpl(name: String?, childMode: ChildMode) :
 
     private var _isRunning = false
     override val isRunning get() = _isRunning
+
+    private var delayedListenerException: Exception? = null
 
     @Synchronized
     override fun <L : StateMachine.Listener> addListener(listener: L): L {
@@ -83,6 +85,11 @@ internal class StateMachineImpl(name: String?, childMode: ChildMode) :
         val transitionParams = makeStartTransitionParams(this, state)
         run(transitionParams)
         switchToTargetState(state as InternalState, this, transitionParams)
+    }
+
+    override fun delayListenerException(exception: Exception) {
+        if (delayedListenerException == null)
+            delayedListenerException = exception
     }
 
     private fun run(transitionParams: TransitionParams<*>) {
@@ -149,7 +156,10 @@ internal class StateMachineImpl(name: String?, childMode: ChildMode) :
     }
 
     private fun process(eventAndArgument: EventAndArgument<*>): ProcessingResult {
-        val eventProcessed = doProcessEvent(eventAndArgument)
+
+        val eventProcessed = runCheckingExceptions{
+            doProcessEvent(eventAndArgument)
+        }
 
         if (!eventProcessed) {
             ignoredEventHandler.onIgnoredEvent(eventAndArgument)
@@ -202,7 +212,31 @@ internal class StateMachineImpl(name: String?, childMode: ChildMode) :
      */
     override fun doEnter(transitionParams: TransitionParams<*>) =
         if (!isRunning) start() else super.doEnter(transitionParams)
+
+    private fun <R> runCheckingExceptions(block: () -> R): R {
+        val result: R
+        try {
+            result = block()
+        } catch (e: Exception) {
+            log { "Fatal exception happened, $this machine is in unpredictable state and will be destroyed: $e" }
+//            runCatching { doDestroy() }
+            runCatching { stop() }
+            throw e
+        }
+        delayedListenerException?.let {
+            delayedListenerException = null
+            exceptionListener.onException(it)
+        }
+        return result
+    }
 }
+
+internal inline fun InternalStateMachine.runDelayingException(crossinline block: () -> Unit) =
+    try {
+        block()
+    } catch (e: Exception) {
+        delayListenerException(e)
+    }
 
 private fun StateMachine.checkPropertyNotMutedOnRunningMachine(propertyType: KClass<*>) =
     check(!isRunning) { "Can not change ${propertyType.simpleName} after state machine started" }

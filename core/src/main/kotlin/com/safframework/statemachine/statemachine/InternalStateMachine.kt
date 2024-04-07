@@ -13,4 +13,6 @@ import com.safframework.statemachine.state.InternalState
  */
 interface InternalStateMachine : StateMachine, InternalState {
     fun startFrom(state: IState)
+
+    fun delayListenerException(exception: Exception)
 }
