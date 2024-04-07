@@ -2,6 +2,8 @@ package com.safframework.statemachine.transition
 
 import com.safframework.statemachine.domain.Event
 import com.safframework.statemachine.state.InternalState
+import com.safframework.statemachine.statemachine.InternalStateMachine
+import com.safframework.statemachine.statemachine.runDelayingException
 import com.safframework.statemachine.utils.TransitionInterceptorBlock
 
 /**
@@ -19,4 +21,12 @@ interface InternalTransition<E : Event> : Transition<E> {
     fun produceTargetStateDirection(policy: TransitionDirectionProducerPolicy<E>): TransitionDirection
 }
 
-internal fun InternalTransition<*>.transitionNotify(block: TransitionInterceptorBlock) = interceptors.forEach { it.apply(block) }
+internal fun InternalTransition<*>.transitionNotify(block: TransitionInterceptorBlock) {
+    val machine = sourceState.machine as InternalStateMachine
+
+    interceptors.forEach {
+        machine.runDelayingException {
+            it.apply(block)
+        }
+    }
+}

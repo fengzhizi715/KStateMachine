@@ -21,9 +21,9 @@ internal class DefaultIgnoredEventHandlerImpl(private val machine: StateMachine)
     override fun onIgnoredEvent(eventAndArgument: EventAndArgument<*>) {
         val event = eventAndArgument.event
         if (event is DataEvent<*>) {
-            machine.log { "$this ignored ${event::class.simpleName}(${event.data})" }
+            machine.log { "${this.javaClass.simpleName} ignored ${event::class.simpleName}(${event.data})" }
         } else {
-            machine.log { "$this ignored ${event::class.simpleName}" }
+            machine.log { "${this.javaClass.simpleName} ignored ${event::class.simpleName}" }
         }
     }
 }
