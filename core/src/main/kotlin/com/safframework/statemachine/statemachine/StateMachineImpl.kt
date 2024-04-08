@@ -52,6 +52,9 @@ internal class StateMachineImpl(name: String?, childMode: ChildMode) :
             field = value
         }
 
+    private var _isDestroyed: Boolean = false
+    override val isDestroyed get() = _isDestroyed
+
     /**
      * Help to check that [processEvent] is not called from state machine notification method.
      * Access to this field must be thread safe.
@@ -136,7 +139,7 @@ internal class StateMachineImpl(name: String?, childMode: ChildMode) :
             queue?.let {
                 var eventAndArgument = it.nextEventAndArgument()
                 while (eventAndArgument != null) {
-                    if (!isRunning) { // if it happens while event processing
+                    if (isDestroyed || !isRunning) { // if it happens while event processing
                         it.clear()
                         return result
                     }
@@ -219,8 +222,7 @@ internal class StateMachineImpl(name: String?, childMode: ChildMode) :
             result = block()
         } catch (e: Exception) {
             log { "Fatal exception happened, $this machine is in unpredictable state and will be destroyed: $e" }
-//            runCatching { doDestroy() }
-            runCatching { stop() }
+            runCatching { doDestroy() }
             throw e
         }
         delayedListenerException?.let {
@@ -228,6 +230,12 @@ internal class StateMachineImpl(name: String?, childMode: ChildMode) :
             exceptionListener.onException(it)
         }
         return result
+    }
+
+    private  fun doDestroy() {
+        _isDestroyed = true
+        machineNotify { onDestroyed() }
+        log { "$this destroyed" }
     }
 }
 

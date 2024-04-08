@@ -42,6 +42,7 @@ interface StateMachine: State {
     var pendingEventHandler: PendingEventHandler
     var exceptionListener: ExceptionListener
     val isRunning: Boolean
+    val isDestroyed: Boolean
     val machineListeners: Collection<Listener>
 
     fun <L : Listener> addListener(listener: L): L
@@ -93,6 +94,11 @@ interface StateMachine: State {
          * Notifies that state machine has stopped.
          */
         fun onStopped() = Unit
+
+        /**
+         * Notifies that state machine has destroyed.
+         */
+        fun onDestroyed() = Unit
     }
 
     /**

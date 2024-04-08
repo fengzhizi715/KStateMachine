@@ -67,5 +67,7 @@ fun main() {
         sm.sendEvent(WashDishesEvent())
     } catch (e: StateMachineException) {
         e.printStackTrace()
+
+        // You can handle exception yourself
     }
 }

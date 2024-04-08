@@ -13,6 +13,13 @@ import com.safframework.statemachine.transition.Transition
  * @date: 2023/7/3 20:39
  * @version: V1.0 <描述当前版本功能>
  */
+internal interface RecursiveVisitor : Visitor {
+    fun IState.visitChildren() {
+        transitions.forEach { visit(it) }
+        states.forEach { visit(it) }
+    }
+}
+
 interface Visitor {
 
     fun visit(machine: StateMachine)

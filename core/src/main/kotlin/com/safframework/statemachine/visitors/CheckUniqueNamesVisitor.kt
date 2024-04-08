@@ -13,7 +13,7 @@ import com.safframework.statemachine.transition.Transition
  * @date: 2023/7/4 16:06
  * @version: V1.0 <描述当前版本功能>
  */
-internal class CheckUniqueNamesVisitor: Visitor {
+internal class CheckUniqueNamesVisitor: RecursiveVisitor {
     private val stateNames = mutableSetOf<String>()
     private val transitionNames = mutableSetOf<String>()
 
@@ -30,10 +30,5 @@ internal class CheckUniqueNamesVisitor: Visitor {
 
     override fun <E : Event> visit(transition: Transition<E>) {
         transition.name?.let { check(transitionNames.add(it)) { "Transition name is not unique: $it" } }
-    }
-
-    private fun IState.visitChildren() {
-        transitions.forEach { visit(it) }
-        states.forEach { visit(it) }
     }
 }
