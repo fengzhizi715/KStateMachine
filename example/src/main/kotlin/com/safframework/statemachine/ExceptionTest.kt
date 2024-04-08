@@ -66,7 +66,7 @@ fun main() {
         sm.sendEvent(CookEvent())
         sm.sendEvent(WashDishesEvent())
     } catch (e: StateMachineException) {
-        e.printStackTrace()
+        sm.restart()
 
         // You can handle exception yourself
     }
