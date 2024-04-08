@@ -1,7 +1,9 @@
 package com.safframework.statemachine.statemachine
 
 import com.safframework.statemachine.domain.DataEvent
+import com.safframework.statemachine.domain.DestroyEvent
 import com.safframework.statemachine.domain.Event
+import com.safframework.statemachine.domain.StopEvent
 import com.safframework.statemachine.exception.StateMachineException
 import com.safframework.statemachine.state.ChildMode
 import com.safframework.statemachine.state.DefaultState
@@ -106,7 +108,7 @@ internal class StateMachineImpl(name: String?, childMode: ChildMode) :
         doEnter(transitionParams)
     }
 
-    override fun stop() {
+    private fun doStop() {
         _isRunning = false
         recursiveStop()
         log { "$this stopped" }
@@ -161,7 +163,19 @@ internal class StateMachineImpl(name: String?, childMode: ChildMode) :
     private fun process(eventAndArgument: EventAndArgument<*>): ProcessingResult {
 
         val eventProcessed = runCheckingExceptions{
-            doProcessEvent(eventAndArgument)
+
+            when (val event = eventAndArgument.event) {
+                is StopEvent -> {
+                    doStop()
+                    true
+                }
+                is DestroyEvent -> {
+                    if (isRunning) doStop()
+                    doDestroy()
+                    true
+                }
+                else -> doProcessEvent(eventAndArgument)
+            }
         }
 
         if (!eventProcessed) {

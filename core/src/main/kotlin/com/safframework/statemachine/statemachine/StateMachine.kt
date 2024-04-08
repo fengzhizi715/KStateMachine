@@ -1,7 +1,9 @@
 package com.safframework.statemachine.statemachine
 
+import com.safframework.statemachine.domain.DestroyEvent
 import com.safframework.statemachine.utils.StateMachineBlock
 import com.safframework.statemachine.domain.Event
+import com.safframework.statemachine.domain.StopEvent
 import com.safframework.statemachine.exception.StateMachineException
 import com.safframework.statemachine.state.ChildMode
 import com.safframework.statemachine.state.IState
@@ -53,11 +55,6 @@ interface StateMachine: State {
      * Starts state machine
      */
     fun start()
-
-    /**
-     * Forces state machine to stop
-     */
-    fun stop()
 
     /**
      * Machine must be started to process events
@@ -135,3 +132,17 @@ fun createStateMachine(
     if (start) start()
 }
 
+fun StateMachine.checkNotDestroyed() = check(!isDestroyed) { "$this is already destroyed" }
+
+fun StateMachine.stop() {
+
+    checkNotDestroyed()
+    if (!isRunning) return
+    sendEvent(StopEvent)
+}
+
+fun StateMachine.destroy() {
+
+    if (isDestroyed) return
+    sendEvent(DestroyEvent)
+}

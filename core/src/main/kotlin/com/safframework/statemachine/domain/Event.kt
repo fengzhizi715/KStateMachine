@@ -18,3 +18,7 @@ interface DataEvent<out D> : Event {
  * Initial event which is processed on state machine start
  */
 internal object StartEvent : Event
+
+internal object StopEvent : Event
+
+internal object DestroyEvent : Event
