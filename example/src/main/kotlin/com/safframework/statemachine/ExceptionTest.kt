@@ -4,6 +4,7 @@ import com.safframework.statemachine.exception.StateMachineException
 import com.safframework.statemachine.statemachine.StateMachine
 import com.safframework.statemachine.statemachine.createStateMachine
 import com.safframework.statemachine.transition.action
+import com.safframework.statemachine.transition.complete
 import com.safframework.statemachine.utils.extension.*
 
 /**
@@ -47,10 +48,10 @@ fun main() {
                     println("Action: Wash Vegetables")
                     println("Action: Cook")
                 }
-//                complete {
-//                    val i = 0
-//                    println( 1/i )
-//                }
+                complete {
+                    val i = 0
+                    println( 1/i )
+                }
             }
         }
 

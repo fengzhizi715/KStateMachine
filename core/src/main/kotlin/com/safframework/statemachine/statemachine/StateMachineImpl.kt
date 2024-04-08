@@ -11,6 +11,7 @@ import com.safframework.statemachine.state.IState
 import com.safframework.statemachine.state.InternalState
 import com.safframework.statemachine.transition.TransitionParams
 import com.safframework.statemachine.transition.transitionNotify
+import com.safframework.statemachine.utils.extension.checkNotDestroyed
 import com.safframework.statemachine.utils.extension.machineNotify
 import com.safframework.statemachine.visitors.CheckUniqueNamesVisitor
 import kotlin.jvm.Throws

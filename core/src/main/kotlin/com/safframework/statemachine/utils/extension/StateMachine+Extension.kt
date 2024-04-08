@@ -32,6 +32,11 @@ fun StateMachine.destroy() {
     sendEvent(DestroyEvent)
 }
 
+fun StateMachine.restart() {
+    stop()
+    start()
+}
+
 fun StateMachine.started(block: StateMachine.() -> Unit) {
     addListener(object : StateMachine.Listener {
         override fun onStarted() = block()
