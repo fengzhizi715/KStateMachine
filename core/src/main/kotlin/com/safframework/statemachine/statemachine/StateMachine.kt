@@ -131,18 +131,3 @@ fun createStateMachine(
     init()
     if (start) start()
 }
-
-fun StateMachine.checkNotDestroyed() = check(!isDestroyed) { "$this is already destroyed" }
-
-fun StateMachine.stop() {
-
-    checkNotDestroyed()
-    if (!isRunning) return
-    sendEvent(StopEvent)
-}
-
-fun StateMachine.destroy() {
-
-    if (isDestroyed) return
-    sendEvent(DestroyEvent)
-}

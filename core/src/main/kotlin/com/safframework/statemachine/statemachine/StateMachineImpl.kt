@@ -115,9 +115,16 @@ internal class StateMachineImpl(name: String?, childMode: ChildMode) :
         machineNotify { onStopped() }
     }
 
+    private  fun doDestroy() {
+        _isDestroyed = true
+        machineNotify { onDestroyed() }
+        log { "$this destroyed" }
+    }
+
     @Synchronized
     @Throws(StateMachineException::class)
     override fun sendEvent(event: Event, argument: Any?): ProcessingResult {
+        checkNotDestroyed()
         check(isRunning) { "$this is not started, call start() first" }
 
         val eventAndArgument = EventAndArgument(event, argument)
@@ -244,12 +251,6 @@ internal class StateMachineImpl(name: String?, childMode: ChildMode) :
             exceptionListener.onException(it)
         }
         return result
-    }
-
-    private  fun doDestroy() {
-        _isDestroyed = true
-        machineNotify { onDestroyed() }
-        log { "$this destroyed" }
     }
 }
 

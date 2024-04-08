@@ -1,5 +1,7 @@
 package com.safframework.statemachine.utils.extension
 
+import com.safframework.statemachine.domain.DestroyEvent
+import com.safframework.statemachine.domain.StopEvent
 import com.safframework.statemachine.transition.TransitionParams
 import com.safframework.statemachine.state.IState
 import com.safframework.statemachine.statemachine.InternalStateMachine
@@ -14,6 +16,22 @@ import com.safframework.statemachine.statemachine.runDelayingException
  * @date: 2023/7/4 14:43
  * @version: V1.0 <描述当前版本功能>
  */
+
+internal fun StateMachine.checkNotDestroyed() = check(!isDestroyed) { "$this is already destroyed" }
+
+fun StateMachine.stop() {
+
+    checkNotDestroyed()
+    if (!isRunning) return
+    sendEvent(StopEvent)
+}
+
+fun StateMachine.destroy() {
+
+    if (isDestroyed) return
+    sendEvent(DestroyEvent)
+}
+
 fun StateMachine.started(block: StateMachine.() -> Unit) {
     addListener(object : StateMachine.Listener {
         override fun onStarted() = block()
