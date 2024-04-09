@@ -6,7 +6,7 @@
 
 使用 Kotlin 特性实现的 FSM、HSM 框架，基于事件驱动。
 
-## 有限状态机定义
+## 1. 有限状态机定义
 
 有限状态机，（英语：Finite-state machine, FSM），又称有限状态自动机，简称状态机，是表示有限个状态以及在这些状态之间的转移和动作等行为的数学模型。有限状态机体现了两点：首先是离散的，然后是有限的。以下是对状态机抽象定义
 
@@ -22,15 +22,15 @@
 
 * Interceptor（拦截器）：对当前状态改变前、后进行监听拦截。
 
-## 分层状态机定义
+## 2. 分层状态机定义
 
 分层状态机，（英语：Hierarchical State Machine, HSM）
 
 分层状态机是一种用于描述系统行为和控制流的模型，它将系统划分为多个层级，并将每个层级表示为一个状态机。每个状态机描述了一个特定的状态集合以及状态之间的转移规则。每个状态机都有自己的输入和输出，可以与其他状态机进行交互，从而形成整个系统的行为。
 
-## 状态机的使用
+## 3. 状态机的使用
 
-### FSM 的使用
+### 3.1 FSM 的使用
 
 ```kotlin
 fun main() {
@@ -95,9 +95,56 @@ Entered [eat] State
 Entered [watchTV] State
 ```
 
-### HSM 的使用
+### 3.2 HSM 的使用
 
-## Feature
+```kotlin
+class CrossLevelTransitionEvent1: Event
+class CrossLevelTransitionEvent2: Event
+class EndEvent: Event
+
+fun main() {
+    val sm = createStateMachine {
+        logger = StateMachine.Logger { println(it) }
+
+        lateinit var nested12: State
+        lateinit var nested22: State
+
+        val finalState = finalState("final")
+
+        initialState("Top level 1") {
+            initialState("Nested 11") {
+                transitionOn<CrossLevelTransitionEvent1> {
+                    targetState = {
+                        nested22
+                    }
+                }
+            }
+
+            nested12 = state("Nested 12") {
+                transition<EndEvent> {
+                    targetState = finalState
+                }
+            }
+        }
+
+        state("Top level 2") {
+            initialState("Nested 21")
+
+            nested22 = state("Nested 22") {
+                transition<CrossLevelTransitionEvent2> {
+                    targetState = nested12
+                }
+            }
+        }
+    }
+
+    sm.sendEvent(CrossLevelTransitionEvent1())
+    sm.sendEvent(CrossLevelTransitionEvent2())
+    sm.sendEvent(EndEvent())
+}
+```
+
+## 4. Feature
 
 * 支持 DSL 的方式构建状态机
 * 支持 FSM、HSM(Nested State)
@@ -110,7 +157,7 @@ Entered [watchTV] State
 * 支持将状态机导出成 PlantUML、JSON
 * 支持异常处理
 
-## 最新版本
+## 5. 最新版本
 
 模块|最新版本
 ---|:-------------:
@@ -127,13 +174,13 @@ statemachine-core|[![](https://jitpack.io/v/fengzhizi715/KStateMachine.svg)](htt
 	}
 ```
 
-## 下载：
+## 6. 下载：
 
 ```groovy
 implementation 'com.github.fengzhizi715.KStateMachine:core:<latest-version>'
 ```
 
-## TODO：
+## 7. TODO：
 
 * 支持 Kotlin Coroutines
 * 支持导出状态图
